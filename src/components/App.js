@@ -8,62 +8,19 @@ import MobxDevTools from 'mobx-react-devtools'
 
 import RootStoreContext from 'context/RootStoreContext'
 
+import BackgroundAnimation from 'components/BackgroundAnimation'
+
+import 'styles/App.scss'
+import 'styles/Scrollbars.scss'
+
 @observer
-class DevTools extends React.Component {
+class DebugChannelList extends React.Component {
   static contextType = RootStoreContext
 
   render () {
-    const { ipfsStore, uiStore, sessionStore, networkStore } = this.context
-
+    const { networkStore } = this.context
     return (
-      <div className="App view">
-        <span>
-          Width: {uiStore.windowDimensions.width}, height: {uiStore.windowDimensions.height}
-        </span>
-        <br />
-        <button
-          onClick={() => sessionStore.login({ username: 'test-user-' + Date.now() })}
-          disabled={sessionStore.username}>
-          Login
-        </button>
-        <button onClick={() => sessionStore.logout()} disabled={!sessionStore.username}>
-          Logout
-        </button>
-        <button
-          onClick={() => ipfsStore.useGoIPFS()}
-          disabled={ipfsStore.node || ipfsStore.starting || !sessionStore.username}>
-          Use go-ipfs
-        </button>
-        <button
-          onClick={() => ipfsStore.useJsIPFS()}
-          disabled={ipfsStore.node || ipfsStore.starting || !sessionStore.username}>
-          Use js-ipfs
-        </button>
-        <button
-          disabled={!networkStore.running || networkStore.channelNames.indexOf('tislaamo') !== -1}
-          onClick={() => networkStore.joinChannel('tislaamo')}>
-          Join tislaamo
-        </button>
-        <button
-          disabled={!networkStore.running || networkStore.channelNames.indexOf('tislaamo') === -1}
-          onClick={() => networkStore.leaveChannel('tislaamo')}>
-          Leave tislaamo
-        </button>
-        <button
-          disabled={!networkStore.running || networkStore.channelNames.indexOf('tislaamo2') !== -1}
-          onClick={() => networkStore.joinChannel('tislaamo2')}>
-          Join tislaamo2
-        </button>
-        <button
-          disabled={!networkStore.running || networkStore.channelNames.indexOf('tislaamo2') === -1}
-          onClick={() => networkStore.leaveChannel('tislaamo2')}>
-          Leave tislaamo2
-        </button>
-        <button onClick={() => networkStore.stop()} disabled={!networkStore.running}>
-          Stop
-        </button>
-        <br />
-        <br />
+      <div>
         Channels: <br />
         <ul>
           {networkStore.channelsAsArray.map(channel => (
@@ -94,7 +51,80 @@ class DevTools extends React.Component {
             </li>
           ))}
         </ul>
-        <MobxDevTools />
+      </div>
+    )
+  }
+}
+
+@observer
+class DebugControlButtons extends React.Component {
+  static contextType = RootStoreContext
+
+  render () {
+    const { ipfsStore, sessionStore, networkStore } = this.context
+
+    return (
+      <div>
+        <button
+          onClick={() => sessionStore.login({ username: 'test-user-' + Date.now() })}
+          disabled={sessionStore.username}>
+          Login
+        </button>
+        <button onClick={() => sessionStore.logout()} disabled={!sessionStore.username}>
+          Logout
+        </button>
+        <br />
+        <button
+          onClick={() => ipfsStore.useGoIPFS()}
+          disabled={ipfsStore.node || ipfsStore.starting || !sessionStore.username}>
+          Use go-ipfs
+        </button>
+        <button
+          onClick={() => ipfsStore.useJsIPFS()}
+          disabled={ipfsStore.node || ipfsStore.starting || !sessionStore.username}>
+          Use js-ipfs
+        </button>
+        <button onClick={() => networkStore.stop()} disabled={!networkStore.running}>
+          Stop
+        </button>
+        <br />
+        <button
+          disabled={!networkStore.running || networkStore.channelNames.indexOf('testing') !== -1}
+          onClick={() => networkStore.joinChannel('testing')}>
+          Join testing
+        </button>
+        <button
+          disabled={!networkStore.running || networkStore.channelNames.indexOf('testing') === -1}
+          onClick={() => networkStore.leaveChannel('testing')}>
+          Leave testing
+        </button>
+        <br />
+        <button
+          disabled={!networkStore.running || networkStore.channelNames.indexOf('testing2') !== -1}
+          onClick={() => networkStore.joinChannel('testing2')}>
+          Join testing2
+        </button>
+        <button
+          disabled={!networkStore.running || networkStore.channelNames.indexOf('testing2') === -1}
+          onClick={() => networkStore.leaveChannel('testing2')}>
+          Leave testing2
+        </button>
+        <br />
+      </div>
+    )
+  }
+}
+@observer
+class DevTools extends React.Component {
+  static contextType = RootStoreContext
+
+  render () {
+    return (
+      <div>
+        <DebugControlButtons />
+        <br />
+        <br />
+        <DebugChannelList />
       </div>
     )
   }
@@ -102,17 +132,30 @@ class DevTools extends React.Component {
 
 @observer
 class App extends React.Component {
+  static contextType = RootStoreContext
   static propTypes = {}
 
   render () {
+    const { uiStore } = this.context
+
     const devTools =
       process.env.NODE_ENV === 'development' ? (
         <div>
           <DevTools />
+          <MobxDevTools />
         </div>
       ) : null
 
-    return <div className="App view">{devTools}</div>
+    return (
+      <div className="App view">
+        <BackgroundAnimation
+          size={uiStore.windowDimensions.width / 1.5}
+          circleSize={2}
+          style={{ opacity: 0.8, zIndex: -1 }}
+        />
+        {devTools}
+      </div>
+    )
   }
 }
 

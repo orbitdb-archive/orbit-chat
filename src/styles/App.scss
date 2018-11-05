@@ -1,0 +1,44 @@
+@import 'Animations';
+@import 'Colors';
+
+textarea, input { outline: none; }
+
+::placeholder {
+  color: $placeholder-color;
+  font-style: italic;
+}
+
+.App {
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transform-style: preserve-3d;
+}
+
+$channel-name-max-height: 5.5vmin;
+$channel-name-min-height: 1.5em;
+
+.no-close {
+  cursor: default;
+  user-select: none;
+}
+
+.view {
+  background-color: #222222;
+  padding: 0;
+  margin: 0;
+}
+
+.headerAnimation-appear {
+  animation: fadeInDown;
+  animation-duration: .2s;
+  animation-fill-mode: both;
+  animation-timing-function: ease-out;
+}
+
+.joinChannelAnimation-appear {
+  animation: fadeIn;
+  animation-duration: .5s;
+  animation-fill-mode: both;
+  animation-timing-function: ease-in;
+}

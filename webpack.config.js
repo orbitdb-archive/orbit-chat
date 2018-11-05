@@ -6,7 +6,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 
 const config = {
-  entry: ['babel-polyfill', './src/components/index.js'],
+  entry: ['babel-polyfill', './src/index.js'],
   output: {
     path: path.join(__dirname, 'dist'),
     publicPath: '/',
@@ -14,9 +14,13 @@ const config = {
   },
   resolve: {
     alias: {
+      components: path.join(__dirname, './src/components/'),
       config: path.join(__dirname, './src/config/'),
       context: path.join(__dirname, './src/context/'),
+      fonts: path.join(__dirname, './src/fonts/'),
+      images: path.join(__dirname, './src/images/'),
       stores: path.join(__dirname, './src/stores/'),
+      styles: path.join(__dirname, './src/styles/'),
       utils: path.join(__dirname, './src/utils/')
     }
   },
@@ -29,20 +33,52 @@ const config = {
       },
       {
         test: /\.css$/,
-        use: ['style-loader', { loader: 'css-loader', options: { url: false } }]
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [require('postcss-preset-env')()]
+            }
+          }
+        ]
       },
       {
         test: /\.scss$/,
-        use: ['style-loader', { loader: 'css-loader', options: { url: false } }, 'sass-loader']
+        use: [
+          'style-loader',
+          'css-loader',
+          {
+            loader: 'postcss-loader',
+            options: {
+              plugins: () => [require('postcss-preset-env')()]
+            }
+          },
+          'sass-loader'
+        ]
       },
       {
         test: /\.(png|jpg)$/,
         use: {
           loader: 'file-loader',
           options: {
-            name: 'images/[name].[hash:20].[ext]'
+            name: '[name].[hash:20].[ext]',
+            outputPath: 'images/'
           }
         }
+      },
+      {
+        test: /\.(woff(2)?|ttf|eot)(\?v=\d+\.\d+\.\d+)?$/,
+        use: [
+          {
+            loader: 'file-loader',
+            options: {
+              name: '[name].[hash:20].[ext]',
+              outputPath: 'fonts/'
+            }
+          }
+        ]
       }
     ]
   },

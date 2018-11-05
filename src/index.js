@@ -4,12 +4,15 @@ import React from 'react'
 import { render } from 'react-dom'
 import { HashRouter } from 'react-router-dom'
 
-import { version } from '../../package.json'
+import { version } from '../package.json'
 
 import RootStore from 'stores/RootStore'
 import RootStoreContext from 'context/RootStoreContext'
 
-import App from './App'
+import App from 'components/App'
+
+import 'styles/normalize.css'
+import 'styles/Main.scss'
 
 render(
   <RootStoreContext.Provider value={new RootStore()}>
