@@ -10,15 +10,17 @@ configure({ enforceActions: 'observed' })
 const logger = new Logger()
 
 export default class OrbitStore {
-  constructor ({ ipfsStore, userStore }) {
+  constructor (rootStore) {
+    this.rootStore = rootStore
+
     this.onIpfsChanged = this.onIpfsChanged.bind(this)
     this.onUsernameChanged = this.onUsernameChanged.bind(this)
 
     // React to ipfs node changes
-    reaction(() => ipfsStore.node, this.onIpfsChanged)
+    reaction(() => this.rootStore.ipfsStore.node, this.onIpfsChanged)
 
     // React to user changes
-    reaction(() => userStore.username, this.onUsernameChanged)
+    reaction(() => this.rootStore.sessionStore.username, this.onUsernameChanged)
   }
 
   @observable
@@ -50,7 +52,7 @@ export default class OrbitStore {
 
   @action.bound
   onStopped () {
-    logger.info('ipfs node stopped')
+    logger.info('orbit node stopped')
     this.stopping = false
     this.node = null
   }

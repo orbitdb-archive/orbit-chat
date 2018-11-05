@@ -6,25 +6,17 @@ import { HashRouter } from 'react-router-dom'
 
 import { version } from '../../package.json'
 
-import NetworkStore from 'stores/NetworkStore'
-import UiStore from 'stores/UiStore'
-import UserStore from 'stores/UserStore'
+import RootStore from 'stores/RootStore'
+import RootStoreContext from 'context/RootStoreContext'
 
 import App from './App'
 
-const uiStore = new UiStore()
-const userStore = new UserStore()
-const networkStore = new NetworkStore({ userStore })
-
 render(
-  <HashRouter>
-    <App
-      networkStore={networkStore}
-      uiStore={uiStore}
-      userStore={userStore}
-      ipfsStore={networkStore.ipfsStore}
-    />
-  </HashRouter>,
+  <RootStoreContext.Provider value={new RootStore()}>
+    <HashRouter>
+      <App />
+    </HashRouter>
+  </RootStoreContext.Provider>,
   document.getElementById('root')
 )
 

@@ -8,13 +8,15 @@ configure({ enforceActions: 'observed' })
 
 const logger = new Logger()
 
-export default class UserStore {
-  constructor () {
+export default class SessionStore {
+  constructor (rootStore) {
+    this.rootStore = rootStore
+
     this.login = this.login.bind(this)
     this.logout = this.logout.bind(this)
   }
 
-  @observable
+  @observable.struct
   _user = null
 
   _prevUser = null

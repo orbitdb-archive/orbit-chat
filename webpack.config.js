@@ -15,6 +15,7 @@ const config = {
   resolve: {
     alias: {
       config: path.join(__dirname, './src/config/'),
+      context: path.join(__dirname, './src/context/'),
       stores: path.join(__dirname, './src/stores/'),
       utils: path.join(__dirname, './src/utils/')
     }

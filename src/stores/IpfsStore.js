@@ -11,11 +11,13 @@ configure({ enforceActions: 'observed' })
 const logger = new Logger()
 
 export default class IpfsStore {
-  constructor ({ userStore }) {
+  constructor (rootStore) {
+    this.rootStore = rootStore
+
     this.onUsernameChanged = this.onUsernameChanged.bind(this)
 
     // React to user changes
-    reaction(() => userStore.username, this.onUsernameChanged)
+    reaction(() => this.rootStore.sessionStore.username, this.onUsernameChanged)
   }
 
   @observable
@@ -35,7 +37,7 @@ export default class IpfsStore {
 
   @action.bound
   onStarted (node) {
-    logger.info('js-ipfs node started')
+    logger.info('ipfs node started')
     this.starting = false
     this.node = node
   }
@@ -71,7 +73,7 @@ export default class IpfsStore {
   stop () {
     if (this.stopping || !this.node) return
     this.stopping = true
-    logger.info('Stopping js-ipfs node')
+    logger.info('Stopping ipfs node')
     this.node.once('stop', () => this.onStopped())
     this.node.stop()
   }

@@ -2,38 +2,41 @@
 
 import React from 'react'
 import { hot } from 'react-hot-loader'
-import { Route, Switch } from 'react-router-dom'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import MobxDevTools from 'mobx-react-devtools'
 
-import Logger from 'utils/logger'
-
-const logger = new Logger()
+import RootStoreContext from 'context/RootStoreContext'
 
 @observer
 class DevTools extends React.Component {
+  static contextType = RootStoreContext
+
   render () {
-    const { ipfsStore, uiStore, userStore, networkStore } = this.props
+    const { ipfsStore, uiStore, sessionStore, networkStore } = this.context
 
     return (
       <div className="App view">
+        <span>
+          Width: {uiStore.windowDimensions.width}, height: {uiStore.windowDimensions.height}
+        </span>
+        <br />
         <button
-          onClick={() => userStore.login({ username: 'test-user-' + Date.now() })}
-          disabled={userStore.username}>
+          onClick={() => sessionStore.login({ username: 'test-user-' + Date.now() })}
+          disabled={sessionStore.username}>
           Login
         </button>
-        <button onClick={() => userStore.logout()} disabled={!userStore.username}>
+        <button onClick={() => sessionStore.logout()} disabled={!sessionStore.username}>
           Logout
         </button>
         <button
           onClick={() => ipfsStore.useGoIPFS()}
-          disabled={ipfsStore.node || ipfsStore.starting || !userStore.username}>
+          disabled={ipfsStore.node || ipfsStore.starting || !sessionStore.username}>
           Use go-ipfs
         </button>
         <button
           onClick={() => ipfsStore.useJsIPFS()}
-          disabled={ipfsStore.node || ipfsStore.starting || !userStore.username}>
+          disabled={ipfsStore.node || ipfsStore.starting || !sessionStore.username}>
           Use js-ipfs
         </button>
         <button
@@ -61,20 +64,31 @@ class DevTools extends React.Component {
         </button>
         <br />
         <br />
-        Feeds: <br />
-        <ul>
-          {networkStore.feeds.map((e, idx) => (
-            <li key={idx}>{e.address.toString()}</li>
-          ))}
-        </ul>
         Channels: <br />
         <ul>
-          {networkStore.channelNames.map((e, idx) => (
-            <li key={idx}>
-              <strong>{e}</strong>
+          {networkStore.channelsAsArray.map(channel => (
+            <li key={channel.name}>
+              <strong>Channel name: {channel.name}</strong> <br />
+              <strong>Peers: {channel.peers.length}</strong> <br />
+              <button
+                disabled={channel.unreadMessages.length === 0}
+                onClick={channel.markAllMessagesAsRead}>
+                Mark read
+              </button>
               <ul>
-                {networkStore.channels[e].messages.map((m, idx) => (
-                  <li key={idx}>{m.Post.content}</li>
+                {channel.messages.map((m, idx) => (
+                  <li key={idx}>
+                    {m.Post.content}
+                    {m.unread ? '*NEW*' : ''}
+                    {m.unread ? (
+                      <button
+                        onClick={() => {
+                          channel.markMessageAsRead(m)
+                        }}>
+                        R
+                      </button>
+                    ) : null}
+                  </li>
                 ))}
               </ul>
             </li>
@@ -88,13 +102,13 @@ class DevTools extends React.Component {
 
 @observer
 class App extends React.Component {
-  render () {
-    const { ...stores } = this.props
+  static propTypes = {}
 
+  render () {
     const devTools =
       process.env.NODE_ENV === 'development' ? (
         <div>
-          <DevTools {...stores} />
+          <DevTools />
         </div>
       ) : null
 

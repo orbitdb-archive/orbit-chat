@@ -2,22 +2,38 @@
 
 import { configure, action, observable } from 'mobx'
 
+import throttleEvent from 'utils/throttleEvent'
+import Logger from 'utils/logger'
+
 configure({ enforceActions: 'observed' })
 
+const logger = new Logger()
+
 export default class UiStore {
-  @observable
-  leftPanelOpen = false
+  @observable.struct
+  windowDimensions = {
+    width: 0,
+    height: 0
+  }
 
-  @observable
-  rightPanelOpen = false
+  constructor (rootStore) {
+    this.rootStore = rootStore
 
-  @action.bound
-  toggleLeftPanel () {
-    this.leftPanelOpen = !this.leftPanelOpen
+    throttleEvent('resize', 'optimizedResize')
+    window.addEventListener('optimizedResize', this.onWindowResize)
+
+    this.windowDimensions = this.getWindowDimensions()
   }
 
   @action.bound
-  toggleRightPanel () {
-    this.rightPanelOpen = !this.rightPanelOpen
+  onWindowResize (event) {
+    this.windowDimensions = this.getWindowDimensions()
+  }
+
+  getWindowDimensions () {
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight
+    }
   }
 }
