@@ -7,8 +7,8 @@ import { observer } from 'mobx-react'
 import MobxDevTools from 'mobx-react-devtools'
 
 import RootStoreContext from 'context/RootStoreContext'
-
 import BackgroundAnimation from 'components/BackgroundAnimation'
+import Themes from 'themes'
 
 import 'styles/App.scss'
 import 'styles/Scrollbars.scss'
@@ -61,7 +61,7 @@ class DebugControlButtons extends React.Component {
   static contextType = RootStoreContext
 
   render () {
-    const { ipfsStore, sessionStore, networkStore } = this.context
+    const { ipfsStore, sessionStore, networkStore, uiStore } = this.context
 
     return (
       <div>
@@ -110,6 +110,9 @@ class DebugControlButtons extends React.Component {
           Leave testing2
         </button>
         <br />
+        <button onClick={() => uiStore.setTheme(Themes.Default)}>Set default theme</button>
+        <button onClick={() => uiStore.setTheme(Themes.Green)}>Set green theme</button>
+        <br />
       </div>
     )
   }
@@ -149,9 +152,10 @@ class App extends React.Component {
     return (
       <div className="App view">
         <BackgroundAnimation
-          size={uiStore.windowDimensions.width / 1.5}
+          size={530}
           circleSize={2}
           style={{ opacity: 0.8, zIndex: -1 }}
+          theme={{ ...uiStore.theme }} // 'theme' needs to be a new object
         />
         {devTools}
       </div>

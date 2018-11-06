@@ -21,6 +21,7 @@ const config = {
       images: path.join(__dirname, './src/images/'),
       stores: path.join(__dirname, './src/stores/'),
       styles: path.join(__dirname, './src/styles/'),
+      themes: path.join(__dirname, './src/themes/'),
       utils: path.join(__dirname, './src/utils/')
     }
   },

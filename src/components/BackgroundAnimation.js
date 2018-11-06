@@ -10,14 +10,14 @@ const defaultDelay = 0.2
 
 function BackgroundAnimation ({
   circleSize,
-  size,
+  size = Math.min(window.innerWidth, window.innerHeight) / 2,
   startX,
   startY,
   delay = defaultDelay,
   theme,
   style
 }) {
-  const maxSize = (size || window.innerWidth) / 2
+  const maxSize = size / 2
   const minSize = 32 * (size / 256)
   const amount = 7
   const opacity = 1
@@ -83,13 +83,24 @@ function BackgroundAnimation ({
     )
   })
 
+  // Minor adjustment to the positions and sizing of graphics so that the outermost dot
+  // will not be cut off by the frame when at max or min x or y
+  const outerDotSize = dots[0].props.r * 2
+  const adjustedSize = size + outerDotSize
+  const adjustedScale = size / adjustedSize
+  const adjustedPosition = (outerDotSize / 2) * adjustedScale
+  let transform = `scale(${adjustedScale},${adjustedScale}),`
+  transform += `translate(${adjustedPosition},${adjustedPosition})`
+
   return (
     <div className="BackgroundAnimation" style={style}>
       <svg className="Rings" width={size} height={size} key="circles" style={theme}>
-        <g className="transparent">{circles}</g>
+        <g className="transparent" transform={transform}>
+          {circles}
+        </g>
       </svg>
       <svg className="Planets opaque" width={size} height={size} key="dots" style={theme}>
-        {dots}
+        <g transform={transform}>{dots}</g>
       </svg>
     </div>
   )
