@@ -19,6 +19,7 @@ const config = {
       context: path.join(__dirname, './src/context/'),
       fonts: path.join(__dirname, './src/fonts/'),
       images: path.join(__dirname, './src/images/'),
+      locales: path.join(__dirname, './src/locales/'),
       stores: path.join(__dirname, './src/stores/'),
       styles: path.join(__dirname, './src/styles/'),
       themes: path.join(__dirname, './src/themes/'),

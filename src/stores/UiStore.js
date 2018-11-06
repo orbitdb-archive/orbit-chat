@@ -6,6 +6,9 @@ import throttleEvent from 'utils/throttleEvent'
 import Logger from 'utils/logger'
 import Themes from 'themes'
 
+// Important! This import will inject i18n to the whole app
+import i18n from 'config/i18n.config'
+
 configure({ enforceActions: 'observed' })
 
 const logger = new Logger()
@@ -38,6 +41,10 @@ export default class UiStore {
   @action.bound
   setTheme (theme) {
     this.theme = theme
+  }
+
+  changeLanguage (lng) {
+    i18n.changeLanguage(lng)
   }
 
   getWindowDimensions () {

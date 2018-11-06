@@ -113,6 +113,9 @@ class DebugControlButtons extends React.Component {
         <button onClick={() => uiStore.setTheme(Themes.Default)}>Set default theme</button>
         <button onClick={() => uiStore.setTheme(Themes.Green)}>Set green theme</button>
         <br />
+        <button onClick={() => uiStore.changeLanguage('en')}>Set locale to EN</button>
+        <button onClick={() => uiStore.changeLanguage('fi')}>Set locale to FI</button>
+        <br />
       </div>
     )
   }
