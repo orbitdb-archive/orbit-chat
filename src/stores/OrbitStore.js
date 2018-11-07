@@ -14,13 +14,9 @@ export default class OrbitStore {
     this.rootStore = rootStore
 
     this.onIpfsChanged = this.onIpfsChanged.bind(this)
-    this.onUsernameChanged = this.onUsernameChanged.bind(this)
 
     // React to ipfs node changes
     reaction(() => this.rootStore.ipfsStore.node, this.onIpfsChanged)
-
-    // React to user changes
-    reaction(() => this.rootStore.sessionStore.username, this.onUsernameChanged)
   }
 
   @observable
@@ -31,12 +27,6 @@ export default class OrbitStore {
 
   @observable
   stopping = false
-
-  _username = null
-
-  onUsernameChanged (newUsername) {
-    this._username = newUsername
-  }
 
   onIpfsChanged (ipfs) {
     this.stop()

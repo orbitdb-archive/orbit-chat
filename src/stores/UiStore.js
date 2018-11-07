@@ -1,13 +1,10 @@
 'use strict'
 
-import { configure, action, observable } from 'mobx'
+import { computed, configure, action, observable, get } from 'mobx'
 
 import throttleEvent from 'utils/throttleEvent'
 import Logger from 'utils/logger'
 import Themes from 'themes'
-
-// Important! This import will inject i18n to the whole app
-import i18n from 'config/i18n.config'
 
 configure({ enforceActions: 'observed' })
 
@@ -20,17 +17,30 @@ export default class UiStore {
     height: 0
   }
 
-  @observable
-  theme = null
-
   constructor (rootStore) {
     this.rootStore = rootStore
+    this.settingsStore = this.rootStore.settingsStore
+    this.updateUiSettings = this.settingsStore.updateUiSettings
 
     throttleEvent('resize', 'optimizedResize')
     window.addEventListener('optimizedResize', this.onWindowResize)
 
     this.windowDimensions = this.getWindowDimensions()
-    this.theme = Themes.Default
+  }
+
+  @computed
+  get themeName () {
+    return get(this.settingsStore.uiSettings, 'themeName')
+  }
+
+  @computed
+  get theme () {
+    return Themes[this.themeName]
+  }
+
+  @computed
+  get language () {
+    return get(this.settingsStore.uiSettings, 'language')
   }
 
   @action.bound
@@ -38,13 +48,12 @@ export default class UiStore {
     this.windowDimensions = this.getWindowDimensions()
   }
 
-  @action.bound
-  setTheme (theme) {
-    this.theme = theme
+  setTheme (themeName) {
+    this.updateUiSettings({ themeName })
   }
 
-  changeLanguage (lng) {
-    i18n.changeLanguage(lng)
+  setLanguage (language) {
+    this.updateUiSettings({ language })
   }
 
   getWindowDimensions () {

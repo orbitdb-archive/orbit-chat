@@ -13,11 +13,6 @@ const logger = new Logger()
 export default class IpfsStore {
   constructor (rootStore) {
     this.rootStore = rootStore
-
-    this.onUsernameChanged = this.onUsernameChanged.bind(this)
-
-    // React to user changes
-    reaction(() => this.rootStore.sessionStore.username, this.onUsernameChanged)
   }
 
   @observable
@@ -28,12 +23,6 @@ export default class IpfsStore {
 
   @observable
   stopping = false
-
-  _username = null
-
-  onUsernameChanged (newUsername) {
-    this._username = newUsername
-  }
 
   @action.bound
   onStarted (node) {
@@ -51,7 +40,8 @@ export default class IpfsStore {
 
   @action.bound
   useJsIPFS () {
-    if (this.starting || !this._username) return
+    const { username } = this.rootStore.sessionStore
+    if (this.starting || !username) return
     this.starting = true
     logger.info('Starting js-ipfs node')
     this.stop()
@@ -62,7 +52,8 @@ export default class IpfsStore {
 
   @action.bound
   useGoIPFS () {
-    if (this.starting || !this._username) return
+    const { username } = this.rootStore.sessionStore
+    if (this.starting || !username) return
     this.starting = true
     logger.debug('Activating go-ipfs node')
     this.stop()

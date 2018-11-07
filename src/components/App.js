@@ -7,11 +7,10 @@ import { observer } from 'mobx-react'
 import MobxDevTools from 'mobx-react-devtools'
 
 import RootStoreContext from 'context/RootStoreContext'
-import Themes from 'themes'
 
 import PrivateRoute from 'components/PrivateRoute'
-
 import LoginView from 'components/LoginView'
+import BackgroundAnimation from 'components/BackgroundAnimation'
 
 import 'styles/App.scss'
 import 'styles/Scrollbars.scss'
@@ -117,13 +116,25 @@ class DebugControlButtons extends React.Component {
         </button>
         <br />
         <br />
-        <button onClick={() => uiStore.setTheme(Themes.Default)}>Set default theme</button>
-        <button onClick={() => uiStore.setTheme(Themes.Green)}>Set green theme</button>
-        <button onClick={() => uiStore.setTheme(Themes.Blue1)}>Set green blue</button>
+        <button
+          disabled={uiStore.themeName === 'Default'}
+          onClick={() => uiStore.setTheme('Default')}>
+          Set default theme
+        </button>
+        <button disabled={uiStore.themeName === 'Green'} onClick={() => uiStore.setTheme('Green')}>
+          Set green theme
+        </button>
+        <button disabled={uiStore.themeName === 'Blue1'} onClick={() => uiStore.setTheme('Blue1')}>
+          Set blue theme
+        </button>
         <br />
         <br />
-        <button onClick={() => uiStore.changeLanguage('en')}>Set locale to EN</button>
-        <button onClick={() => uiStore.changeLanguage('fi')}>Set locale to FI</button>
+        <button disabled={uiStore.language === 'en'} onClick={() => uiStore.setLanguage('en')}>
+          Set locale to EN
+        </button>
+        <button disabled={uiStore.language === 'fi'} onClick={() => uiStore.setLanguage('fi')}>
+          Set locale to FI
+        </button>
         <br />
       </div>
     )
@@ -146,9 +157,13 @@ class DevTools extends React.Component {
   }
 }
 
+@observer
 class AppView extends React.Component {
+  static contextType = RootStoreContext
+
   render () {
-    return <div>APP VIEW</div>
+    const { uiStore } = this.context
+    return <BackgroundAnimation size={480} theme={{ ...uiStore.theme }} />
   }
 }
 
