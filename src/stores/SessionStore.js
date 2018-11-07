@@ -1,6 +1,6 @@
 'use strict'
 
-import { configure, action, observable, computed } from 'mobx'
+import { configure, action, observable, computed, runInAction } from 'mobx'
 
 import Logger from 'utils/logger'
 
@@ -27,24 +27,33 @@ export default class SessionStore {
     return this._user.username
   }
 
+  @computed
+  get isAuthenticated () {
+    return !!(this._user && this._user.username)
+  }
+
   get prevUsername () {
     if (!this._prevUser || !this._prevUser.username) return null
     return this._prevUser.username || null
   }
 
+  // Async so the API is consistend if async is needed in the future
   @action.bound
-  setUser (user) {
-    this._prevUser = this._user
-    this._user = user
+  async setUser (user) {
+    if (user && !user.username) throw new Error('"user.username" is not defined')
+    runInAction(() => {
+      this._prevUser = this._user
+      this._user = user
+    })
   }
 
   login (user) {
     logger.info('User login')
-    this.setUser(user)
+    return this.setUser(user)
   }
 
   logout () {
     logger.info('User logout')
-    this.setUser(null)
+    return this.setUser(null)
   }
 }

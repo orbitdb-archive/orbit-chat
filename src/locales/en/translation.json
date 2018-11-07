@@ -1,4 +1,9 @@
 {
   "configuration": "Configuration",
+  "login": {
+    "nickname": "Nickname",
+    "orLoginWith": "Or login with",
+    "pressEnterToLogin": "Press ENTER to login"
+  },
   "version": "Version"
 }

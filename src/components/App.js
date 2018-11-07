@@ -1,17 +1,22 @@
 'use strict'
 
 import React from 'react'
+import { Route } from 'react-router-dom'
 import { hot } from 'react-hot-loader'
-// import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import MobxDevTools from 'mobx-react-devtools'
 
 import RootStoreContext from 'context/RootStoreContext'
-import BackgroundAnimation from 'components/BackgroundAnimation'
 import Themes from 'themes'
+
+import PrivateRoute from 'components/PrivateRoute'
+
+import LoginView from 'components/LoginView'
 
 import 'styles/App.scss'
 import 'styles/Scrollbars.scss'
+
+import 'styles/DevTools.scss'
 
 @observer
 class DebugChannelList extends React.Component {
@@ -27,10 +32,11 @@ class DebugChannelList extends React.Component {
             <li key={channel.name}>
               <strong>Channel name: {channel.name}</strong> <br />
               <strong>Peers: {channel.peers.length}</strong> <br />
+              <strong>Messages: </strong>
               <button
                 disabled={channel.unreadMessages.length === 0}
                 onClick={channel.markAllMessagesAsRead}>
-                Mark read
+                Mark all as read
               </button>
               <ul>
                 {channel.messages.map((m, idx) => (
@@ -67,10 +73,10 @@ class DebugControlButtons extends React.Component {
       <div>
         <button
           onClick={() => sessionStore.login({ username: 'test-user-' + Date.now() })}
-          disabled={sessionStore.username}>
+          disabled={sessionStore.isAuthenticated}>
           Login
         </button>
-        <button onClick={() => sessionStore.logout()} disabled={!sessionStore.username}>
+        <button onClick={() => sessionStore.logout()} disabled={!sessionStore.isAuthenticated}>
           Logout
         </button>
         <br />
@@ -110,8 +116,11 @@ class DebugControlButtons extends React.Component {
           Leave testing2
         </button>
         <br />
+        <br />
         <button onClick={() => uiStore.setTheme(Themes.Default)}>Set default theme</button>
         <button onClick={() => uiStore.setTheme(Themes.Green)}>Set green theme</button>
+        <button onClick={() => uiStore.setTheme(Themes.Blue1)}>Set green blue</button>
+        <br />
         <br />
         <button onClick={() => uiStore.changeLanguage('en')}>Set locale to EN</button>
         <button onClick={() => uiStore.changeLanguage('fi')}>Set locale to FI</button>
@@ -125,28 +134,34 @@ class DevTools extends React.Component {
   static contextType = RootStoreContext
 
   render () {
+    const { networkStore } = this.context
     return (
       <div>
         <DebugControlButtons />
         <br />
         <br />
-        <DebugChannelList />
+        {networkStore.running ? <DebugChannelList /> : null}
       </div>
     )
   }
 }
 
-@observer
+class AppView extends React.Component {
+  render () {
+    return <div>APP VIEW</div>
+  }
+}
+
 class App extends React.Component {
   static contextType = RootStoreContext
   static propTypes = {}
 
   render () {
-    const { uiStore } = this.context
+    const { sessionStore } = this.context
 
     const devTools =
       process.env.NODE_ENV === 'development' ? (
-        <div>
+        <div className="devtools">
           <DevTools />
           <MobxDevTools />
         </div>
@@ -154,16 +169,18 @@ class App extends React.Component {
 
     return (
       <div className="App view">
-        <BackgroundAnimation
-          size={530}
-          circleSize={2}
-          style={{ opacity: 0.8, zIndex: -1 }}
-          theme={{ ...uiStore.theme }} // 'theme' needs to be a new object
+        <PrivateRoute
+          exact
+          path="/"
+          loginPath={'/connect'}
+          isAuthenticated={sessionStore.isAuthenticated}
+          component={AppView}
         />
+        <Route path="/connect" component={LoginView} />
         {devTools}
       </div>
     )
   }
 }
 
-export default hot(module)(App)
+export default hot(module)(observer(App))

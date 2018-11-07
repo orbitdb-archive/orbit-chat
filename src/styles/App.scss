@@ -13,6 +13,9 @@ textarea, input { outline: none; }
   display: flex;
   flex-direction: column;
   transform-style: preserve-3d;
+  width: 100%;
+  height: 100%;
+  position: absolute;
 }
 
 $channel-name-max-height: 5.5vmin;

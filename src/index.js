@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { render } from 'react-dom'
-import { HashRouter } from 'react-router-dom'
+import { HashRouter as Router, Route } from 'react-router-dom'
 
 import { version } from '../package.json'
 
@@ -16,9 +16,11 @@ import 'styles/Main.scss'
 
 render(
   <RootStoreContext.Provider value={new RootStore()}>
-    <HashRouter>
-      <App />
-    </HashRouter>
+    <Router>
+      {/* Render App in a route so it will receive the "location" prop
+          and rerender properly on location changes */}
+      <Route component={App} />
+    </Router>
   </RootStoreContext.Provider>,
   document.getElementById('root')
 )

@@ -9,13 +9,14 @@ import 'styles/BackgroundAnimation.scss'
 const defaultDelay = 0.2
 
 function BackgroundAnimation ({
-  circleSize,
+  circleSize = 2,
   size = Math.min(window.innerWidth, window.innerHeight) / 2,
   startX,
   startY,
   delay = defaultDelay,
   theme,
-  style
+  style,
+  ...rest
 }) {
   const maxSize = size / 2
   const minSize = 32 * (size / 256)
@@ -56,7 +57,7 @@ function BackgroundAnimation ({
     const color = `rgba(${c}, ${c}, ${c}, ${0.5 - (i + 1) * 0.01})` // 0.025
     const mul = Math.random() < 0.5 ? -1 : 1 // randomize between negative and positive pos
     const pos = (minSize + i * inc) * mul // starting position for the dot
-    const dotSize = (circleSize || 1) * (Math.random() * 2) + 1
+    const dotSize = circleSize * (Math.random() * 2) + 1
     const startRadians = Math.floor(Math.random() * 360)
     const keyframes = `@keyframes rot${i} {
         0%   { transform: rotate(${startRadians}deg) translate(${pos}px) rotate(-${startRadians}deg) }
@@ -93,7 +94,7 @@ function BackgroundAnimation ({
   transform += `translate(${adjustedPosition},${adjustedPosition})`
 
   return (
-    <div className="BackgroundAnimation" style={style}>
+    <div className="BackgroundAnimation" style={style} {...rest}>
       <svg className="Rings" width={size} height={size} key="circles" style={theme}>
         <g className="transparent" transform={transform}>
           {circles}

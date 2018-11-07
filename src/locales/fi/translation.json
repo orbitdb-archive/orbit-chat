@@ -1,4 +1,9 @@
 {
   "configuration": "Asetukset",
+  "login": {
+    "nickname": "Nimimerkki",
+    "orLoginWith": "Tai kirjaudu käyttäen",
+    "pressEnterToLogin": "Paina ENTER kirjautuaksesi"
+  },
   "version": "Versio"
 }
