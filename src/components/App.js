@@ -11,6 +11,7 @@ import RootStoreContext from 'context/RootStoreContext'
 import PrivateRoute from 'components/PrivateRoute'
 import LoginView from 'components/LoginView'
 import BackgroundAnimation from 'components/BackgroundAnimation'
+import LoadingView from 'components/LoadingView'
 
 import 'styles/App.scss'
 import 'styles/Scrollbars.scss'
@@ -172,7 +173,7 @@ class App extends React.Component {
   static propTypes = {}
 
   render () {
-    const { sessionStore } = this.context
+    const { sessionStore, uiStore } = this.context
 
     const devTools =
       process.env.NODE_ENV === 'development' ? (
@@ -181,6 +182,8 @@ class App extends React.Component {
           <MobxDevTools />
         </div>
       ) : null
+
+    if (uiStore.loading) return <LoadingView />
 
     return (
       <div className="App view">
@@ -191,7 +194,7 @@ class App extends React.Component {
           isAuthenticated={sessionStore.isAuthenticated}
           component={AppView}
         />
-        <Route path="/connect" component={LoginView} />
+        <Route exact path="/connect" component={LoginView} />
         {devTools}
       </div>
     )

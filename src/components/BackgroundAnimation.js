@@ -72,7 +72,7 @@ function BackgroundAnimation ({
       <circle
         cx={startX || size / 2}
         cy={startY || size / 2}
-        r={dotSize}
+        r={i === rings.length - 1 ? circleSize : dotSize} // Static outer dot size to prevent wobling
         fill={color}
         style={{
           animation: `rot${i} linear`,

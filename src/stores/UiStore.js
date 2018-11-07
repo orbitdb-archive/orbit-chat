@@ -17,6 +17,9 @@ export default class UiStore {
     height: 0
   }
 
+  @observable
+  _loading = []
+
   constructor (rootStore) {
     this.rootStore = rootStore
     this.settingsStore = this.rootStore.settingsStore
@@ -26,6 +29,11 @@ export default class UiStore {
     window.addEventListener('optimizedResize', this.onWindowResize)
 
     this.windowDimensions = this.getWindowDimensions()
+  }
+
+  @computed
+  get loading () {
+    return this._loading.length > 0
   }
 
   @computed
@@ -46,6 +54,18 @@ export default class UiStore {
   @action.bound
   onWindowResize (event) {
     this.windowDimensions = this.getWindowDimensions()
+  }
+
+  @action.bound
+  startLoading (name) {
+    if (this._loading.indexOf(name) !== -1) return
+    this._loading.push(name)
+  }
+
+  @action.bound
+  stopLoading (name) {
+    const idx = this._loading.indexOf(name)
+    this._loading.splice(idx, 1)
   }
 
   setTheme (themeName) {

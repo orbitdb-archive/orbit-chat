@@ -5,5 +5,6 @@
     "orLoginWith": "Tai kirjaudu käyttäen",
     "pressEnterToLogin": "Paina ENTER kirjautuaksesi"
   },
+  "loading": "Ladataan",
   "version": "Versio"
 }
