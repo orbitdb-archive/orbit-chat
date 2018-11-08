@@ -1,7 +1,7 @@
 'use strict'
 
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Switch, Link } from 'react-router-dom'
 import { hot } from 'react-hot-loader'
 import { observer } from 'mobx-react'
 import MobxDevTools from 'mobx-react-devtools'
@@ -12,6 +12,7 @@ import PrivateRoute from 'components/PrivateRoute'
 import LoginView from 'components/LoginView'
 import BackgroundAnimation from 'components/BackgroundAnimation'
 import LoadingView from 'components/LoadingView'
+import ChannelView from 'components/ChannelView'
 
 import 'styles/App.scss'
 import 'styles/Scrollbars.scss'
@@ -90,31 +91,19 @@ class DebugControlButtons extends React.Component {
           disabled={ipfsStore.node || ipfsStore.starting || !sessionStore.username}>
           Use js-ipfs
         </button>
-        <button onClick={() => networkStore.stop()} disabled={!networkStore.running}>
+        <button onClick={() => networkStore.stop()} disabled={!networkStore.isOnline}>
           Stop
         </button>
         <br />
-        <button
-          disabled={!networkStore.running || networkStore.channelNames.indexOf('testing') !== -1}
-          onClick={() => networkStore.joinChannel('testing')}>
-          Join testing
-        </button>
-        <button
-          disabled={!networkStore.running || networkStore.channelNames.indexOf('testing') === -1}
-          onClick={() => networkStore.leaveChannel('testing')}>
-          Leave testing
-        </button>
-        <br />
-        <button
-          disabled={!networkStore.running || networkStore.channelNames.indexOf('testing2') !== -1}
-          onClick={() => networkStore.joinChannel('testing2')}>
-          Join testing2
-        </button>
-        <button
-          disabled={!networkStore.running || networkStore.channelNames.indexOf('testing2') === -1}
-          onClick={() => networkStore.leaveChannel('testing2')}>
-          Leave testing2
-        </button>
+        <Link to="/channel/test1">
+          <button>Channel test1</button>
+        </Link>
+        <Link to="/channel/test2">
+          <button>Channel test2</button>
+        </Link>
+        <Link to="/channel/test3">
+          <button>Channel test3</button>
+        </Link>
         <br />
         <br />
         <button
@@ -152,19 +141,27 @@ class DevTools extends React.Component {
         <DebugControlButtons />
         <br />
         <br />
-        {networkStore.running ? <DebugChannelList /> : null}
+        {/* {networkStore.isOnline ? <DebugChannelList /> : null} */}
       </div>
     )
   }
 }
 
 @observer
-class AppView extends React.Component {
+class DefaultView extends React.Component {
   static contextType = RootStoreContext
+  static propTypes = {}
 
   render () {
     const { uiStore } = this.context
-    return <BackgroundAnimation size={480} theme={{ ...uiStore.theme }} />
+
+    uiStore.setTitle('Orbit')
+
+    return (
+      <div>
+        <BackgroundAnimation size={480} theme={{ ...uiStore.theme }} />
+      </div>
+    )
   }
 }
 
@@ -187,14 +184,22 @@ class App extends React.Component {
 
     return (
       <div className="App view">
-        <PrivateRoute
-          exact
-          path="/"
-          loginPath={'/connect'}
-          isAuthenticated={sessionStore.isAuthenticated}
-          component={AppView}
-        />
-        <Route exact path="/connect" component={LoginView} />
+        <Switch>
+          <Route exact path="/connect" component={LoginView} />
+
+          <PrivateRoute
+            path="/channel/:channel"
+            loginPath={'/connect'}
+            isAuthenticated={sessionStore.isAuthenticated}
+            component={ChannelView}
+          />
+
+          <PrivateRoute
+            loginPath={'/connect'}
+            isAuthenticated={sessionStore.isAuthenticated}
+            component={DefaultView}
+          />
+        </Switch>
         {devTools}
       </div>
     )

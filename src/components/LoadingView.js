@@ -28,6 +28,8 @@ class LoadingView extends React.Component {
       transitionLeaveTimeout: 5000
     }
 
+    uiStore.setTitle('Loading | Orbit')
+
     return (
       <div className="LoadingView">
         <CSSTransitionGroup

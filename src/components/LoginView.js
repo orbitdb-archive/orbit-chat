@@ -45,12 +45,14 @@ class LoginForm extends React.Component {
     this.usernameInput = React.createRef()
   }
 
-  async onSubmit (e) {
+  onSubmit (e) {
     const username = this.usernameInput.current.value.trim()
     this.props.onSubmit(e, username)
   }
 
-  onUportLogin () {}
+  onUportLogin () {
+    logger.warn('Uport Login not implemented')
+  }
 
   onInputChange () {
     const currentLength = this.usernameInput.current.value.length
@@ -118,7 +120,9 @@ class LoginView extends React.Component {
     this.loginForm = React.createRef()
   }
 
-  onConfigure () {}
+  onConfigure () {
+    logger.warn('Settings view not implemented')
+  }
 
   onBackgroundClick () {
     this.loginForm.current.focusUsername()
@@ -145,6 +149,8 @@ class LoginView extends React.Component {
     const { from } = location.state || { from: { pathname: '/' } }
 
     if (sessionStore.isAuthenticated) return <Redirect to={from} />
+
+    uiStore.setTitle('Login | Orbit')
 
     return (
       <div className="LoginView">

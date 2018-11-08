@@ -49,7 +49,7 @@ export default class NetworkStore {
   }
 
   @computed
-  get running () {
+  get isOnline () {
     return this._ipfs && this._orbit
   }
 
@@ -105,7 +105,7 @@ export default class NetworkStore {
   }
 
   async stop () {
-    if (!this.running) return
+    if (!this.isOnline) return
     logger.info('Stopping network')
 
     this.stopOrbit()

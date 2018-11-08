@@ -1,6 +1,6 @@
 'use strict'
 
-import { computed, configure, action, observable, get } from 'mobx'
+import { computed, configure, action, observable, get, reaction } from 'mobx'
 
 import throttleEvent from 'utils/throttleEvent'
 import Logger from 'utils/logger'
@@ -20,6 +20,9 @@ export default class UiStore {
   @observable
   _loading = []
 
+  @observable
+  title = 'Orbit'
+
   constructor (rootStore) {
     this.rootStore = rootStore
     this.settingsStore = this.rootStore.settingsStore
@@ -29,6 +32,13 @@ export default class UiStore {
     window.addEventListener('optimizedResize', this.onWindowResize)
 
     this.windowDimensions = this.getWindowDimensions()
+
+    reaction(
+      () => this.title,
+      title => {
+        document.title = title
+      }
+    )
   }
 
   @computed
@@ -66,6 +76,11 @@ export default class UiStore {
   stopLoading (name) {
     const idx = this._loading.indexOf(name)
     this._loading.splice(idx, 1)
+  }
+
+  @action.bound
+  setTitle (title) {
+    this.title = title
   }
 
   setTheme (themeName) {
