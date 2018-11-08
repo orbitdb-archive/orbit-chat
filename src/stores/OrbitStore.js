@@ -1,6 +1,6 @@
 'use strict'
 
-import { configure, action, observable, reaction } from 'mobx'
+import { action, configure, observable, reaction } from 'mobx'
 import Orbit from 'orbit_'
 
 import Logger from 'utils/logger'

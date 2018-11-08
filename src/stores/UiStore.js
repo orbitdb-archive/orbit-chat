@@ -1,14 +1,12 @@
 'use strict'
 
-import { computed, configure, action, observable, get, reaction } from 'mobx'
+import { action, computed, configure, get, observable, reaction } from 'mobx'
 
 import throttleEvent from 'utils/throttleEvent'
-import Logger from 'utils/logger'
+
 import Themes from 'themes'
 
 configure({ enforceActions: 'observed' })
-
-const logger = new Logger()
 
 export default class UiStore {
   @observable.struct

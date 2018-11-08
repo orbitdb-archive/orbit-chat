@@ -1,18 +1,14 @@
 'use strict'
 
-import { action, configure, observable, reaction, set, get } from 'mobx'
+import { action, configure, get, observable, reaction, set } from 'mobx'
 
 // Important! This import will inject i18n to the whole app
 import i18n from 'config/i18n.config'
-
-import Logger from 'utils/logger'
 
 import defaulNetworkSettings from 'config/network.default.json'
 import defaultUiSettings from 'config/ui.default.json'
 
 configure({ enforceActions: 'observed' })
-
-const logger = new Logger()
 
 export default class SettingsStore {
   constructor (rootStore) {

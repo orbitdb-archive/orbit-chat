@@ -8,11 +8,11 @@ import MobxDevTools from 'mobx-react-devtools'
 
 import RootStoreContext from 'context/RootStoreContext'
 
-import PrivateRoute from 'components/PrivateRoute'
-import LoginView from 'components/LoginView'
 import BackgroundAnimation from 'components/BackgroundAnimation'
-import LoadingView from 'components/LoadingView'
 import ChannelView from 'components/ChannelView'
+import LoadingView from 'components/LoadingView'
+import LoginView from 'components/LoginView'
+import PrivateRoute from 'components/PrivateRoute'
 
 import 'styles/App.scss'
 import 'styles/Scrollbars.scss'

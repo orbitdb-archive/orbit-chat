@@ -1,17 +1,17 @@
 'use strict'
 
 import {
-  configure,
   action,
+  computed,
+  configure,
   get,
   keys,
-  values,
-  set,
-  remove,
   observable,
   reaction,
-  computed,
-  runInAction
+  remove,
+  runInAction,
+  set,
+  values
 } from 'mobx'
 
 import Logger from 'utils/logger'

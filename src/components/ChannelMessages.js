@@ -1,8 +1,8 @@
 'use strict'
 
 import React from 'react'
-import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
 
 function renderMessage (message) {
   return <div key={message.Hash}>{message.Post.content}</div>

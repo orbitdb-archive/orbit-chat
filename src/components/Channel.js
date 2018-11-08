@@ -1,15 +1,15 @@
 'use strict'
 
 import React from 'react'
-import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
 import { Redirect } from 'react-router-dom'
 
 import RootStoreContext from 'context/RootStoreContext'
 
-import ChannelMessages from 'components/ChannelMessages'
 import ChannelControls from 'components/ChannelControls'
+import ChannelMessages from 'components/ChannelMessages'
 
 import Logger from 'utils/logger'
 
@@ -56,7 +56,7 @@ class Channel extends React.Component {
     if (!channel) return null
 
     return (
-      <div className="Channel">
+      <div className="Channel flipped">
         <ChannelMessages messages={channel.messages} theme={{ ...uiStore.theme }} />
         <ChannelControls theme={{ ...uiStore.theme }} channel={channel} />
       </div>

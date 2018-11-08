@@ -4,6 +4,7 @@ import { action, configure, observable } from 'mobx'
 import IPFS from 'ipfs'
 
 import { getJsIpfsConfig } from 'config/ipfs.config'
+
 import Logger from 'utils/logger'
 
 configure({ enforceActions: 'observed' })

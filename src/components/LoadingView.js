@@ -1,8 +1,8 @@
 'use strict'
 
 import React from 'react'
-import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
 import { CSSTransitionGroup } from 'react-transition-group'
 

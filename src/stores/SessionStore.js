@@ -1,6 +1,6 @@
 'use strict'
 
-import { configure, action, observable, computed, runInAction } from 'mobx'
+import { action, configure, observable, computed, runInAction } from 'mobx'
 
 import Logger from 'utils/logger'
 
