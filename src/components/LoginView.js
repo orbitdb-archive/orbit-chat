@@ -128,17 +128,15 @@ class LoginView extends React.Component {
     this.loginForm.current.focusUsername()
   }
 
-  async onLogin (e, username) {
+  onLogin (e, username) {
     const { sessionStore } = this.context
 
     e.preventDefault()
 
-    try {
-      if (username !== '') {
-        await sessionStore.login({ username })
-      }
-    } catch (e) {
-      logger.error(e)
+    if (username !== '') {
+      sessionStore.login({ username }).catch(e => {
+        logger.error(e)
+      })
     }
   }
 

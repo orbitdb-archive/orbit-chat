@@ -33,28 +33,6 @@ class DebugChannelList extends React.Component {
             <li key={channel.name}>
               <strong>Channel name: {channel.name}</strong> <br />
               <strong>Peers: {channel.peers.length}</strong> <br />
-              <strong>Messages: </strong>
-              <button
-                disabled={channel.unreadMessages.length === 0}
-                onClick={channel.markAllMessagesAsRead}>
-                Mark all as read
-              </button>
-              <ul>
-                {channel.messages.map((m, idx) => (
-                  <li key={idx}>
-                    {m.Post.content}
-                    {m.unread ? '*NEW*' : ''}
-                    {m.unread ? (
-                      <button
-                        onClick={() => {
-                          channel.markMessageAsRead(m)
-                        }}>
-                        R
-                      </button>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
             </li>
           ))}
         </ul>
@@ -141,7 +119,7 @@ class DevTools extends React.Component {
         <DebugControlButtons />
         <br />
         <br />
-        {/* {networkStore.isOnline ? <DebugChannelList /> : null} */}
+        {networkStore.isOnline ? <DebugChannelList /> : null}
       </div>
     )
   }

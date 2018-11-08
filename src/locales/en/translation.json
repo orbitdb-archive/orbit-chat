@@ -1,4 +1,7 @@
 {
+  "channel": {
+    "sendMessagePlaceholder": "Type a message..."
+  },
   "configuration": "Configuration",
   "login": {
     "nickname": "Nickname",

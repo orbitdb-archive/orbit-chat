@@ -1,4 +1,7 @@
 {
+  "channel": {
+    "sendMessagePlaceholder": "Kirjoita viesti..."
+  },
   "configuration": "Asetukset",
   "login": {
     "nickname": "Nimimerkki",

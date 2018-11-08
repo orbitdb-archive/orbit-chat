@@ -64,7 +64,7 @@ export default class SettingsStore {
       const { networkKey, uiKey } = this.settingsKeys
       networkSettings = JSON.parse(localStorage.getItem(networkKey)) || {}
       uiSettings = JSON.parse(localStorage.getItem(uiKey)) || {}
-    } catch (e) {}
+    } catch (err) {}
 
     set(this.networkSettings, Object.assign({}, defaulNetworkSettings, networkSettings))
     set(this.uiSettings, Object.assign({}, defaultUiSettings, uiSettings))
@@ -74,14 +74,14 @@ export default class SettingsStore {
     try {
       const { networkKey } = this.settingsKeys
       localStorage.setItem(networkKey, JSON.stringify(this.networkSettings))
-    } catch (e) {}
+    } catch (err) {}
   }
 
   saveUiSettings () {
     try {
       const { uiKey } = this.settingsKeys
       localStorage.setItem(uiKey, JSON.stringify(this.uiSettings))
-    } catch (e) {}
+    } catch (err) {}
   }
 
   updateLanguage (lng) {

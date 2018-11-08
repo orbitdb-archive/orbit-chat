@@ -1,6 +1,18 @@
 'use strict'
 
-import { configure, action, observable, reaction, computed, runInAction } from 'mobx'
+import {
+  configure,
+  action,
+  get,
+  keys,
+  values,
+  set,
+  remove,
+  observable,
+  reaction,
+  computed,
+  runInAction
+} from 'mobx'
 
 import Logger from 'utils/logger'
 
@@ -11,6 +23,10 @@ const logger = new Logger()
 export default class NetworkStore {
   constructor (rootStore) {
     this.rootStore = rootStore
+    this.startLoading = this.rootStore.uiStore.startLoading
+    this.stopLoading = this.rootStore.uiStore.stopLoading
+
+    this.channels = observable.object({})
 
     this.onUsernameChanged = this.onUsernameChanged.bind(this)
 
@@ -29,9 +45,6 @@ export default class NetworkStore {
 
   @observable
   _orbit = null
-
-  @observable
-  channels = {}
 
   @observable
   swarmPeers = []
@@ -53,14 +66,16 @@ export default class NetworkStore {
     return this._ipfs && this._orbit
   }
 
-  @computed
   get channelNames () {
-    return Object.keys(this.channels)
+    return keys(this.channels)
   }
 
-  @computed
   get channelsAsArray () {
-    return Object.values(this.channels)
+    return values(this.channels)
+  }
+
+  getChannel (channelName) {
+    return get(this.channels, channelName)
   }
 
   @action.bound
@@ -83,15 +98,16 @@ export default class NetworkStore {
 
   @action.bound
   onJoinedChannel (channelName) {
+    this.stopLoading('channel:join')
     if (this.channelNames.indexOf(channelName) !== -1) return
     const channelSetup = Object.assign({}, this.orbit.channels[channelName], { store: this })
-    this.channels[channelName] = new Channel(channelSetup)
+    set(this.channels, channelName, new Channel(channelSetup))
   }
 
   @action.bound
   onLeftChannel (channelName) {
-    this.channels[channelName].stop()
-    delete this.channels[channelName]
+    this.stopLoading('channel:leave')
+    this.removeChannel(channelName)
   }
 
   @action.bound
@@ -116,9 +132,8 @@ export default class NetworkStore {
 
   @action.bound
   stopOrbit () {
-    this.channelsAsArray.map(c => c.stop())
+    this.channelNames.map(this.removeChannel)
 
-    this.channels = {}
     this.swarmPeers = []
 
     if (this.orbit) {
@@ -130,12 +145,21 @@ export default class NetworkStore {
 
   joinChannel (channelName) {
     if (!this.orbit || this.channelNames.indexOf(channelName) !== -1) return
+    this.startLoading('channel:join')
     this.orbit.join(channelName)
   }
 
   leaveChannel (channelName) {
     if (!this.orbit || this.channelNames.indexOf(channelName) === -1) return
+    this.startLoading('channel:leave')
     this.orbit.leave(channelName)
+  }
+
+  @action.bound
+  removeChannel (channelName) {
+    const channel = get(this.channels, channelName)
+    channel.stop()
+    remove(this.channels, channelName)
   }
 }
 
@@ -156,6 +180,7 @@ class Channel {
     this.feed.events.once('ready', this.onReady.bind(this))
     this.feed.events.on('error', this.onError.bind(this))
     this.feed.events.on('replicated', this.onReplicated.bind(this))
+    this.feed.events.on('write', this.onWrite.bind(this))
 
     this.stop = this.stop.bind(this)
   }
@@ -218,6 +243,11 @@ class Channel {
     this.updateMessages(this.messages.length + 64)
   }
 
+  @action
+  onWrite (channel, logHash, message) {
+    this.messages.push(this.parseMessage(message[0]))
+  }
+
   onError (err) {
     logger.error(this.channelName, err)
   }
@@ -228,6 +258,7 @@ class Channel {
     this.feed.events.removeListener('ready', this.onReady)
     this.feed.events.removeListener('error', this.onError)
     this.feed.events.removeListener('replicated', this.onReplicated)
+    this.feed.events.removeListener('write', this.onWrite)
   }
 
   getMessages (amount) {
@@ -240,19 +271,23 @@ class Channel {
     return this.feed
       .iterator(options)
       .collect()
-      .map(e => {
-        try {
-          const message = JSON.parse(e.payload.value)
-          message.Entry = e
-          return message
-        } catch (err) {
-          logger.warn('Failed to parse payload from message:', err)
-        }
-      })
+      .map(this.parseMessage)
       .filter(e => e !== undefined)
+  }
+
+  parseMessage (entry) {
+    try {
+      return JSON.parse(entry.payload.value)
+    } catch (err) {
+      logger.warn('Failed to parse payload from message:', err)
+    }
   }
 
   getPeers () {
     return this.store.ipfs.pubsub.peers(this.feed.address.toString())
+  }
+
+  async sendMessage (text) {
+    await this.store.orbit.send(this.name, text)
   }
 }

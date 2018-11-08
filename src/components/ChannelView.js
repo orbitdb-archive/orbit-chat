@@ -1,6 +1,7 @@
 'use strict'
 
 import React from 'react'
+import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
 import { withNamespaces } from 'react-i18next'
 import { Redirect } from 'react-router-dom'
@@ -24,7 +25,7 @@ class ChannelView extends React.Component {
     const { ipfsStore, networkStore } = this.context
 
     if (!networkStore.isOnline) {
-      if (window.confirm(`Start network?`)) {
+      if (window.confirm(`__ Start network? __`)) {
         ipfsStore.useJsIPFS()
       } else {
         this.setState({ shouldRedirectToIndex: true })
@@ -34,24 +35,24 @@ class ChannelView extends React.Component {
 
   render () {
     const { uiStore } = this.context
+    const { shouldRedirectToIndex } = this.state
     const {
       match: {
-        params: { channel }
+        params: { channel: channelName }
       }
     } = this.props
-    const { shouldRedirectToIndex } = this.state
 
     if (shouldRedirectToIndex) return <Redirect to="/" />
 
-    uiStore.setTitle(`#${channel} | Orbit`)
+    uiStore.setTitle(`#${channelName} | Orbit`)
 
     return (
       <div className="ChannelView">
         {/* Add 'key' prop so react will create a new Channel component on 'channel' changes */}
-        <Channel channelName={channel} key={channel} />
+        <Channel channelName={channelName} key={channelName} />
       </div>
     )
   }
 }
 
-export default withNamespaces()(ChannelView)
+export default withNamespaces()(observer(ChannelView))
