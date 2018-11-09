@@ -7,6 +7,7 @@ import { withNamespaces } from 'react-i18next'
 import { CSSTransitionGroup } from 'react-transition-group'
 
 import RootStoreContext from 'context/RootStoreContext'
+
 import BackgroundAnimation from 'components/BackgroundAnimation'
 
 import 'styles/LoadingView.scss'

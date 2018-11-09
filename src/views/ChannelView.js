@@ -8,7 +8,7 @@ import { withNamespaces } from 'react-i18next'
 
 import RootStoreContext from 'context/RootStoreContext'
 
-import Channel from 'components/Channel'
+import Channel from 'containers/Channel'
 
 import 'styles/ChannelView.scss'
 

@@ -16,6 +16,7 @@ const config = {
     alias: {
       components: path.join(__dirname, './src/components/'),
       config: path.join(__dirname, './src/config/'),
+      containers: path.join(__dirname, './src/containers/'),
       context: path.join(__dirname, './src/context/'),
       fonts: path.join(__dirname, './src/fonts/'),
       images: path.join(__dirname, './src/images/'),
@@ -23,7 +24,8 @@ const config = {
       stores: path.join(__dirname, './src/stores/'),
       styles: path.join(__dirname, './src/styles/'),
       themes: path.join(__dirname, './src/themes/'),
-      utils: path.join(__dirname, './src/utils/')
+      utils: path.join(__dirname, './src/utils/'),
+      views: path.join(__dirname, './src/views/')
     }
   },
   module: {

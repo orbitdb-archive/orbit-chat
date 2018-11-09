@@ -10,6 +10,7 @@ import { CSSTransitionGroup } from 'react-transition-group'
 import { version } from '../../package.json'
 
 import RootStoreContext from 'context/RootStoreContext'
+
 import BackgroundAnimation from 'components/BackgroundAnimation'
 
 import Logger from 'utils/logger'

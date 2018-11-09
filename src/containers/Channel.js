@@ -8,7 +8,8 @@ import { Redirect } from 'react-router-dom'
 
 import RootStoreContext from 'context/RootStoreContext'
 
-import ChannelControls from 'components/ChannelControls'
+import ChannelControls from 'containers/ChannelControls'
+
 import ChannelMessages from 'components/ChannelMessages'
 
 import Logger from 'utils/logger'

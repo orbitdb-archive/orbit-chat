@@ -9,7 +9,7 @@ import { version } from '../package.json'
 import RootStore from 'stores/RootStore'
 import RootStoreContext from 'context/RootStoreContext'
 
-import App from 'components/App'
+import App from 'views/App'
 
 import 'styles/normalize.css'
 import 'styles/Main.scss'
