@@ -4,13 +4,11 @@ import {
   action,
   computed,
   configure,
-  get,
   keys,
   observable,
   reaction,
   remove,
   runInAction,
-  set,
   values
 } from 'mobx'
 
@@ -26,8 +24,6 @@ export default class NetworkStore {
     this.startLoading = this.rootStore.uiStore.startLoading
     this.stopLoading = this.rootStore.uiStore.stopLoading
 
-    this.channels = observable.object({})
-
     this.onUsernameChanged = this.onUsernameChanged.bind(this)
 
     // React to ipfs changes
@@ -39,6 +35,9 @@ export default class NetworkStore {
     // React to user changes
     reaction(() => this.rootStore.sessionStore.username, this.onUsernameChanged)
   }
+
+  @observable
+  channels = {}
 
   @observable
   _ipfs = null
@@ -75,7 +74,7 @@ export default class NetworkStore {
   }
 
   getChannel (channelName) {
-    return get(this.channels, channelName)
+    return this.channels[channelName]
   }
 
   @action.bound
@@ -101,7 +100,7 @@ export default class NetworkStore {
     this.stopLoading('channel:join')
     if (this.channelNames.indexOf(channelName) !== -1) return
     const channelSetup = Object.assign({}, this.orbit.channels[channelName], { store: this })
-    set(this.channels, channelName, new Channel(channelSetup))
+    this.channels[channelName] = new Channel(channelSetup)
   }
 
   @action.bound
@@ -157,7 +156,7 @@ export default class NetworkStore {
 
   @action.bound
   removeChannel (channelName) {
-    const channel = get(this.channels, channelName)
+    const channel = this.channels[channelName]
     channel.stop()
     remove(this.channels, channelName)
   }

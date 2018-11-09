@@ -87,22 +87,34 @@ class DebugControlButtons extends React.Component {
         <br />
         <button
           disabled={uiStore.themeName === 'Default'}
-          onClick={() => uiStore.setTheme('Default')}>
+          onClick={() => (uiStore.themeName = 'Default')}>
           Set default theme
         </button>
-        <button disabled={uiStore.themeName === 'Green'} onClick={() => uiStore.setTheme('Green')}>
+        <button
+          disabled={uiStore.themeName === 'Green'}
+          onClick={() => (uiStore.themeName = 'Green')}>
           Set green theme
         </button>
-        <button disabled={uiStore.themeName === 'Blue1'} onClick={() => uiStore.setTheme('Blue1')}>
+        <button
+          disabled={uiStore.themeName === 'Blue1'}
+          onClick={() => (uiStore.themeName = 'Blue1')}>
           Set blue theme
         </button>
         <br />
-        <br />
-        <button disabled={uiStore.language === 'en'} onClick={() => uiStore.setLanguage('en')}>
+        <button disabled={uiStore.language === 'en'} onClick={() => (uiStore.language = 'en')}>
           Set locale to EN
         </button>
-        <button disabled={uiStore.language === 'fi'} onClick={() => uiStore.setLanguage('fi')}>
+        <button disabled={uiStore.language === 'fi'} onClick={() => (uiStore.language = 'fi')}>
           Set locale to FI
+        </button>
+        <br />
+        <button disabled={uiStore.useLargeMessage} onClick={() => (uiStore.useLargeMessage = true)}>
+          Set useLargeMessage to true
+        </button>
+        <button
+          disabled={!uiStore.useLargeMessage}
+          onClick={() => (uiStore.useLargeMessage = false)}>
+          Set useLargeMessage to false
         </button>
         <br />
       </div>

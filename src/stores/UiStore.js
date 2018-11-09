@@ -1,6 +1,6 @@
 'use strict'
 
-import { action, computed, configure, get, observable, reaction } from 'mobx'
+import { action, computed, configure, observable, reaction } from 'mobx'
 
 import throttleEvent from 'utils/throttleEvent'
 
@@ -40,13 +40,17 @@ export default class UiStore {
   }
 
   @computed
-  get loading () {
-    return this._loading.length > 0
+  get language () {
+    return this.settingsStore.uiSettings.language
+  }
+
+  set language (val) {
+    this.settingsStore.uiSettings.language = val
   }
 
   @computed
-  get themeName () {
-    return get(this.settingsStore.uiSettings, 'themeName')
+  get loading () {
+    return this._loading.length > 0
   }
 
   @computed
@@ -55,8 +59,21 @@ export default class UiStore {
   }
 
   @computed
-  get language () {
-    return get(this.settingsStore.uiSettings, 'language')
+  get themeName () {
+    return this.settingsStore.uiSettings.themeName
+  }
+
+  set themeName (val) {
+    this.settingsStore.uiSettings.themeName = val
+  }
+
+  @computed
+  get useLargeMessage () {
+    return this.settingsStore.uiSettings.useLargeMessage
+  }
+
+  set useLargeMessage (val) {
+    this.settingsStore.uiSettings.useLargeMessage = val
   }
 
   @action.bound
@@ -79,14 +96,6 @@ export default class UiStore {
   @action.bound
   setTitle (title) {
     this.title = title
-  }
-
-  setTheme (themeName) {
-    this.updateUiSettings({ themeName })
-  }
-
-  setLanguage (language) {
-    this.updateUiSettings({ language })
   }
 
   getWindowDimensions () {
