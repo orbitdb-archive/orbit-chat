@@ -2,9 +2,11 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
+import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
 
 import SendMessage from 'components/SendMessage'
+import Spinner from 'components/Spinner'
 
 import Logger from 'utils/logger'
 
@@ -36,13 +38,18 @@ class ChannelControls extends React.Component {
   }
 
   render () {
-    const { t, theme } = this.props
+    const { t, theme, channel } = this.props
     return (
       <div className="Controls">
+        <Spinner
+          loading={channel.loadingNewMessages}
+          color="rgba(255, 255, 255, 0.7)"
+          size="16px"
+        />
         <SendMessage t={t} theme={theme} onSendMessage={this.sendMessage} />
       </div>
     )
   }
 }
 
-export default withNamespaces()(ChannelControls)
+export default withNamespaces()(observer(ChannelControls))

@@ -34,6 +34,7 @@ class DebugChannelList extends React.Component {
             <li key={channel.name}>
               <strong>Channel name: {channel.name}</strong> <br />
               <strong>Peers: {channel.peers.length}</strong> <br />
+              <button onClick={() => channel.leave()}>Leave</button>
             </li>
           ))}
         </ul>

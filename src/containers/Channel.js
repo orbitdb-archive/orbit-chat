@@ -9,8 +9,7 @@ import { Redirect } from 'react-router-dom'
 import RootStoreContext from 'context/RootStoreContext'
 
 import ChannelControls from 'containers/ChannelControls'
-
-import ChannelMessages from 'components/ChannelMessages'
+import ChannelMessages from 'containers/ChannelMessages'
 
 import Logger from 'utils/logger'
 
@@ -52,13 +51,13 @@ class Channel extends React.Component {
 
     if (shouldRedirectToIndex) return <Redirect to="/" />
 
-    const channel = networkStore.getChannel(channelName)
+    const channel = networkStore.channels[channelName]
 
     if (!channel) return null
 
     return (
       <div className="Channel flipped">
-        <ChannelMessages messages={channel.messages} theme={{ ...uiStore.theme }} />
+        <ChannelMessages theme={{ ...uiStore.theme }} channel={channel} />
         <ChannelControls theme={{ ...uiStore.theme }} channel={channel} />
       </div>
     )

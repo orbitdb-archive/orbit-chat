@@ -1,16 +1,8 @@
 'use strict'
 
-import {
-  action,
-  computed,
-  configure,
-  keys,
-  observable,
-  reaction,
-  remove,
-  runInAction,
-  values
-} from 'mobx'
+import { action, computed, configure, keys, observable, reaction, values } from 'mobx'
+
+import ChannelStore from 'stores/ChannelStore'
 
 import Logger from 'utils/logger'
 
@@ -73,10 +65,6 @@ export default class NetworkStore {
     return values(this.channels)
   }
 
-  getChannel (channelName) {
-    return this.channels[channelName]
-  }
-
   @action.bound
   onIpfsChanged (newIpfs) {
     this._ipfs = newIpfs
@@ -99,8 +87,8 @@ export default class NetworkStore {
   onJoinedChannel (channelName) {
     this.stopLoading('channel:join')
     if (this.channelNames.indexOf(channelName) !== -1) return
-    const channelSetup = Object.assign({}, this.orbit.channels[channelName], { store: this })
-    this.channels[channelName] = new Channel(channelSetup)
+    const channelSetup = Object.assign({}, this.orbit.channels[channelName], { network: this })
+    this.channels[channelName] = new ChannelStore(channelSetup)
   }
 
   @action.bound
@@ -156,137 +144,7 @@ export default class NetworkStore {
 
   @action.bound
   removeChannel (channelName) {
-    const channel = this.channels[channelName]
-    channel.stop()
-    remove(this.channels, channelName)
-  }
-}
-
-class Channel {
-  @observable
-  messages = []
-
-  @observable
-  peers = []
-
-  constructor ({ store, feed, name }) {
-    this.store = store
-    this.feed = feed
-    this.name = name
-
-    this.peerInterval = setInterval(this.updatePeers, 1000)
-
-    this.feed.events.once('ready', this.onReady.bind(this))
-    this.feed.events.on('error', this.onError.bind(this))
-    this.feed.events.on('replicated', this.onReplicated.bind(this))
-    this.feed.events.on('write', this.onWrite.bind(this))
-
-    this.stop = this.stop.bind(this)
-  }
-
-  @computed
-  get messageHashesAndTimestamps () {
-    return this.messages.map(m => [m.Hash, m.Post.meta.ts])
-  }
-
-  @computed
-  get readMessages () {
-    return this.messages.filter(m => !m.unread)
-  }
-
-  @computed
-  get unreadMessages () {
-    return this.messages.filter(m => m.unread)
-  }
-
-  @action.bound
-  updateMessages (amount) {
-    const oldHashesAndTimestamps = this.messageHashesAndTimestamps
-    const messages = this.getMessages(amount).map(m => {
-      // Check which messages are new and flag accordingly
-      oldHashesAndTimestamps.indexOf([m.Hash, m.Post.meta.ts]) === -1
-        ? (m.unread = true)
-        : (m.unread = false)
-      return m
-    })
-
-    this.messages = messages
-  }
-
-  @action.bound
-  async updatePeers () {
-    const peers = await this.getPeers()
-    runInAction(() => {
-      this.peers = peers
-    })
-  }
-
-  @action.bound
-  markMessageAsRead (message) {
-    message.unread = false
-  }
-
-  @action.bound
-  markAllMessagesAsRead () {
-    this.messages = this.messages.map(m => {
-      m.unread = false
-      return m
-    })
-  }
-
-  onReady () {
-    this.updateMessages(-1)
-  }
-
-  onReplicated () {
-    this.updateMessages(this.messages.length + 64)
-  }
-
-  @action
-  onWrite (channel, logHash, message) {
-    this.messages.push(this.parseMessage(message[0]))
-  }
-
-  onError (err) {
-    logger.error(this.channelName, err)
-  }
-
-  stop () {
-    clearInterval(this.peerInterval)
-
-    this.feed.events.removeListener('ready', this.onReady)
-    this.feed.events.removeListener('error', this.onError)
-    this.feed.events.removeListener('replicated', this.onReplicated)
-    this.feed.events.removeListener('write', this.onWrite)
-  }
-
-  getMessages (amount) {
-    const options = {
-      limit: amount,
-      lt: null,
-      gte: null
-    }
-
-    return this.feed
-      .iterator(options)
-      .collect()
-      .map(this.parseMessage)
-      .filter(e => e !== undefined)
-  }
-
-  parseMessage (entry) {
-    try {
-      return JSON.parse(entry.payload.value)
-    } catch (err) {
-      logger.warn('Failed to parse payload from message:', err)
-    }
-  }
-
-  getPeers () {
-    return this.store.ipfs.pubsub.peers(this.feed.address.toString())
-  }
-
-  async sendMessage (text) {
-    await this.store.orbit.send(this.name, text)
+    this.channels[channelName].stop()
+    delete this.channels[channelName]
   }
 }
