@@ -1,11 +1,10 @@
 {
   "themeName": "Default",
   "language": "en",
-  "useEmojis": true,
+  "leftSidePanel": true,
   "colorifyUsernames": true,
-  "font": "Lato",
-  "monospaceFont": "Roboto Mono",
+  "useEmojis": true,
+  "emojiSet": "emojione",
   "useMonospaceFont": false,
-  "leftSidePanel": false,
   "useLargeMessage": false
 }

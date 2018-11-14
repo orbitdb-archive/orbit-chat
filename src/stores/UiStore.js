@@ -2,7 +2,7 @@
 
 import { action, computed, configure, observable, reaction } from 'mobx'
 
-import throttleEvent from 'utils/throttleEvent'
+import throttleEvent from 'utils/throttle-event'
 
 import Themes from 'themes'
 
@@ -68,12 +68,48 @@ export default class UiStore {
   }
 
   @computed
+  get colorifyUsernames () {
+    return this.settingsStore.uiSettings.colorifyUsernames
+  }
+
+  set colorifyUsernames (val) {
+    this.settingsStore.uiSettings.colorifyUsernames = val
+  }
+
+  @computed
+  get useEmojis () {
+    return this.settingsStore.uiSettings.useEmojis
+  }
+
+  set useEmojis (val) {
+    this.settingsStore.uiSettings.useEmojis = val
+  }
+
+  @computed
+  get emojiSet () {
+    return this.settingsStore.uiSettings.emojiSet
+  }
+
+  set emojiSet (val) {
+    this.settingsStore.uiSettings.emojiSet = val
+  }
+
+  @computed
   get useLargeMessage () {
     return this.settingsStore.uiSettings.useLargeMessage
   }
 
   set useLargeMessage (val) {
     this.settingsStore.uiSettings.useLargeMessage = val
+  }
+
+  @computed
+  get useMonospaceFont () {
+    return this.settingsStore.uiSettings.useMonospaceFont
+  }
+
+  set useMonospaceFont (val) {
+    this.settingsStore.uiSettings.useMonospaceFont = val
   }
 
   @action.bound

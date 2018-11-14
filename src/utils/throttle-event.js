@@ -1,6 +1,6 @@
 'use strict'
 
-function throttleEvent (type, name, obj) {
+export default function throttleEvent (type, name, obj) {
   obj = obj || window
   let running = false
   const func = function () {
@@ -13,5 +13,3 @@ function throttleEvent (type, name, obj) {
   }
   obj.addEventListener(type, func)
 }
-
-export default throttleEvent

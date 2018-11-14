@@ -8,42 +8,41 @@ import RootStoreContext from 'context/RootStoreContext'
 
 import MessageRow from 'containers/MessageRow'
 
-import Logger from 'utils/logger'
+import FirstMessage from 'components/FirstMessage'
+import MessageDateSeparator from 'components/MessageDateSeparator'
 
-const logger = new Logger()
+function ChannelMessages ({ channel, ...rest }, { uiStore, sessionStore }) {
+  const { colorifyUsernames, useLargeMessage, useMonospaceFont } = uiStore
 
-function ChannelMessages ({ channel }, { uiStore }) {
   let prevDate
 
   // Reduce so we can put the date separators in
-  const messageEls = channel.messages.reduce((els, m) => {
-    const date = new Date(m.Post.meta.ts)
+  const messageEls = channel.messages.reduce((els, message) => {
+    const date = new Date(message.Post.meta.ts)
+
     if (date.getDate() !== prevDate) {
       prevDate = date.getDate()
-      // Add date separator
-      els.push(
-        <div className="dateSeparator" key={date}>
-          {date.toDateString()}
-        </div>
-      )
+      els.push(<MessageDateSeparator key={date} date={date} />)
     }
 
-    // Add the message
-    els.push(<MessageRow key={m.Hash} message={m} useLargeMessage={uiStore.useLargeMessage} />)
+    els.push(
+      <MessageRow
+        key={message.Hash}
+        message={message}
+        colorifyUsernames={colorifyUsernames}
+        useLargeMessage={useLargeMessage}
+        useMonospaceFont={useMonospaceFont}
+        highlightWords={[sessionStore.username]}
+        {...rest}
+      />
+    )
 
     return els
   }, [])
 
   // Add an element to the beginning of messages to indicate whether there are
   // older messages or we are at the beginning of the channels history
-  messageEls.unshift(
-    <div
-      className="firstMessage"
-      key="firstMessage"
-      onClick={() => logger.warn('loadOlderMessages not implemented')}>
-      {channel.loadingHistory ? `Loading history...` : `Beginning of #${channel.name}`}
-    </div>
-  )
+  messageEls.unshift(<FirstMessage key="firstMessage" channel={channel} />)
 
   return <div className="Messages">{messageEls}</div>
 }

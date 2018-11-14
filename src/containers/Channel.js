@@ -55,10 +55,17 @@ class Channel extends React.Component {
 
     if (!channel) return null
 
+    const props = {
+      theme: { ...uiStore.theme },
+      channel,
+      useEmojis: uiStore.useEmojis,
+      emojiSet: uiStore.emojiSet
+    }
+
     return (
       <div className="Channel flipped">
-        <ChannelMessages theme={{ ...uiStore.theme }} channel={channel} />
-        <ChannelControls theme={{ ...uiStore.theme }} channel={channel} />
+        <ChannelMessages {...props} />
+        <ChannelControls {...props} />
       </div>
     )
   }

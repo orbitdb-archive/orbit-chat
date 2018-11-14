@@ -1,0 +1,28 @@
+.EmojiPicker {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  position: absolute;
+  padding: 4px;
+  margin: 0 12px 0 5px;
+  list-style: none;
+  background-color: #404040;
+  border: 1px solid #1c1c1c;
+
+  > * {
+    display: flex;
+    padding: 1px;
+  }
+
+  > *:hover {
+    padding: 0;
+    // background-color: #5c5c5c;
+    border: 1px solid #363636;
+  }
+
+  .selected {
+    padding: 0;
+    background-color: #5c5c5c;
+    border: 1px solid #363636;
+  }
+}

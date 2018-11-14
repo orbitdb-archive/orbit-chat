@@ -86,6 +86,7 @@ class DebugControlButtons extends React.Component {
         </Link>
         <br />
         <br />
+
         <button
           disabled={uiStore.themeName === 'Default'}
           onClick={() => (uiStore.themeName = 'Default')}>
@@ -101,14 +102,69 @@ class DebugControlButtons extends React.Component {
           onClick={() => (uiStore.themeName = 'Blue1')}>
           Set blue theme
         </button>
+
         <br />
+
         <button disabled={uiStore.language === 'en'} onClick={() => (uiStore.language = 'en')}>
           Set locale to EN
         </button>
         <button disabled={uiStore.language === 'fi'} onClick={() => (uiStore.language = 'fi')}>
           Set locale to FI
         </button>
+
         <br />
+
+        <button
+          disabled={uiStore.colorifyUsernames}
+          onClick={() => (uiStore.colorifyUsernames = true)}>
+          Set colorifyUsernames to true
+        </button>
+        <button
+          disabled={!uiStore.colorifyUsernames}
+          onClick={() => (uiStore.colorifyUsernames = false)}>
+          Set colorifyUsernames to false
+        </button>
+
+        <br />
+
+        <button disabled={uiStore.useEmojis} onClick={() => (uiStore.useEmojis = true)}>
+          Set useEmojis to true
+        </button>
+        <button disabled={!uiStore.useEmojis} onClick={() => (uiStore.useEmojis = false)}>
+          Set useEmojis to false
+        </button>
+
+        <br />
+
+        <button
+          disabled={uiStore.emojiSet === 'emojione'}
+          onClick={() => (uiStore.emojiSet = 'emojione')}>
+          Set emojiSet to emojione
+        </button>
+        <button
+          disabled={uiStore.emojiSet === 'google'}
+          onClick={() => (uiStore.emojiSet = 'google')}>
+          Set emojiSet to google
+        </button>
+        <button
+          disabled={uiStore.emojiSet === 'apple'}
+          onClick={() => (uiStore.emojiSet = 'apple')}>
+          Set emojiSet to apple
+        </button>
+        <br />
+        <button
+          disabled={uiStore.emojiSet === 'facebook'}
+          onClick={() => (uiStore.emojiSet = 'facebook')}>
+          Set emojiSet to facebook
+        </button>
+        <button
+          disabled={uiStore.emojiSet === 'twitter'}
+          onClick={() => (uiStore.emojiSet = 'twitter')}>
+          Set emojiSet to twitter
+        </button>
+
+        <br />
+
         <button disabled={uiStore.useLargeMessage} onClick={() => (uiStore.useLargeMessage = true)}>
           Set useLargeMessage to true
         </button>
@@ -117,6 +173,21 @@ class DebugControlButtons extends React.Component {
           onClick={() => (uiStore.useLargeMessage = false)}>
           Set useLargeMessage to false
         </button>
+
+        <br />
+
+        <button
+          disabled={uiStore.useMonospaceFont}
+          onClick={() => (uiStore.useMonospaceFont = true)}>
+          Set useMonospaceFont to true
+        </button>
+        <button
+          disabled={!uiStore.useMonospaceFont}
+          onClick={() => (uiStore.useMonospaceFont = false)}>
+          Set useMonospaceFont to false
+        </button>
+
+        <br />
         <br />
       </div>
     )

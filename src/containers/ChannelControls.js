@@ -14,8 +14,6 @@ const logger = new Logger()
 
 class ChannelControls extends React.Component {
   static propTypes = {
-    t: PropTypes.func.isRequired,
-    theme: PropTypes.object.isRequired,
     channel: PropTypes.object.isRequired
   }
 
@@ -38,7 +36,7 @@ class ChannelControls extends React.Component {
   }
 
   render () {
-    const { t, theme, channel } = this.props
+    const { channel, ...rest } = this.props
     return (
       <div className="Controls">
         <Spinner
@@ -46,7 +44,7 @@ class ChannelControls extends React.Component {
           color="rgba(255, 255, 255, 0.7)"
           size="16px"
         />
-        <SendMessage t={t} theme={theme} onSendMessage={this.sendMessage} />
+        <SendMessage onSendMessage={this.sendMessage} {...rest} />
       </div>
     )
   }
