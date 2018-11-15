@@ -48,8 +48,7 @@ class ChannelView extends React.Component {
 
     return (
       <div className="ChannelView">
-        {/* Add 'key' prop so react will create a new Channel component on 'channel' changes */}
-        <Channel channelName={channelName} key={channelName} />
+        <Channel channelName={channelName} />
       </div>
     )
   }

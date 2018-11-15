@@ -26,6 +26,14 @@ class Channel extends React.Component {
   state = { shouldRedirectToIndex: false }
 
   componentDidMount () {
+    this.checkNetworkAndChannel()
+  }
+
+  componentDidUpdate () {
+    this.checkNetworkAndChannel()
+  }
+
+  checkNetworkAndChannel () {
     const { networkStore } = this.context
     const { channelName } = this.props
 
