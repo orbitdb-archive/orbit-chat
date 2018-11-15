@@ -269,8 +269,9 @@ input[type=button], .channelOptionsButton {
   position: relative;
   box-sizing: border-box;
   width: 100%;
-  overflow: auto;
   transform-style: preserve-3d;
+  overflow: hidden;
+  overflow-y: scroll;
 
   .dateSeparator {
     display: flex;
@@ -298,6 +299,11 @@ input[type=button], .channelOptionsButton {
     padding: 0.5em;
     user-select: none;
     cursor: default;
+  }
+
+  .messagesEnd {
+    display: block;
+    height: 0;
   }
 
 }

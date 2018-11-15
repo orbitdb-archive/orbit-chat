@@ -2,11 +2,12 @@
 
 import { action, computed, configure, observable, reaction } from 'mobx'
 
-import throttleEvent from 'utils/throttle-event'
+import { throttleEvent } from 'utils/throttle'
 
 import Themes from 'themes'
 
 configure({ enforceActions: 'observed' })
+throttleEvent('resize', 'optimizedResize', window)
 
 export default class UiStore {
   @observable.struct
@@ -25,7 +26,6 @@ export default class UiStore {
     this.rootStore = rootStore
     this.settingsStore = this.rootStore.settingsStore
 
-    throttleEvent('resize', 'optimizedResize')
     window.addEventListener('optimizedResize', this.onWindowResize)
 
     this.windowDimensions = this.getWindowDimensions()
