@@ -39,11 +39,7 @@ class Channel extends React.Component {
 
     if (networkStore.isOnline) {
       if (networkStore.channelNames.indexOf(channelName) === -1) {
-        if (window.confirm(`__ Join #${channelName}? __`)) {
-          networkStore.joinChannel(channelName)
-        } else {
-          this.setState({ shouldRedirectToIndex: true })
-        }
+        networkStore.joinChannel(channelName)
       }
     } else {
       logger.warn(`Network is offline`)

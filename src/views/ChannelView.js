@@ -22,19 +22,19 @@ class ChannelView extends React.Component {
   state = { shouldRedirectToIndex: false }
 
   componentDidMount () {
+    this.checkNetwork()
+  }
+
+  checkNetwork () {
     const { ipfsStore, networkStore } = this.context
 
     if (!networkStore.isOnline) {
-      if (window.confirm(`__ Start network? __`)) {
-        ipfsStore.useJsIPFS()
-      } else {
-        this.setState({ shouldRedirectToIndex: true })
-      }
+      ipfsStore.useJsIPFS()
     }
   }
 
   render () {
-    const { uiStore } = this.context
+    const { networkStore, uiStore } = this.context
     const { shouldRedirectToIndex } = this.state
     const {
       match: {
@@ -44,7 +44,8 @@ class ChannelView extends React.Component {
 
     if (shouldRedirectToIndex) return <Redirect to="/" />
 
-    uiStore.setTitle(`#${channelName} | Orbit`)
+    if (networkStore.hasUnreadMessages) uiStore.setTitle(`* #${channelName} | Orbit`)
+    else uiStore.setTitle(`* #${channelName} | Orbit`)
 
     return (
       <div className="ChannelView">

@@ -57,6 +57,11 @@ export default class NetworkStore {
     return this._ipfs && this._orbit
   }
 
+  @computed
+  get hasUnreadMessages () {
+    return this.channelsAsArray.some(c => c.hasUnreadMessages)
+  }
+
   get channelNames () {
     return keys(this.channels)
   }

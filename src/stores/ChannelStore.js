@@ -53,6 +53,16 @@ export default class ChannelStore {
     return this.messages.filter(m => m.unread)
   }
 
+  @computed
+  get hasUnreadMessages () {
+    return this.unreadMessages.length > 0
+  }
+
+  @computed
+  get hasMentions () {
+    return false
+  }
+
   @action.bound
   updateMessages (amount) {
     const oldHashesAndTimestamps = this.messageHashesAndTimestamps
