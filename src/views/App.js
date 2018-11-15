@@ -12,6 +12,7 @@ import ChannelView from 'views/ChannelView'
 import LoadingView from 'views/LoadingView'
 import LoginView from 'views/LoginView'
 
+import ControlPanel from 'containers/ControlPanel'
 import Header from 'containers/Header'
 import DevTools from 'containers/DevTools'
 
@@ -46,6 +47,8 @@ class App extends React.Component {
   render () {
     const { sessionStore, uiStore } = this.context
 
+    if (uiStore.loading) return <LoadingView />
+
     const devTools =
       process.env.NODE_ENV === 'development' ? (
         <div className="devtools">
@@ -54,11 +57,27 @@ class App extends React.Component {
         </div>
       ) : null
 
-    if (uiStore.loading) return <LoadingView />
+    const panel = uiStore.isControlPanelOpen ? (
+      <ControlPanel
+      // onClose={this.closePanel.bind(this)}
+      // onOpenSwarmView={this.openSwarmView.bind(this)}
+      // onOpenSettings={this.openSettings.bind(this)}
+      // onDisconnect={this.disconnect.bind(this)}
+      // channel={location}
+      // username={user ? user.name : ''}
+      // requirePassword={requirePassword}
+      // theme={theme}
+      // left={leftSidePanel}
+      // networkName={networkName}
+      // joiningToChannel={joiningToChannel}
+      />
+    ) : null
 
     return (
       <div className="App view">
         <Route path="/channel/:channel" component={Header} />
+
+        {panel}
 
         <Switch>
           <Route exact path="/connect" component={LoginView} />

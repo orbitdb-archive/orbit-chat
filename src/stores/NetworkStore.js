@@ -28,6 +28,8 @@ export default class NetworkStore {
     reaction(() => this.rootStore.sessionStore.username, this.onUsernameChanged)
   }
 
+  networkName = 'Orbit DEV Network'
+
   @observable
   channels = {}
 

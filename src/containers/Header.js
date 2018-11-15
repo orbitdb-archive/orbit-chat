@@ -1,13 +1,13 @@
 'use strict'
 
 import React from 'react'
-import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import { CSSTransitionGroup } from 'react-transition-group'
-import classNames from 'classnames'
 
 import RootStoreContext from 'context/RootStoreContext'
+
+import ChannelLink from 'components/ChannelLink'
 
 import 'styles/Header.scss'
 
@@ -29,21 +29,7 @@ class Header extends React.Component {
     const otherChannels = networkStore.channelsAsArray
       .filter(c => c.name !== currentChannelName)
       .sort((a, b) => a.name.localeCompare(b.name))
-      .map(c => (
-        <Link
-          to={`/channel/${c.name}`}
-          key={c.name}
-          className={classNames('channel', {
-            hasUnreadMessages: c.hasUnreadMessages,
-            hasMentions: c.hasMentions
-          })}
-          style={{ ...uiStore.theme }}>
-          #{c.name}
-          {c.hasUnreadMessages ? (
-            <span className="unreadMessages">{c.unreadMessages.length}</span>
-          ) : null}
-        </Link>
-      ))
+      .map(c => <ChannelLink key={c.name} channel={c} theme={{ ...uiStore.theme }} />)
 
     return (
       <div className="Header">

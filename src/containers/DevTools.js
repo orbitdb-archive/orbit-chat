@@ -62,6 +62,7 @@ class DebugControlButtons extends React.Component {
         <button onClick={() => networkStore.stop()} disabled={!networkStore.isOnline}>
           Stop
         </button>
+
         <br />
         <Link to="/channel/test1">
           <button>Channel test1</button>
@@ -72,6 +73,15 @@ class DebugControlButtons extends React.Component {
         <Link to="/channel/test3">
           <button>Channel test3</button>
         </Link>
+        <br />
+        <button onClick={() => uiStore.toggleControlPanel()}>Toggle control panel</button>
+        <button disabled={uiStore.leftSidePanel} onClick={() => (uiStore.leftSidePanel = true)}>
+          Left side
+        </button>
+        <button disabled={!uiStore.leftSidePanel} onClick={() => (uiStore.leftSidePanel = false)}>
+          Right side
+        </button>
+
         <br />
         <br />
 

@@ -22,6 +22,9 @@ export default class UiStore {
   @observable
   title = 'Orbit'
 
+  @observable
+  isControlPanelOpen = false
+
   constructor (rootStore) {
     this.rootStore = rootStore
     this.settingsStore = this.rootStore.settingsStore
@@ -111,6 +114,15 @@ export default class UiStore {
     this.settingsStore.uiSettings.useMonospaceFont = val
   }
 
+  @computed
+  get leftSidePanel () {
+    return this.settingsStore.uiSettings.leftSidePanel
+  }
+
+  set leftSidePanel (val) {
+    this.settingsStore.uiSettings.leftSidePanel = val
+  }
+
   @action.bound
   onWindowResize (event) {
     this.windowDimensions = this.getWindowDimensions()
@@ -131,6 +143,21 @@ export default class UiStore {
   @action.bound
   setTitle (title) {
     this.title = title
+  }
+
+  @action.bound
+  openControlPanel () {
+    this.isControlPanelOpen = true
+  }
+
+  @action.bound
+  closeControlPanel () {
+    this.isControlPanelOpen = false
+  }
+
+  @action.bound
+  toggleControlPanel () {
+    this.isControlPanelOpen = !this.isControlPanelOpen
   }
 
   getWindowDimensions () {
