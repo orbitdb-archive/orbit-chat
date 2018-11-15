@@ -7,15 +7,18 @@ import Logger from 'utils/logger'
 
 const logger = new Logger()
 
-function FirstMessage ({ channel }) {
+function FirstMessage ({ t, channel }) {
   return (
     <div className="firstMessage" onClick={() => logger.warn('loadOlderMessages not implemented')}>
-      {channel.loadingHistory ? `Loading history...` : `Beginning of #${channel.name}`}
+      {channel.loadingHistory
+        ? t('channel.loadingHistory')
+        : t('channel.beginningOf', { channel: channel.name })}
     </div>
   )
 }
 
 FirstMessage.propTypes = {
+  t: PropTypes.func.isRequired,
   channel: PropTypes.object.isRequired
 }
 

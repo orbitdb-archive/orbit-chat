@@ -3,9 +3,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import { withNamespaces } from 'react-i18next'
 
-import SendMessage from 'components/SendMessage'
+import SendMessage from 'containers/SendMessage'
+
 import Spinner from 'components/Spinner'
 
 import Logger from 'utils/logger'
@@ -50,4 +50,4 @@ class ChannelControls extends React.Component {
   }
 }
 
-export default withNamespaces()(observer(ChannelControls))
+export default observer(ChannelControls)

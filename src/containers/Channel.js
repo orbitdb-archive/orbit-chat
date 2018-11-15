@@ -3,7 +3,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import { withNamespaces } from 'react-i18next'
 import { Redirect } from 'react-router-dom'
 
 import RootStoreContext from 'context/RootStoreContext'
@@ -19,8 +18,8 @@ const logger = new Logger()
 
 class Channel extends React.Component {
   static contextType = RootStoreContext
+
   static propTypes = {
-    t: PropTypes.func.isRequired,
     channelName: PropTypes.string.isRequired
   }
 
@@ -71,4 +70,4 @@ class Channel extends React.Component {
   }
 }
 
-export default withNamespaces()(observer(Channel))
+export default observer(Channel)

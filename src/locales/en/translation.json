@@ -1,5 +1,7 @@
 {
   "channel": {
+    "beginningOf": "Beginning of #{{channel}}",
+    "loadingHistory": "Loading history...",
     "sendMessagePlaceholder": "Type a message..."
   },
   "configuration": "Configuration",

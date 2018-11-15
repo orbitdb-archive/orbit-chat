@@ -24,7 +24,6 @@ export default class UiStore {
   constructor (rootStore) {
     this.rootStore = rootStore
     this.settingsStore = this.rootStore.settingsStore
-    this.updateUiSettings = this.settingsStore.updateUiSettings
 
     throttleEvent('resize', 'optimizedResize')
     window.addEventListener('optimizedResize', this.onWindowResize)

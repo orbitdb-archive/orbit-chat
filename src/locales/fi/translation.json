@@ -1,5 +1,7 @@
 {
   "channel": {
+    "beginningOf": "Kanavan #{{channel}} alku",
+    "loadingHistory": "Ladataan historiaa...",
     "sendMessagePlaceholder": "Kirjoita viesti..."
   },
   "configuration": "Asetukset",

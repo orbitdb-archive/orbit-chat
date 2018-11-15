@@ -2,9 +2,6 @@
 
 import { action, configure, observable, reaction, values } from 'mobx'
 
-// Important! This import will inject i18n to the whole app
-import i18n from 'config/i18n.config'
-
 import defaulNetworkSettings from 'config/network.default.json'
 import defaultUiSettings from 'config/ui.default.json'
 
@@ -106,6 +103,6 @@ export default class SettingsStore {
   }
 
   updateLanguage (lng) {
-    i18n.changeLanguage(lng)
+    this.rootStore.i18n.changeLanguage(lng)
   }
 }
