@@ -13,7 +13,7 @@ import FirstMessage from 'components/FirstMessage'
 import MessageDateSeparator from 'components/MessageDateSeparator'
 
 function ChannelMessages ({ t, channel, ...rest }, { uiStore, sessionStore }) {
-  const { colorifyUsernames, useLargeMessage, useMonospaceFont } = uiStore
+  const { colorifyUsernames, useLargeMessage, useMonospaceFont, language } = uiStore
 
   let prevDate
 
@@ -23,7 +23,7 @@ function ChannelMessages ({ t, channel, ...rest }, { uiStore, sessionStore }) {
 
     if (date.getDate() !== prevDate) {
       prevDate = date.getDate()
-      els.push(<MessageDateSeparator key={date} date={date} />)
+      els.push(<MessageDateSeparator key={date} date={date} locale={language} />)
     }
 
     els.push(
