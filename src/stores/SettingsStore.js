@@ -5,11 +5,8 @@ import { action, configure, observable, reaction, values } from 'mobx'
 import defaulNetworkSettings from 'config/network.default.json'
 import defaultUiSettings from 'config/ui.default.json'
 
-import Logger from 'utils/logger'
-
 configure({ enforceActions: 'observed' })
 
-const logger = new Logger()
 export default class SettingsStore {
   @observable
   networkSettings = {}
@@ -32,20 +29,10 @@ export default class SettingsStore {
     reaction(() => this.uiSettings.language, this.updateLanguage)
 
     // Save network settings when they change
-    reaction(
-      () => values(this.networkSettings),
-      () => {
-        this.saveNetworkSettings()
-      }
-    )
+    reaction(() => values(this.networkSettings), this.saveNetworkSettings)
 
     // Save ui settings when they change
-    reaction(
-      () => values(this.uiSettings),
-      () => {
-        this.saveUiSettings()
-      }
-    )
+    reaction(() => values(this.uiSettings), this.saveUiSettings)
 
     this.load()
   }
@@ -69,27 +56,40 @@ export default class SettingsStore {
   }
 
   @action.bound
-  load () {
+  load (username) {
     let networkSettings = {}
     let uiSettings = {}
 
+    // Create a copy so we can alter the values without affecting the original
+    const defaulNetworkSettingsCopy = JSON.parse(JSON.stringify(defaulNetworkSettings))
+    const defaultUiSettingsCopy = JSON.parse(JSON.stringify(defaultUiSettings))
+
+    // Get user defined settings from local storage
     try {
       const { networkKey, uiKey } = this.settingsKeys
       networkSettings = JSON.parse(localStorage.getItem(networkKey)) || {}
       uiSettings = JSON.parse(localStorage.getItem(uiKey)) || {}
     } catch (err) {}
 
-    logger.debug('Loading network settings')
-    Object.assign(this.networkSettings, defaulNetworkSettings, networkSettings)
+    // Set default orbit dataDir
+    if (username && !networkSettings.orbit) {
+      defaulNetworkSettingsCopy.orbit.dataDir += `/${username}`
+    }
 
-    logger.debug('Loading ui settings')
-    Object.assign(this.uiSettings, defaultUiSettings, uiSettings)
+    // Set default ipfs repo
+    if (!networkSettings.ipfs) {
+      const { orbit } = defaulNetworkSettingsCopy
+      defaulNetworkSettingsCopy.ipfs.repo = `${orbit.dataDir}/ipfs`
+    }
+
+    // Merge default settings with user defined settings
+    Object.assign(this.networkSettings, defaulNetworkSettingsCopy, networkSettings)
+    Object.assign(this.uiSettings, defaultUiSettingsCopy, uiSettings)
   }
 
   saveNetworkSettings () {
     try {
       const { networkKey } = this.settingsKeys
-      logger.debug('Saving network settings')
       localStorage.setItem(networkKey, JSON.stringify(this.networkSettings))
     } catch (err) {}
   }
@@ -97,7 +97,6 @@ export default class SettingsStore {
   saveUiSettings () {
     try {
       const { uiKey } = this.settingsKeys
-      logger.debug('Saving ui settings')
       localStorage.setItem(uiKey, JSON.stringify(this.uiSettings))
     } catch (err) {}
   }

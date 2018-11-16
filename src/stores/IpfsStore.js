@@ -1,9 +1,7 @@
 'use strict'
 
-import { action, configure, observable } from 'mobx'
+import { action, computed, configure, observable } from 'mobx'
 import IPFS from 'ipfs'
-
-import { getJsIpfsConfig } from 'config/ipfs.config'
 
 import Logger from 'utils/logger'
 
@@ -14,6 +12,9 @@ const logger = new Logger()
 export default class IpfsStore {
   constructor (rootStore) {
     this.rootStore = rootStore
+    this.sessionStore = this.rootStore.sessionStore
+    this.settingsStore = this.rootStore.settingsStore
+
     this.startLoading = this.rootStore.uiStore.startLoading
     this.stopLoading = this.rootStore.uiStore.stopLoading
   }
@@ -45,14 +46,14 @@ export default class IpfsStore {
 
   @action.bound
   useJsIPFS () {
-    const { username } = this.rootStore.sessionStore
+    const { username } = this.sessionStore
     if (this.starting || !username) return
     this.starting = true
     this.startLoading('ipfs-node:start')
     logger.info('Starting js-ipfs node')
     this.stop()
-    const config = getJsIpfsConfig(window.ipfsDataDir || '/orbit/ipfs')
-    const node = new IPFS(config)
+    const settings = this.settingsStore.networkSettings.ipfs
+    const node = new IPFS(settings)
     node.version((err, { version }) => {
       if (err) return
       logger.info(`js-ipfs version ${version}`)
@@ -62,7 +63,7 @@ export default class IpfsStore {
 
   @action.bound
   useGoIPFS () {
-    const { username } = this.rootStore.sessionStore
+    const { username } = this.sessionStore
     if (this.starting || !username) return
     this.starting = true
     this.startLoading('ipfs-node:start')

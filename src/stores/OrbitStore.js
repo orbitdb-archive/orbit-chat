@@ -13,6 +13,7 @@ export default class OrbitStore {
   constructor (rootStore) {
     this.rootStore = rootStore
     this.sessionStore = this.rootStore.sessionStore
+    this.settingsStore = this.rootStore.settingsStore
 
     this.startLoading = this.rootStore.uiStore.startLoading
     this.stopLoading = this.rootStore.uiStore.stopLoading
@@ -60,7 +61,16 @@ export default class OrbitStore {
     this.startLoading('orbit-node:start')
     logger.info('Starting orbit node')
     this.stop()
-    const node = new Orbit(ipfs, {})
+    const settings = this.settingsStore.networkSettings.orbit
+    const options = {
+      // path where to keep generates keys
+      keystorePath: `${settings.dataDir}/data/keys`,
+      // path to orbit-db cache file
+      cachePath: `${settings.dataDir}/data/orbit-db`,
+      // how many messages to retrieve from history on joining a channel
+      maxHistory: 2
+    }
+    const node = new Orbit(ipfs, options)
     node.events.once('connected', () => this.onStarted(node))
     node.connect(this.sessionStore.username)
   }
