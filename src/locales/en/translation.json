@@ -9,6 +9,9 @@
     "channels": "Channels",
     "closeChannel": "Close"
   },
+  "joinChannel": {
+    "inputPlaceholder": "Join channel"
+  },
   "login": {
     "nickname": "Nickname",
     "orLoginWith": "Or login with",

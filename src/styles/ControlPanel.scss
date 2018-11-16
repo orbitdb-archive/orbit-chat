@@ -79,6 +79,11 @@ $channel-name-min-height: 1.5em;
       flex: 1 1 80%;
       padding: 0.2em;
       align-items: stretch;
+
+      &.active:before {
+        content: "➭";
+        margin-right: 4px;
+      }
     }
 
     .closeChannelButton {

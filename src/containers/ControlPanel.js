@@ -12,6 +12,7 @@ import RootStoreContext from 'context/RootStoreContext'
 import ChannelLink from 'components/ChannelLink'
 
 import BackgroundAnimation from 'components/BackgroundAnimation'
+import JoinChannel from 'components/JoinChannel'
 
 import 'styles/flaticon.css'
 import 'styles/ControlPanel.scss'
@@ -26,12 +27,23 @@ class ControlPanel extends React.Component {
   constructor (props) {
     super(props)
     this.onClose = this.onClose.bind(this)
+    this.onJoinChannel = this.onJoinChannel.bind(this)
   }
 
   onClose () {
     const { uiStore } = this.context
     if (!uiStore.currentChannelName) return
     uiStore.closeControlPanel()
+  }
+
+  onJoinChannel (e) {
+    e.preventDefault()
+    if (!this.joinChannelInput) return
+    const { networkStore } = this.context
+    const channel = this.joinChannelInput.value.trim()
+    networkStore.joinChannel(channel).then(() => {
+      this.joinChannelInput.value = ''
+    })
   }
 
   render () {
@@ -84,6 +96,21 @@ class ControlPanel extends React.Component {
             </CSSTransitionGroup>
 
             <div className="username">{sessionStore.username}</div>
+
+            {networkStore.isOnline ? (
+              <CSSTransitionGroup
+                {...transitionProps}
+                transitionName="joinChannelAnimation"
+                className="joinChannelInput">
+                <JoinChannel
+                  onSubmit={this.onJoinChannel}
+                  // requirePassword={this.state.requirePassword}
+                  theme={{ ...uiStore.theme }}
+                  t={t}
+                  inputRef={el => (this.joinChannelInput = el)}
+                />
+              </CSSTransitionGroup>
+            ) : null}
 
             <div
               className={classNames({

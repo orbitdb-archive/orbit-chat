@@ -137,16 +137,16 @@ export default class NetworkStore {
     }
   }
 
-  joinChannel (channelName) {
+  async joinChannel (channelName) {
     if (!this.orbit || this.channelNames.indexOf(channelName) !== -1) return
     this.startLoading('channel:join')
-    this.orbit.join(channelName)
+    await this.orbit.join(channelName)
   }
 
-  leaveChannel (channelName) {
+  async leaveChannel (channelName) {
     if (!this.orbit || this.channelNames.indexOf(channelName) === -1) return
     this.startLoading('channel:leave')
-    this.orbit.leave(channelName)
+    await this.orbit.leave(channelName)
   }
 
   @action.bound

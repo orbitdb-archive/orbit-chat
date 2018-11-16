@@ -9,6 +9,9 @@
     "channels": "Kanavat",
     "closeChannel": "Sulje"
   },
+  "joinChannel": {
+    "inputPlaceholder": "Liity kanavalle"
+  },
   "login": {
     "nickname": "Nimimerkki",
     "orLoginWith": "Tai kirjaudu käyttäen",
