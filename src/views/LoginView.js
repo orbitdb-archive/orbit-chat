@@ -12,99 +12,13 @@ import { version } from '../../package.json'
 import RootStoreContext from 'context/RootStoreContext'
 
 import BackgroundAnimation from 'components/BackgroundAnimation'
+import LoginForm from 'components/LoginForm'
 
 import Logger from 'utils/logger'
 
 import 'styles/LoginView.scss'
-import 'styles/SubmitButton.scss'
-import 'styles/InputField.scss'
-
-import uportLogo from 'images/uport.png'
 
 const logger = new Logger()
-
-@observer
-class LoginForm extends React.Component {
-  static contextType = RootStoreContext
-  static propTypes = {
-    onSubmit: PropTypes.func.isRequired,
-    t: PropTypes.func.isRequired
-  }
-
-  constructor (props) {
-    super(props)
-
-    this.state = {
-      currentLength: 0
-    }
-
-    this.focusUsername = this.focusUsername.bind(this)
-    this.onSubmit = this.onSubmit.bind(this)
-    this.onUportLogin = this.onUportLogin.bind(this)
-    this.onInputChange = this.onInputChange.bind(this)
-
-    this.usernameInput = React.createRef()
-  }
-
-  onSubmit (e) {
-    const username = this.usernameInput.current.value.trim()
-    this.props.onSubmit(e, username)
-  }
-
-  onUportLogin () {
-    logger.warn('Uport Login not implemented')
-  }
-
-  onInputChange () {
-    const currentLength = this.usernameInput.current.value.length
-    this.setState({ currentLength })
-  }
-
-  focusUsername () {
-    this.usernameInput.current.focus()
-  }
-
-  render () {
-    const { uiStore } = this.context
-    const { t } = this.props
-
-    return (
-      <form onSubmit={this.onSubmit}>
-        <CSSTransitionGroup
-          transitionName="loginScreenAnimation"
-          transitionAppear={true}
-          component="div"
-          className="inputs"
-          transitionAppearTimeout={5000}
-          transitionEnterTimeout={5000}
-          transitionLeaveTimeout={5000}>
-          <div className="usernameRow" onClick={this.focusUsername}>
-            <input
-              ref={this.usernameInput}
-              type="text"
-              placeholder={t('login.nickname')}
-              maxLength="32"
-              autoFocus
-              style={{ ...uiStore.theme }}
-              onChange={this.onInputChange}
-            />
-          </div>
-          <div className="connectButtonRow">
-            <span className="hint">
-              {this.state.currentLength > 0 ? t('login.pressEnterToLogin') : t('login.orLoginWith')}
-            </span>
-            <input type="submit" value="Connect" style={{ display: 'none' }} />
-          </div>
-          <div className="lastRow">
-            {this.state.currentLength === 0 ? (
-              <img onClick={this.onUportLogin} className="logo" src={uportLogo} height="64" />
-            ) : null}
-          </div>
-        </CSSTransitionGroup>
-      </form>
-    )
-  }
-}
 
 class LoginView extends React.Component {
   static contextType = RootStoreContext
@@ -163,7 +77,12 @@ class LoginView extends React.Component {
           transitionLeaveTimeout={5000}>
           <h1>Orbit</h1>
         </CSSTransitionGroup>
-        <LoginForm ref={this.loginForm} t={t} onSubmit={this.onLogin} />
+        <LoginForm
+          ref={this.loginForm}
+          onSubmit={this.onLogin}
+          t={t}
+          theme={{ ...uiStore.theme }}
+        />
         <div className="Version">
           {t('version')}: {version}
         </div>

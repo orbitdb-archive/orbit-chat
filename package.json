@@ -33,7 +33,6 @@
     "ipfs": "^0.33.1",
     "mobx": "^5.5.2",
     "mobx-react": "^5.3.6",
-    "mobx-react-devtools": "^6.0.3",
     "pleasejs": "^0.4.2",
     "prop-types": "^15.6.2",
     "react": "^16.6.3",

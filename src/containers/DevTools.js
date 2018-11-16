@@ -199,7 +199,7 @@ class DevTools extends React.Component {
   render () {
     const { networkStore } = this.context
     return (
-      <div>
+      <div className="devtools">
         <DebugControlButtons />
         <br />
         <br />

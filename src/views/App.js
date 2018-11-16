@@ -4,7 +4,6 @@ import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 import { hot } from 'react-hot-loader'
 import { observer } from 'mobx-react'
-import MobxDevTools from 'mobx-react-devtools'
 
 import RootStoreContext from 'context/RootStoreContext'
 
@@ -49,33 +48,11 @@ class App extends React.Component {
 
     if (uiStore.loading) return <LoadingView />
 
-    const devTools =
-      process.env.NODE_ENV === 'development' ? (
-        <div className="devtools">
-          <DevTools />
-          {/* <MobxDevTools /> */}
-        </div>
-      ) : null
-
-    const panel = uiStore.isControlPanelOpen ? (
-      <ControlPanel
-      // onClose={this.closePanel.bind(this)}
-      // onOpenSwarmView={this.openSwarmView.bind(this)}
-      // onOpenSettings={this.openSettings.bind(this)}
-      // onDisconnect={this.disconnect.bind(this)}
-      // channel={location}
-      // username={user ? user.name : ''}
-      // requirePassword={requirePassword}
-      // theme={theme}
-      // left={leftSidePanel}
-      // networkName={networkName}
-      // joiningToChannel={joiningToChannel}
-      />
-    ) : null
+    const devTools = process.env.NODE_ENV === 'development' ? <DevTools /> : null
 
     return (
       <div className="App view">
-        {panel}
+        {uiStore.isControlPanelOpen ? <ControlPanel /> : null}
 
         <Route path="/channel/:channel" component={Header} />
 
