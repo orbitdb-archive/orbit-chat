@@ -53,6 +53,10 @@ export default class IpfsStore {
     this.stop()
     const config = getJsIpfsConfig(window.ipfsDataDir || '/orbit/ipfs')
     const node = new IPFS(config)
+    node.version((err, { version }) => {
+      if (err) return
+      logger.info(`js-ipfs version ${version}`)
+    })
     node.once('ready', () => this.onStarted(node))
   }
 
