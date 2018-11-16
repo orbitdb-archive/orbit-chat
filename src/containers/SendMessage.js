@@ -41,11 +41,14 @@ class SendMessage extends React.Component {
     const inputField = this.inputField.current
     const text = inputField.value.trim()
 
-    this.setState({ emojiResults: [], emojiPickerActive: false })
-
-    this.props.onSendMessage(text).then(() => {
-      inputField.value = ''
+    this.setState({ inputValue: '', emojiResults: [], emojiPickerActive: false }, () =>
       inputField.focus()
+    )
+
+    this.props.onSendMessage(text).catch(e => {
+      // There was an error sending the message
+      // Revert input value and focus the field
+      this.setState({ inputValue: text }, () => inputField.focus())
     })
   }
 
