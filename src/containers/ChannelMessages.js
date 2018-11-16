@@ -48,6 +48,11 @@ class ChannelMessages extends React.Component {
 
   scrollToBottom () {
     if (!this.messagesEnd.current) return
+
+    // This is needed because otherwise all components will be pushed up
+    // for some reason when control panel is open
+    if (this.context.uiStore.isControlPanelOpen) return
+
     this.messagesEnd.current.scrollIntoView({ behavior: 'smooth' })
   }
 
