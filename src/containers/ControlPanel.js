@@ -1,7 +1,8 @@
 'use strict'
 
 import React from 'react'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
+import { withNamespaces } from 'react-i18next'
 import { observer } from 'mobx-react'
 import { CSSTransitionGroup } from 'react-transition-group'
 import classNames from 'classnames'
@@ -18,10 +19,24 @@ import 'styles/ControlPanel.scss'
 class ControlPanel extends React.Component {
   static contextType = RootStoreContext
 
-  static propTypes = {}
+  static propTypes = {
+    t: PropTypes.func.isRequired
+  }
+
+  constructor (props) {
+    super(props)
+    this.onClose = this.onClose.bind(this)
+  }
+
+  onClose () {
+    const { uiStore } = this.context
+    if (!uiStore.currentChannelName) return
+    uiStore.closeControlPanel()
+  }
 
   render () {
     const { networkStore, sessionStore, uiStore } = this.context
+    const { t } = this.props
 
     const leftSide = uiStore.leftSidePanel
 
@@ -43,7 +58,8 @@ class ControlPanel extends React.Component {
           <div
             className={classNames('ControlPanel', {
               left: leftSide,
-              right: !leftSide
+              right: !leftSide,
+              'no-close': !uiStore.currentChannelName
             })}>
             <div style={{ opacity: 0.8, zIndex: -1 }}>
               <BackgroundAnimation
@@ -56,7 +72,7 @@ class ControlPanel extends React.Component {
             <CSSTransitionGroup
               {...transitionProps}
               transitionName={leftSide ? 'panelHeaderAnimationLeft' : 'panelHeaderAnimationRight'}>
-              <div className="header">
+              <div className="header" onClick={this.onClose}>
                 <div className="logo">Orbit</div>
               </div>
             </CSSTransitionGroup>
@@ -74,7 +90,7 @@ class ControlPanel extends React.Component {
                 panelHeader: channels.length > 0,
                 hidden: channels.length === 0
               })}>
-              Channels
+              {t('controlPanel.channels')}
             </div>
 
             <CSSTransitionGroup
@@ -84,7 +100,16 @@ class ControlPanel extends React.Component {
               <div className="RecentChannelsView">
                 <div className="RecentChannels">
                   {channels.map(c => (
-                    <ChannelLink key={c.name} channel={c} theme={{ ...uiStore.theme }} />
+                    <div className="row link" key={c.name}>
+                      <ChannelLink
+                        channel={c}
+                        theme={{ ...uiStore.theme }}
+                        onClick={this.onClose}
+                      />
+                      <span className="closeChannelButton" onClick={c.leave}>
+                        {t('controlPanel.closeChannel')}
+                      </span>
+                    </div>
                   ))}
                 </div>
               </div>
@@ -115,12 +140,12 @@ class ControlPanel extends React.Component {
         <CSSTransitionGroup
           {...transitionProps}
           transitionName="darkenerAnimation"
-          className="darkener"
-          // onClick={this.onClose.bind(this)}
+          className={classNames('darkener', { 'no-close': !uiStore.currentChannelName })}
+          onClick={this.onClose}
         />
       </React.Fragment>
     )
   }
 }
 
-export default observer(ControlPanel)
+export default withNamespaces()(observer(ControlPanel))

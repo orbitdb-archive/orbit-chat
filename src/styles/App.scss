@@ -21,11 +21,6 @@ textarea, input { outline: none; }
 $channel-name-max-height: 5.5vmin;
 $channel-name-min-height: 1.5em;
 
-.no-close {
-  cursor: default;
-  user-select: none;
-}
-
 .view {
   background-color: #222222;
   padding: 0;

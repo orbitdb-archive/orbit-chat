@@ -35,6 +35,11 @@ class LoginView extends React.Component {
     this.loginForm = React.createRef()
   }
 
+  componentDidMount () {
+    const { uiStore } = this.context
+    uiStore.setTitle('Login | Orbit')
+  }
+
   onConfigure () {
     logger.warn('Settings view not implemented')
   }
@@ -62,8 +67,6 @@ class LoginView extends React.Component {
     const { from } = location.state || { from: { pathname: '/' } }
 
     if (sessionStore.isAuthenticated) return <Redirect to={from} />
-
-    uiStore.setTitle('Login | Orbit')
 
     return (
       <div className="LoginView">

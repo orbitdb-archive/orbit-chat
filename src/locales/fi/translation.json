@@ -5,6 +5,10 @@
     "sendMessagePlaceholder": "Kirjoita viesti..."
   },
   "configuration": "Asetukset",
+  "controlPanel": {
+    "channels": "Kanavat",
+    "closeChannel": "Sulje"
+  },
   "login": {
     "nickname": "Nimimerkki",
     "orLoginWith": "Tai kirjaudu käyttäen",

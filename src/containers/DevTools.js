@@ -197,13 +197,13 @@ class DevTools extends React.Component {
   static contextType = RootStoreContext
 
   render () {
-    const { networkStore } = this.context
+    // const { networkStore } = this.context
     return (
       <div className="devtools">
         <DebugControlButtons />
-        <br />
-        <br />
-        {networkStore.isOnline ? <DebugChannelList /> : null}
+        {/* <br />
+        <br /> */}
+        {/* {networkStore.isOnline ? <DebugChannelList /> : null} */}
       </div>
     )
   }

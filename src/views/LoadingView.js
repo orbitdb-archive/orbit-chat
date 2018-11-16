@@ -18,6 +18,11 @@ class LoadingView extends React.Component {
     t: PropTypes.func.isRequired
   }
 
+  componentDidMount () {
+    const { uiStore } = this.context
+    uiStore.setTitle('Loading | Orbit')
+  }
+
   render () {
     const { uiStore } = this.context
     const { t } = this.props
@@ -28,8 +33,6 @@ class LoadingView extends React.Component {
       transitionEnterTimeout: 5000,
       transitionLeaveTimeout: 5000
     }
-
-    uiStore.setTitle('Loading | Orbit')
 
     return (
       <div className="LoadingView">

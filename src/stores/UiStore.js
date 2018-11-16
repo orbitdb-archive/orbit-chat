@@ -25,6 +25,9 @@ export default class UiStore {
   @observable
   isControlPanelOpen = false
 
+  @observable
+  _currentChannelName = null
+
   constructor (rootStore) {
     this.rootStore = rootStore
     this.settingsStore = this.rootStore.settingsStore
@@ -39,6 +42,11 @@ export default class UiStore {
         document.title = title
       }
     )
+  }
+
+  @computed
+  get currentChannelName () {
+    return this._currentChannelName
   }
 
   @computed
@@ -141,8 +149,13 @@ export default class UiStore {
   }
 
   @action.bound
-  setTitle (title) {
-    this.title = title
+  setTitle (val) {
+    this.title = val
+  }
+
+  @action.bound
+  setCurrentChannelName (val) {
+    this._currentChannelName = val
   }
 
   @action.bound

@@ -18,6 +18,23 @@ class Header extends React.Component {
     match: PropTypes.object.isRequired
   }
 
+  constructor (props) {
+    super(props)
+    this.onChannelClick = this.onChannelClick.bind(this)
+    this.onHeaderClick = this.onHeaderClick.bind(this)
+  }
+
+  onChannelClick (e) {
+    // Stop propagation to Header
+    e.stopPropagation()
+    // No other actions needed since ChannelLink is doing the rest
+  }
+
+  onHeaderClick (e) {
+    const { uiStore } = this.context
+    uiStore.toggleControlPanel()
+  }
+
   render () {
     const { networkStore, uiStore } = this.context
     const {
@@ -29,10 +46,17 @@ class Header extends React.Component {
     const otherChannels = networkStore.channelsAsArray
       .filter(c => c.name !== currentChannelName)
       .sort((a, b) => a.name.localeCompare(b.name))
-      .map(c => <ChannelLink key={c.name} channel={c} theme={{ ...uiStore.theme }} />)
+      .map(c => (
+        <ChannelLink
+          key={c.name}
+          channel={c}
+          theme={{ ...uiStore.theme }}
+          onClick={this.onChannelClick}
+        />
+      ))
 
     return (
-      <div className="Header">
+      <div className="Header" onClick={this.onHeaderClick}>
         <div className="ChannelName">
           <div className="currentChannel">
             <CSSTransitionGroup

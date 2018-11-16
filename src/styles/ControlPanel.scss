@@ -96,21 +96,11 @@ $channel-name-min-height: 1.5em;
     }
 
     .unreadMessages {
-      font-weight: bold;
-      font-size: 0.5em;
       color: $main-text-color;
-      border-radius: 32px;
-      background-color: rgba(240, 240, 240, 0.1);
-      display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      height: 16px;
-      width: 16px;
-      flex: 1 0 6%;
-      margin: 0em 1em;
-      margin-top: 2px;
-      margin-bottom: 1px;
+      min-width: 2em;
+      margin: 2px 1em 1px 1em;
       align-self: center;
     }
 
@@ -153,12 +143,18 @@ $channel-name-min-height: 1.5em;
     margin-top: 0.05em;
 
     cursor: pointer;
-    -webkit-user-select: none;
-    -moz-user-select: none;
+    user-select: none;
 
     .logo {
       margin-top: 0.75em;
       text-transform: uppercase;
+    }
+  }
+
+  &.no-close {
+    .header {
+      cursor: default;
+      user-select: none;
     }
   }
 
@@ -227,12 +223,6 @@ $channel-name-min-height: 1.5em;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
   }
-
-  .no-close {
-    cursor: default;
-    user-select: none;
-  }
-
 }
 
 .darkener {
@@ -252,6 +242,10 @@ $channel-name-min-height: 1.5em;
     animation-timing-function: ease-out;
   }
 
+  &.no-close {
+    cursor: default;
+    user-select: none;
+  }
 }
 
 .RecentChannelsView {
@@ -268,7 +262,7 @@ $channel-name-min-height: 1.5em;
 
     font-weight: bold;
 
-    .ChannelLink {
+    .link {
       box-sizing: border-box;
       vertical-align: middle;
       cursor: pointer;
@@ -277,7 +271,7 @@ $channel-name-min-height: 1.5em;
       margin-bottom: 0.1em;
     }
 
-    .ChannelLink:hover {
+    .link:hover {
       background-color: rgb(48, 48, 48);
       color: rgb(250, 250, 250);
       border: 0px solid transparent;
@@ -290,7 +284,6 @@ $channel-name-min-height: 1.5em;
   }
 
 }
-
 
 .openPanelAnimationRight-appear {
   animation: slideFromRight;

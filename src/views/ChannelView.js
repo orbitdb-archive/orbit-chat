@@ -23,18 +23,41 @@ class ChannelView extends React.Component {
 
   componentDidMount () {
     this.checkNetwork()
+    this.handleChannelName()
+  }
+
+  componentDidUpdate () {
+    this.handleChannelName()
+  }
+
+  componentWillUnmount () {
+    const { uiStore } = this.context
+    uiStore.setCurrentChannelName(null)
   }
 
   checkNetwork () {
     const { ipfsStore, networkStore } = this.context
-
     if (!networkStore.isOnline) {
       ipfsStore.useJsIPFS()
     }
   }
 
-  render () {
+  handleChannelName () {
     const { networkStore, uiStore } = this.context
+
+    const {
+      match: {
+        params: { channel: channelName }
+      }
+    } = this.props
+
+    if (networkStore.hasUnreadMessages) uiStore.setTitle(`* #${channelName} | Orbit`)
+    else uiStore.setTitle(`#${channelName} | Orbit`)
+
+    uiStore.setCurrentChannelName(channelName)
+  }
+
+  render () {
     const { shouldRedirectToIndex } = this.state
     const {
       match: {
@@ -43,9 +66,6 @@ class ChannelView extends React.Component {
     } = this.props
 
     if (shouldRedirectToIndex) return <Redirect to="/" />
-
-    if (networkStore.hasUnreadMessages) uiStore.setTitle(`* #${channelName} | Orbit`)
-    else uiStore.setTitle(`* #${channelName} | Orbit`)
 
     return (
       <div className="ChannelView">

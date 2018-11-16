@@ -132,7 +132,7 @@ export default class ChannelStore {
     this.loadingNewMessages = false
   }
 
-  @action
+  @action.bound
   leave () {
     this.network.leaveChannel(this.name)
   }

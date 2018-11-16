@@ -5,6 +5,10 @@
     "sendMessagePlaceholder": "Type a message..."
   },
   "configuration": "Configuration",
+  "controlPanel": {
+    "channels": "Channels",
+    "closeChannel": "Close"
+  },
   "login": {
     "nickname": "Nickname",
     "orLoginWith": "Or login with",
