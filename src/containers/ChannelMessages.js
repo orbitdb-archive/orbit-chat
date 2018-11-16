@@ -53,7 +53,9 @@ class ChannelMessages extends React.Component {
     // for some reason when control panel is open
     if (this.context.uiStore.isControlPanelOpen) return
 
-    this.messagesEnd.current.scrollIntoView({ behavior: 'smooth' })
+    // Smooth scroll will cause the chat input field to bounce when sending
+    // messages so we use the default ("auto")
+    this.messagesEnd.current.scrollIntoView()
   }
 
   renderMessages () {

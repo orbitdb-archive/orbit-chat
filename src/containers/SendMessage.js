@@ -60,7 +60,10 @@ class SendMessage extends React.Component {
     const emojiSearch = emojiPickerActive ? inputValue.slice(lastEmojiIdx) : null
     let emojiResults = emojiSearch ? emojiIndex.search(emojiSearch) : []
     if (emojiResults.length === 0) {
-      // Slice the ':' prefix so we search for emojis instead of emoticons
+      // Slice the ':' prefix so we search for emojis instead of emoticons so
+      // ':smile' => 'smile'
+      // This is needed because we can also search for ':)' which requires the
+      // ':' prefix
       emojiResults = emojiSearch ? emojiIndex.search(emojiSearch.slice(1)) : []
     }
     this.setState({ inputValue, emojiResults, emojiPickerActive })
@@ -81,16 +84,15 @@ class SendMessage extends React.Component {
       n1 !== this.state.inputValue.length - 1
         ? this.state.inputValue.slice(0, n1) + emoji.colons
         : this.state.inputValue.slice(0, n2) + emoji.colons
+
     this.setState({ inputValue }, () => {
       this.inputField.current.focus()
     })
   }
 
   getEmojiPickerStyle (emojiSize) {
-    const actualEmojiSize = emojiSize + 2 // 1px padding or border
-
     return {
-      maxWidth: actualEmojiSize * 10,
+      maxWidth: (emojiSize + 2) * 10, // 2 * 1px padding or border
       bottom: this.inputField ? this.inputField.current.offsetHeight + 10 : '45px'
     }
   }
@@ -104,7 +106,6 @@ class SendMessage extends React.Component {
     const emojiPicker =
       emojiPickerActive && emojiResults.length > 0 ? (
         <CSSTransitionGroup
-          // key={emojiSearch} // So we rerender the component on 'emojiSearch' change
           component="div"
           transitionName="emojiPreview"
           transitionAppear={true}
