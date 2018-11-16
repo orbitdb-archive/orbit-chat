@@ -75,9 +75,9 @@ class App extends React.Component {
 
     return (
       <div className="App view">
-        <Route path="/channel/:channel" component={Header} />
-
         {panel}
+
+        <Route path="/channel/:channel" component={Header} />
 
         <Switch>
           <Route exact path="/connect" component={LoginView} />

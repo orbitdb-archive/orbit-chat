@@ -49,10 +49,6 @@ class ChannelMessages extends React.Component {
   scrollToBottom () {
     if (!this.messagesEnd.current) return
 
-    // This is needed because otherwise all components will be pushed up
-    // for some reason when control panel is open
-    if (this.context.uiStore.isControlPanelOpen) return
-
     // Smooth scroll will cause the chat input field to bounce when sending
     // messages so we use the default ("auto")
     this.messagesEnd.current.scrollIntoView()
