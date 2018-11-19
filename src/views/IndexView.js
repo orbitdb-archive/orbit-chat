@@ -14,6 +14,12 @@ class IndexView extends React.Component {
     uiStore.openControlPanel()
   }
 
+  componentDidUpdate () {
+    const { uiStore } = this.context
+    uiStore.setTitle('Orbit')
+    uiStore.openControlPanel()
+  }
+
   render () {
     return null
   }

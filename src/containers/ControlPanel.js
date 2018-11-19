@@ -23,7 +23,8 @@ class ControlPanel extends React.Component {
   static contextType = RootStoreContext
 
   static propTypes = {
-    t: PropTypes.func.isRequired
+    t: PropTypes.func.isRequired,
+    history: PropTypes.object.isRequired
   }
 
   state = { redirectTo: null }
@@ -33,11 +34,24 @@ class ControlPanel extends React.Component {
     this.onClose = this.onClose.bind(this)
     this.onJoinChannel = this.onJoinChannel.bind(this)
     this.redirect = this.redirect.bind(this)
+    this.isClosable = this.isClosable.bind(this)
+  }
+
+  componentDidMount () {
+    this.focusJoinChannelInput()
+  }
+
+  componentDidUpdate () {
+    this.focusJoinChannelInput()
+  }
+
+  focusJoinChannelInput () {
+    if (this.joinChannelInput) this.joinChannelInput.focus()
   }
 
   onClose () {
-    const { uiStore } = this.context
-    uiStore.closeControlPanel()
+    if (!this.isClosable()) return
+    this.context.uiStore.closeControlPanel()
   }
 
   onJoinChannel (e) {
@@ -51,10 +65,24 @@ class ControlPanel extends React.Component {
     })
   }
 
+  isClosable () {
+    const {
+      history: {
+        location: { pathname }
+      }
+    } = this.props
+
+    return pathname !== '/'
+  }
+
   redirect (to) {
     this.setState({ redirectTo: to }, () => {
-      // Remember to close the panel since we will be redirecting away
-      this.onClose()
+      // Reset the state so we will not continue to redirect after one redirect
+      // since this component is always mounted
+      this.setState({ redirectTo: null }, () => {
+        // Remember to close the panel
+        this.onClose()
+      })
     })
   }
 
@@ -63,6 +91,9 @@ class ControlPanel extends React.Component {
     if (redirectTo) return <Redirect to={redirectTo} />
 
     const { ipfsStore, networkStore, sessionStore, uiStore } = this.context
+
+    if (!uiStore.isControlPanelOpen) return null
+
     const { t } = this.props
 
     const leftSide = uiStore.sidePanelPosition === 'left'
@@ -86,7 +117,7 @@ class ControlPanel extends React.Component {
             className={classNames('ControlPanel', {
               left: leftSide,
               right: !leftSide,
-              'no-close': !uiStore.currentChannelName
+              'no-close': !this.isClosable()
             })}>
             <div style={{ opacity: 0.8, zIndex: -1 }}>
               <BackgroundAnimation
@@ -119,6 +150,7 @@ class ControlPanel extends React.Component {
                 className="joinChannelInput">
                 <JoinChannel
                   onSubmit={this.onJoinChannel}
+                  autoFocus
                   // requirePassword={this.state.requirePassword}
                   theme={{ ...uiStore.theme }}
                   t={t}
@@ -198,7 +230,7 @@ class ControlPanel extends React.Component {
         <CSSTransitionGroup
           {...transitionProps}
           transitionName="darkenerAnimation"
-          className={classNames('darkener', { 'no-close': !uiStore.currentChannelName })}
+          className={classNames('darkener', { 'no-close': !this.isClosable() })}
           onClick={this.onClose}
         />
       </React.Fragment>

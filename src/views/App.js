@@ -1,7 +1,6 @@
 'use strict'
 
 import React from 'react'
-import PropTypes from 'prop-types'
 import { Route, Switch } from 'react-router-dom'
 import { hot } from 'react-hot-loader'
 import { observer } from 'mobx-react'
@@ -17,46 +16,44 @@ import ControlPanel from 'containers/ControlPanel'
 import ChannelHeader from 'containers/ChannelHeader'
 // import DevTools from 'containers/DevTools'
 
-import PrivateRoute from 'components/PrivateRoute'
+import __PrivateRoute from 'components/PrivateRoute'
 
 import 'styles/App.scss'
 import 'styles/Scrollbars.scss'
 
 const loginPath = '/connect'
 
-function _MyPrivateRoute (props, { sessionStore }) {
+function _PrivateRoute (props, { sessionStore }) {
   if (!sessionStore) return null
   return (
-    <PrivateRoute {...props} loginPath={loginPath} isAuthenticated={sessionStore.isAuthenticated} />
+    <__PrivateRoute
+      {...props}
+      loginPath={loginPath}
+      isAuthenticated={sessionStore.isAuthenticated}
+    />
   )
 }
-_MyPrivateRoute.contextType = RootStoreContext
-const MyPrivateRoute = observer(_MyPrivateRoute)
+_PrivateRoute.contextType = RootStoreContext
+const PrivateRoute = observer(_PrivateRoute)
 
 class App extends React.Component {
   static contextType = RootStoreContext
 
-  static propTypes = {
-    match: PropTypes.object.isRequired
-  }
-
   render () {
-    const { uiStore } = this.context
-
     // const devTools = process.env.NODE_ENV === 'development' ? <DevTools /> : null
 
     return (
       <div className="App view">
-        {uiStore.isControlPanelOpen ? <ControlPanel /> : null}
+        <PrivateRoute component={ControlPanel} />
 
         <Route exact path="/channel/:channel" component={ChannelHeader} />
         <Route exact path="/settings" component={ChannelHeader} />
 
         <Switch>
           <Route exact path={loginPath} component={LoginView} />
-          <MyPrivateRoute exact path="/channel/:channel" component={ChannelView} />
-          <MyPrivateRoute exact path="/settings" component={SettingsView} />
-          <MyPrivateRoute component={IndexView} />
+          <PrivateRoute exact path="/channel/:channel" component={ChannelView} />
+          <PrivateRoute exact path="/settings" component={SettingsView} />
+          <PrivateRoute component={IndexView} />
         </Switch>
         {/* {devTools} */}
       </div>
