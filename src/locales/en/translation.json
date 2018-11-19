@@ -7,7 +7,8 @@
   "configuration": "Configuration",
   "controlPanel": {
     "channels": "Channels",
-    "closeChannel": "Close"
+    "closeChannel": "Close",
+    "startJsIpfs": "Start js-ipfs"
   },
   "joinChannel": {
     "inputPlaceholder": "Join channel"

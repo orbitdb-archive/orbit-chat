@@ -10,7 +10,11 @@ import RootStoreContext from 'context/RootStoreContext'
 
 import Channel from 'containers/Channel'
 
+import Logger from 'utils/logger'
+
 import 'styles/ChannelView.scss'
+
+const logger = new Logger()
 
 class ChannelView extends React.Component {
   static contextType = RootStoreContext
@@ -36,9 +40,10 @@ class ChannelView extends React.Component {
   }
 
   checkNetwork () {
-    const { ipfsStore, networkStore } = this.context
+    const { networkStore } = this.context
     if (!networkStore.isOnline) {
-      ipfsStore.useJsIPFS()
+      logger.warn(`Network is offline`)
+      this.setState({ shouldRedirectToIndex: true })
     }
   }
 
@@ -59,13 +64,14 @@ class ChannelView extends React.Component {
 
   render () {
     const { shouldRedirectToIndex } = this.state
+
+    if (shouldRedirectToIndex) return <Redirect to="/" />
+
     const {
       match: {
         params: { channel: channelName }
       }
     } = this.props
-
-    if (shouldRedirectToIndex) return <Redirect to="/" />
 
     return (
       <div className="ChannelView">

@@ -1,6 +1,6 @@
 'use strict'
 
-import { action, computed, configure, observable } from 'mobx'
+import { action, configure, observable } from 'mobx'
 import IPFS from 'ipfs'
 
 import Logger from 'utils/logger'

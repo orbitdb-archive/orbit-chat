@@ -13,19 +13,23 @@ const logger = new Logger()
 export default class NetworkStore {
   constructor (rootStore) {
     this.rootStore = rootStore
-    this.startLoading = this.rootStore.uiStore.startLoading
-    this.stopLoading = this.rootStore.uiStore.stopLoading
+    this.ipfsStore = rootStore.ipfsStore
+    this.orbitStore = rootStore.orbitStore
+    this.sessionStore = rootStore.sessionStore
+
+    this.startLoading = rootStore.uiStore.startLoading
+    this.stopLoading = rootStore.uiStore.stopLoading
 
     this.onUsernameChanged = this.onUsernameChanged.bind(this)
 
     // React to ipfs changes
-    reaction(() => this.rootStore.ipfsStore.node, this.onIpfsChanged)
+    reaction(() => this.ipfsStore.node, this.onIpfsChanged)
 
     // React to orbit changes
-    reaction(() => this.rootStore.orbitStore.node, this.onOrbitChanged)
+    reaction(() => this.orbitStore.node, this.onOrbitChanged)
 
     // React to user changes
-    reaction(() => this.rootStore.sessionStore.username, this.onUsernameChanged)
+    reaction(() => this.sessionStore.username, this.onUsernameChanged)
   }
 
   networkName = 'Orbit DEV Network'
@@ -57,6 +61,11 @@ export default class NetworkStore {
   @computed
   get isOnline () {
     return this._ipfs && this._orbit
+  }
+
+  @computed
+  get starting () {
+    return this.ipfsStore.starting || this.orbitStore.starting
   }
 
   @computed
@@ -120,8 +129,8 @@ export default class NetworkStore {
 
     this.stopOrbit()
 
-    await this.rootStore.orbitStore.stop()
-    await this.rootStore.ipfsStore.stop()
+    await this.orbitStore.stop()
+    await this.ipfsStore.stop()
   }
 
   @action.bound

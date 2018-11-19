@@ -9,30 +9,17 @@ import { observer } from 'mobx-react'
 import RootStoreContext from 'context/RootStoreContext'
 
 import ChannelView from 'views/ChannelView'
-// import LoadingView from 'views/LoadingView'
+import IndexView from 'views/IndexView'
 import LoginView from 'views/LoginView'
 
 import ControlPanel from 'containers/ControlPanel'
 import Header from 'containers/Header'
-import DevTools from 'containers/DevTools'
+// import DevTools from 'containers/DevTools'
 
-import BackgroundAnimation from 'components/BackgroundAnimation'
 import PrivateRoute from 'components/PrivateRoute'
 
 import 'styles/App.scss'
 import 'styles/Scrollbars.scss'
-
-function IndexView () {
-  const { uiStore } = this.context
-  uiStore.setTitle('Orbit')
-  return (
-    <div>
-      <BackgroundAnimation size={480} theme={{ ...uiStore.theme }} />
-    </div>
-  )
-}
-
-IndexView.contextType = RootStoreContext
 
 class App extends React.Component {
   static contextType = RootStoreContext
@@ -44,10 +31,7 @@ class App extends React.Component {
   render () {
     const { sessionStore, uiStore } = this.context
 
-    // Is this really needed?
-    // if (uiStore.loading) return <LoadingView />
-
-    const devTools = process.env.NODE_ENV === 'development' ? <DevTools /> : null
+    // const devTools = process.env.NODE_ENV === 'development' ? <DevTools /> : null
 
     return (
       <div className="App view">
@@ -71,7 +55,7 @@ class App extends React.Component {
             component={observer(IndexView)}
           />
         </Switch>
-        {devTools}
+        {/* {devTools} */}
       </div>
     )
   }

@@ -35,8 +35,8 @@
     "mobx-react": "^5.3.6",
     "pleasejs": "^0.4.2",
     "prop-types": "^15.6.2",
-    "react": "^16.6.3",
-    "react-dom": "^16.6.3",
+    "react": "^16.7.0-alpha.2",
+    "react-dom": "^16.7.0-alpha.2",
     "react-i18next": "^8.3.8",
     "react-router-dom": "^4.3.1",
     "react-transition-group": "^1.2.1"

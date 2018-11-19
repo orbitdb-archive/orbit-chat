@@ -1,6 +1,7 @@
 'use strict'
 
 import React from 'react'
+import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { withNamespaces } from 'react-i18next'
 import { observer } from 'mobx-react'
@@ -13,6 +14,7 @@ import ChannelLink from 'components/ChannelLink'
 
 import BackgroundAnimation from 'components/BackgroundAnimation'
 import JoinChannel from 'components/JoinChannel'
+import Spinner from 'components/Spinner'
 
 import 'styles/flaticon.css'
 import 'styles/ControlPanel.scss'
@@ -24,10 +26,13 @@ class ControlPanel extends React.Component {
     t: PropTypes.func.isRequired
   }
 
+  state = { redirectTo: null }
+
   constructor (props) {
     super(props)
     this.onClose = this.onClose.bind(this)
     this.onJoinChannel = this.onJoinChannel.bind(this)
+    this.redirect = this.redirect.bind(this)
   }
 
   onClose () {
@@ -43,11 +48,23 @@ class ControlPanel extends React.Component {
     const channel = this.joinChannelInput.value.trim()
     networkStore.joinChannel(channel).then(() => {
       this.joinChannelInput.value = ''
+      this.redirect(`/channel/${channel}`)
+    })
+  }
+
+  redirect (to) {
+    const { uiStore } = this.context
+    this.setState({ redirectTo: to }, () => {
+      // Remember to close the panel since we will be redirecting away
+      uiStore.closeControlPanel()
     })
   }
 
   render () {
-    const { networkStore, sessionStore, uiStore } = this.context
+    const { redirectTo } = this.state
+    if (redirectTo) return <Redirect to={redirectTo} />
+
+    const { ipfsStore, networkStore, sessionStore, uiStore } = this.context
     const { t } = this.props
 
     const leftSide = uiStore.leftSidePanel
@@ -110,7 +127,20 @@ class ControlPanel extends React.Component {
                   inputRef={el => (this.joinChannelInput = el)}
                 />
               </CSSTransitionGroup>
-            ) : null}
+            ) : !networkStore.starting ? (
+              <button
+                className="startIpfsButton submitButton"
+                style={{ ...uiStore.theme }}
+                onClick={() => {
+                  ipfsStore.useJsIPFS()
+                }}>
+                {t('controlPanel.startJsIpfs')}
+              </button>
+            ) : (
+              <div style={{ position: 'relative' }}>
+                <Spinner loading={true} color="rgba(255, 255, 255, 0.7)" size="16px" />
+              </div>
+            )}
 
             <div
               className={classNames({
@@ -157,7 +187,7 @@ class ControlPanel extends React.Component {
               />
               <div
                 className="icon flaticon-prohibition35"
-                // onClick={this.props.onDisconnect}
+                onClick={() => sessionStore.logout()}
                 style={{ ...uiStore.theme }}
                 key="disconnectIcon"
               />

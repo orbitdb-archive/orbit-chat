@@ -48,11 +48,12 @@ class Channel extends React.Component {
   }
 
   render () {
-    const { networkStore, uiStore } = this.context
     const { shouldRedirectToIndex } = this.state
-    const { channelName } = this.props
 
     if (shouldRedirectToIndex) return <Redirect to="/" />
+
+    const { networkStore, uiStore } = this.context
+    const { channelName } = this.props
 
     const channel = networkStore.channels[channelName]
 

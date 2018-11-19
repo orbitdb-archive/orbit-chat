@@ -32,7 +32,7 @@ class Header extends React.Component {
 
   onHeaderClick (e) {
     const { uiStore } = this.context
-    uiStore.toggleControlPanel()
+    uiStore.openControlPanel()
   }
 
   render () {

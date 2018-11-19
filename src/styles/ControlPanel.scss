@@ -228,6 +228,15 @@ $channel-name-min-height: 1.5em;
     padding-top: 0.5em;
     padding-bottom: 0.5em;
   }
+
+  .startIpfsButton {
+    margin-top: 20px;
+    align-self: center;
+    color: $main-text-color;
+    border: 1px solid $bar-background-color;
+    font-size: .8em;
+    line-height: 1.5;
+  }
 }
 
 .darkener {
