@@ -159,7 +159,12 @@ class ControlPanel extends React.Component {
                         theme={{ ...uiStore.theme }}
                         onClick={this.onClose}
                       />
-                      <span className="closeChannelButton" onClick={c.leave}>
+                      <span
+                        className="closeChannelButton"
+                        onClick={() => {
+                          if (uiStore.currentChannelName === c.name) this.redirect('/')
+                          c.leave()
+                        }}>
                         {t('controlPanel.closeChannel')}
                       </span>
                     </div>
