@@ -75,10 +75,14 @@ class DebugControlButtons extends React.Component {
         </Link>
         <br />
         <button onClick={() => uiStore.toggleControlPanel()}>Toggle control panel</button>
-        <button disabled={uiStore.leftSidePanel} onClick={() => (uiStore.leftSidePanel = true)}>
+        <button
+          disabled={uiStore.sidePanelPosition === 'left'}
+          onClick={() => (uiStore.sidePanelPosition = 'left')}>
           Left side
         </button>
-        <button disabled={!uiStore.leftSidePanel} onClick={() => (uiStore.leftSidePanel = false)}>
+        <button
+          disabled={!uiStore.sidePanelPosition === 'right'}
+          onClick={() => (uiStore.sidePanelPosition = 'right')}>
           Right side
         </button>
 

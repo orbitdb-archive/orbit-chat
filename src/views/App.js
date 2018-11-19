@@ -11,15 +11,27 @@ import RootStoreContext from 'context/RootStoreContext'
 import ChannelView from 'views/ChannelView'
 import IndexView from 'views/IndexView'
 import LoginView from 'views/LoginView'
+import SettingsView from 'views/SettingsView'
 
 import ControlPanel from 'containers/ControlPanel'
-import Header from 'containers/Header'
+import ChannelHeader from 'containers/ChannelHeader'
 // import DevTools from 'containers/DevTools'
 
 import PrivateRoute from 'components/PrivateRoute'
 
 import 'styles/App.scss'
 import 'styles/Scrollbars.scss'
+
+const loginPath = '/connect'
+
+function _MyPrivateRoute (props, { sessionStore }) {
+  if (!sessionStore) return null
+  return (
+    <PrivateRoute {...props} loginPath={loginPath} isAuthenticated={sessionStore.isAuthenticated} />
+  )
+}
+_MyPrivateRoute.contextType = RootStoreContext
+const MyPrivateRoute = observer(_MyPrivateRoute)
 
 class App extends React.Component {
   static contextType = RootStoreContext
@@ -29,7 +41,7 @@ class App extends React.Component {
   }
 
   render () {
-    const { sessionStore, uiStore } = this.context
+    const { uiStore } = this.context
 
     // const devTools = process.env.NODE_ENV === 'development' ? <DevTools /> : null
 
@@ -37,23 +49,14 @@ class App extends React.Component {
       <div className="App view">
         {uiStore.isControlPanelOpen ? <ControlPanel /> : null}
 
-        <Route path="/channel/:channel" component={Header} />
+        <Route exact path="/channel/:channel" component={ChannelHeader} />
+        <Route exact path="/settings" component={ChannelHeader} />
 
         <Switch>
-          <Route exact path="/connect" component={LoginView} />
-
-          <PrivateRoute
-            path="/channel/:channel"
-            loginPath={'/connect'}
-            isAuthenticated={sessionStore.isAuthenticated}
-            component={ChannelView}
-          />
-
-          <PrivateRoute
-            loginPath={'/connect'}
-            isAuthenticated={sessionStore.isAuthenticated}
-            component={observer(IndexView)}
-          />
+          <Route exact path={loginPath} component={LoginView} />
+          <MyPrivateRoute exact path="/channel/:channel" component={ChannelView} />
+          <MyPrivateRoute exact path="/settings" component={SettingsView} />
+          <MyPrivateRoute component={IndexView} />
         </Switch>
         {/* {devTools} */}
       </div>

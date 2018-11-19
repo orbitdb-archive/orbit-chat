@@ -19,5 +19,54 @@
     "pressEnterToLogin": "Paina ENTER kirjautuaksesi"
   },
   "loading": "Ladataan",
-  "version": "Versio"
+  "settings": {
+    "names": {
+      "themeName": "Teema",
+      "language": "Kieli",
+      "sidePanelPosition": "Sivupaneelin asemointi",
+      "colorifyUsernames": "Väritä käyttäjänimet",
+      "useEmojis": "Käytä hymiöitä",
+      "emojiSet": "Hymiö teema",
+      "useMonospaceFont": "Käytä monospace fonttia",
+      "useLargeMessage": "Käytä suuria viestejä"
+    },
+    "descriptions": {},
+    "options": {
+      "themeName": {
+        "default": "Oletus",
+        "purple1": "Violetti 1",
+        "purple2": "Violetti 2",
+        "magenta": "Purppura",
+        "red": "Punainen",
+        "orange": "Oranssi",
+        "brown": "Ruskea",
+        "lime": "Lime",
+        "green": "Vihreä",
+        "cyan": "Syaani",
+        "blue1": "Sininen 1",
+        "blue2": "Sininen 2",
+        "grey": "Harmaa"
+      },
+      "language": {
+        "en": "English",
+        "fi": "Suomi"
+      },
+      "sidePanelPosition": {
+        "left": "Vasemmalla",
+        "right": "Oikealla"
+      },
+      "emojiSet": {
+        "apple": "Apple",
+        "emojione": "Emojione",
+        "facebook": "Facebook",
+        "google": "Google",
+        "messenger": "Messenger",
+        "twitter": "Twitter"
+      }
+    }
+  },
+  "version": "Versio",
+  "viewNames": {
+    "settings": "Asetukset"
+  }
 }

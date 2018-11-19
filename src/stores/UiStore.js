@@ -123,12 +123,12 @@ export default class UiStore {
   }
 
   @computed
-  get leftSidePanel () {
-    return this.settingsStore.uiSettings.leftSidePanel
+  get sidePanelPosition () {
+    return this.settingsStore.uiSettings.sidePanelPosition
   }
 
-  set leftSidePanel (val) {
-    this.settingsStore.uiSettings.leftSidePanel = val
+  set sidePanelPosition (val) {
+    this.settingsStore.uiSettings.sidePanelPosition = val
   }
 
   @action.bound

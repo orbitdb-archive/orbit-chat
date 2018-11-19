@@ -37,7 +37,6 @@ class ControlPanel extends React.Component {
 
   onClose () {
     const { uiStore } = this.context
-    if (!uiStore.currentChannelName) return
     uiStore.closeControlPanel()
   }
 
@@ -53,10 +52,9 @@ class ControlPanel extends React.Component {
   }
 
   redirect (to) {
-    const { uiStore } = this.context
     this.setState({ redirectTo: to }, () => {
       // Remember to close the panel since we will be redirecting away
-      uiStore.closeControlPanel()
+      this.onClose()
     })
   }
 
@@ -67,7 +65,7 @@ class ControlPanel extends React.Component {
     const { ipfsStore, networkStore, sessionStore, uiStore } = this.context
     const { t } = this.props
 
-    const leftSide = uiStore.leftSidePanel
+    const leftSide = uiStore.sidePanelPosition === 'left'
 
     const transitionProps = {
       component: 'div',
@@ -131,9 +129,7 @@ class ControlPanel extends React.Component {
               <button
                 className="startIpfsButton submitButton"
                 style={{ ...uiStore.theme }}
-                onClick={() => {
-                  ipfsStore.useJsIPFS()
-                }}>
+                onClick={() => ipfsStore.useJsIPFS()}>
                 {t('controlPanel.startJsIpfs')}
               </button>
             ) : (
@@ -175,7 +171,7 @@ class ControlPanel extends React.Component {
             <div className="bottomRow">
               <div
                 className="icon flaticon-gear94"
-                // onClick={this.props.onOpenSettings}
+                onClick={() => this.redirect('/settings')}
                 style={{ ...uiStore.theme }}
                 key="settingsIcon"
               />
