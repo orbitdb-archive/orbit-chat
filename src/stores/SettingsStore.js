@@ -1,6 +1,6 @@
 'use strict'
 
-import { action, configure, observable, reaction, values } from 'mobx'
+import { action, configure, observable, reaction, values, computed } from 'mobx'
 
 import defaulNetworkSettings from 'config/network.default.json'
 import defaultUiSettings from 'config/ui.default.json'
@@ -16,13 +16,14 @@ export default class SettingsStore {
 
   constructor (rootStore) {
     this.rootStore = rootStore
+    this.sessionStore = rootStore.sessionStore
 
     this.saveNetworkSettings = this.saveNetworkSettings.bind(this)
     this.saveUiSettings = this.saveUiSettings.bind(this)
     this.updateLanguage = this.updateLanguage.bind(this)
 
     // Reload settings when user changes
-    reaction(() => this.rootStore.sessionStore.username, this.load)
+    reaction(() => this.sessionStore.username, this.load)
 
     // Need to react to language changes
     // since we need to call 'i18n.changeLanguage'
@@ -37,11 +38,13 @@ export default class SettingsStore {
     this.load()
   }
 
+  @computed
   get settingsKeys () {
-    if (!this.rootStore.sessionStore.username) throw new Error('No logged in user')
+    const username = this.sessionStore.username
+    if (!username) throw new Error('No logged in user')
     return {
-      networkKey: `orbit-chat.${this.rootStore.sessionStore.username}.network-settings`,
-      uiKey: `orbit-chat.${this.rootStore.sessionStore.username}.ui-settings`
+      networkKey: `orbit-chat.${username}.network-settings`,
+      uiKey: `orbit-chat.${username}.ui-settings`
     }
   }
 
