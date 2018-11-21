@@ -3,23 +3,18 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import Logger from 'utils/logger'
-
-const logger = new Logger()
-
-function FirstMessage ({ t, channel }) {
+function FirstMessage ({ t, loading, channelName, ...rest }) {
   return (
-    <div className="firstMessage" onClick={() => logger.warn('loadOlderMessages not implemented')}>
-      {channel.loadingHistory
-        ? t('channel.loadingHistory')
-        : t('channel.beginningOf', { channel: channel.name })}
+    <div className="firstMessage" {...rest}>
+      {loading ? t('channel.loadingHistory') : t('channel.beginningOf', { channel: channelName })}
     </div>
   )
 }
 
 FirstMessage.propTypes = {
   t: PropTypes.func.isRequired,
-  channel: PropTypes.object.isRequired
+  loading: PropTypes.bool.isRequired,
+  channelName: PropTypes.string.isRequired
 }
 
 export default FirstMessage

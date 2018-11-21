@@ -6,6 +6,7 @@ import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
 
 import { throttleFunc } from 'utils/throttle'
+import Logger from 'utils/logger'
 
 import RootStoreContext from 'context/RootStoreContext'
 
@@ -14,6 +15,7 @@ import MessageRow from 'containers/MessageRow'
 import FirstMessage from 'components/FirstMessage'
 import MessageDateSeparator from 'components/MessageDateSeparator'
 
+const logger = new Logger()
 class ChannelMessages extends React.Component {
   static contextType = RootStoreContext
 
@@ -92,7 +94,12 @@ class ChannelMessages extends React.Component {
 
     return (
       <div className="Messages" onScroll={this.onScroll} ref={this.messagesEl}>
-        <FirstMessage key="firstMessage" channel={channel} t={t} />
+        <FirstMessage
+          t={t}
+          channelName={channel.name}
+          loading={channel.loadingHistory}
+          onClick={() => logger.warn('loadOlderMessages not implemented')}
+        />
         {messageEls}
         <span className="messagesEnd" ref={this.messagesEnd} />
       </div>

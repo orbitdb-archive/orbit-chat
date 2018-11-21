@@ -39,6 +39,17 @@ if (process.env.NODE_ENV === 'development') {
       console.error(e)
     }
   }
+
+  window.debugBlocking = (amount = 100, interval = 100) => {
+    let i = 0
+    let last = Date.now()
+    const timer = setInterval(() => {
+      console.log('tick ' + i, interval - (Date.now() - last))
+      last = Date.now()
+      i++
+      if (i === amount) clearInterval(timer)
+    }, interval)
+  }
 }
 
 render(
