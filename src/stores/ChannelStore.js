@@ -18,14 +18,16 @@ export default class ChannelStore {
   peers = []
 
   @observable
-  loadingHistory = true
+  loadingHistory = false
 
   @observable
   loadingNewMessages = false
 
   sendQueue = []
-
   sending = false
+
+  loadBatch = []
+  replicationBatch = []
 
   constructor ({ network, feed, name }) {
     this.network = network
@@ -39,17 +41,19 @@ export default class ChannelStore {
     this.peerInterval = setInterval(this.updatePeers, 1000)
     this.processSendQueueInterval = setInterval(this.processSendQueue, 10)
 
-    this.feed.events.once('ready', this.onReady.bind(this))
     this.feed.events.on('error', this.onError.bind(this))
-    this.feed.events.on('replicate', this.onReplicate.bind(this))
+    this.feed.events.on('load.progress', this.onLoadProgress.bind(this))
+    this.feed.events.on('ready', this.onLoaded.bind(this))
     this.feed.events.on('replicate.progress', this.onReplicateProgress.bind(this))
     this.feed.events.on('replicated', this.onReplicated.bind(this))
     this.feed.events.on('write', this.onWrite.bind(this))
+
+    this.feed.load()
   }
 
   @computed
-  get messageHashesAndTimestamps () {
-    return this.messages.map(m => [m.Hash, m.Post.meta.ts])
+  get messageHashes () {
+    return this.messages.map(m => m.Hash)
   }
 
   @computed
@@ -73,17 +77,18 @@ export default class ChannelStore {
   }
 
   @action.bound
-  updateMessages (amount) {
-    const oldHashesAndTimestamps = this.messageHashesAndTimestamps
-    const messages = this.getMessages(amount).map(m => {
-      // Check which messages are new and flag accordingly
-      oldHashesAndTimestamps.indexOf([m.Hash, m.Post.meta.ts]) === -1
-        ? (m.unread = true)
-        : (m.unread = false)
-      return m
-    })
+  updateMessages (messages) {
+    const oldHashes = this.messageHashes
 
-    this.messages = messages
+    const newMessages = messages
+      // Filter out messages we already have
+      .filter(m => oldHashes.indexOf(m.Hash) === -1)
+      // Set messages as unread
+      .map(m => Object.assign(m, { unread: true }))
+
+    this.messages = this.messages
+      .concat(newMessages)
+      .sort((a, b) => a.Post.meta.ts - b.Post.meta.ts)
   }
 
   @action.bound
@@ -101,37 +106,42 @@ export default class ChannelStore {
 
   @action.bound
   markAllMessagesAsRead () {
-    this.messages = this.messages.map(m => {
-      m.unread = false
-      return m
-    })
+    this.messages = this.messages.map(m => Object.assign(m, { unread: false }))
   }
 
-  @action
-  onReady () {
-    this.updateMessages(-1)
+  @action // Called while loading from local filesystem
+  onLoadProgress (...args) {
+    const entry = this.parseMessage(args[2])
+    this.loadBatch.push(entry)
+    this.loadingHistory = true
+  }
+
+  @action // Called when done loading from local filesystem
+  onLoaded () {
+    const messages = this.loadBatch.filter(e => e)
+    this.loadBatch = []
+    this.updateMessages(messages)
     this.loadingHistory = false
   }
 
-  @action
-  onReplicate () {
+  @action // Called while loading from IPFS
+  onReplicateProgress (...args) {
+    const entry = this.parseMessage(args[2])
+    this.replicationBatch.push(entry)
     this.loadingNewMessages = true
   }
 
-  @action
-  onReplicateProgress () {
-    this.loadingNewMessages = true
-  }
-
-  @action
+  @action // Called when done loading from IPFS
   onReplicated () {
-    this.updateMessages(this.messages.length + 64)
+    const messages = this.replicationBatch.filter(e => e)
+    this.replicationBatch = []
+    this.updateMessages(messages)
     this.loadingNewMessages = false
   }
 
-  @action
-  onWrite (channel, logHash, message) {
-    this.messages.push(this.parseMessage(message[0]))
+  // Called when the user writes a message
+  onWrite (...args) {
+    this.updateMessages([this.parseMessage(args[2][0])])
   }
 
   @action
@@ -150,26 +160,12 @@ export default class ChannelStore {
     clearInterval(this.peerInterval)
     clearInterval(this.processSendQueueInterval)
 
-    this.feed.events.removeListener('ready', this.onReady)
     this.feed.events.removeListener('error', this.onError)
-    this.feed.events.removeListener('replicate', this.onReplicate)
+    this.feed.events.removeListener('load.progress', this.onLoadProgress)
+    this.feed.events.removeListener('ready', this.onLoaded)
     this.feed.events.removeListener('replicate.progress', this.onReplicateProgress)
     this.feed.events.removeListener('replicated', this.onReplicated)
     this.feed.events.removeListener('write', this.onWrite)
-  }
-
-  getMessages (amount) {
-    const options = {
-      limit: amount,
-      lt: null,
-      gte: null
-    }
-
-    return this.feed
-      .iterator(options)
-      .collect()
-      .map(this.parseMessage)
-      .filter(e => e !== undefined)
   }
 
   parseMessage (entry) {

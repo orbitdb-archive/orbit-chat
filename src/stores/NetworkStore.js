@@ -17,9 +17,6 @@ export default class NetworkStore {
     this.orbitStore = rootStore.orbitStore
     this.sessionStore = rootStore.sessionStore
 
-    this.startLoading = rootStore.uiStore.startLoading
-    this.stopLoading = rootStore.uiStore.stopLoading
-
     this.onUsernameChanged = this.onUsernameChanged.bind(this)
 
     // React to ipfs changes
@@ -101,7 +98,6 @@ export default class NetworkStore {
 
   @action.bound
   onJoinedChannel (channelName) {
-    this.stopLoading('channel:join')
     if (this.channelNames.indexOf(channelName) !== -1) return
     const channelSetup = Object.assign({}, this.orbit.channels[channelName], { network: this })
     this.channels[channelName] = new ChannelStore(channelSetup)
@@ -109,7 +105,6 @@ export default class NetworkStore {
 
   @action.bound
   onLeftChannel (channelName) {
-    this.stopLoading('channel:leave')
     this.removeChannel(channelName)
   }
 
@@ -146,16 +141,14 @@ export default class NetworkStore {
     }
   }
 
-  async joinChannel (channelName) {
+  joinChannel (channelName) {
     if (!this.orbit || this.channelNames.indexOf(channelName) !== -1) return
-    this.startLoading('channel:join')
-    await this.orbit.join(channelName)
+    return this.orbit.join(channelName)
   }
 
-  async leaveChannel (channelName) {
+  leaveChannel (channelName) {
     if (!this.orbit || this.channelNames.indexOf(channelName) === -1) return
-    this.startLoading('channel:leave')
-    await this.orbit.leave(channelName)
+    return this.orbit.leave(channelName)
   }
 
   @action.bound

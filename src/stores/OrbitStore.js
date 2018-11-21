@@ -68,7 +68,7 @@ export default class OrbitStore {
       // path to orbit-db cache file
       cachePath: `${settings.dataDir}/data/orbit-db`,
       // how many messages to retrieve from history on joining a channel
-      maxHistory: 2
+      maxHistory: 1
     }
     const node = new Orbit(ipfs, options)
     node.events.once('connected', () => this.onStarted(node))
