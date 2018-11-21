@@ -17,9 +17,33 @@ import App from 'views/App'
 import 'styles/normalize.css'
 import 'styles/Main.scss'
 
+const rootStore = new RootStore(i18n)
+
+if (process.env.NODE_ENV === 'development') {
+  window.debugSend = (channelName, amount = 1, interval = 100, text = 'ping') => {
+    let timer
+    try {
+      const channel = rootStore.networkStore.channels[channelName]
+      if (channel) {
+        let i = 0
+        timer = setInterval(() => {
+          channel.sendMessage(text + ' (' + i + ')')
+          i++
+          if (i === amount) clearInterval(timer)
+        }, interval)
+      } else {
+        throw new Error('Channel not found')
+      }
+    } catch (e) {
+      if (timer) clearInterval(timer)
+      console.error(e)
+    }
+  }
+}
+
 render(
   <I18nextProvider i18n={i18n}>
-    <RootStoreContext.Provider value={new RootStore(i18n)}>
+    <RootStoreContext.Provider value={rootStore}>
       <Router>
         {/* Render App in a route so it will receive the "location" prop
           and rerender properly on location changes */}
