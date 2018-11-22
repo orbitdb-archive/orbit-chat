@@ -74,15 +74,15 @@ export default class SettingsStore {
       uiSettings = JSON.parse(localStorage.getItem(uiKey)) || {}
     } catch (err) {}
 
-    // Set default orbit dataDir
+    // Set default orbit root
     if (username && !networkSettings.orbit) {
-      defaulNetworkSettingsCopy.orbit.dataDir += `/${username}`
+      defaulNetworkSettingsCopy.orbit.root += `/${username}`
     }
 
     // Set default ipfs repo
     if (!networkSettings.ipfs) {
       const { orbit } = defaulNetworkSettingsCopy
-      defaulNetworkSettingsCopy.ipfs.repo = `${orbit.dataDir}/ipfs`
+      defaulNetworkSettingsCopy.ipfs.repo = `${orbit.root}/ipfs`
     }
 
     // Merge default settings with user defined settings

@@ -10,13 +10,9 @@ configure({ enforceActions: 'observed' })
 const logger = new Logger()
 
 export default class IpfsStore {
-  constructor (rootStore) {
-    this.rootStore = rootStore
-    this.sessionStore = this.rootStore.sessionStore
-    this.settingsStore = this.rootStore.settingsStore
-
-    this.startLoading = this.rootStore.uiStore.startLoading
-    this.stopLoading = this.rootStore.uiStore.stopLoading
+  constructor (networkStore) {
+    this.sessionStore = networkStore.rootStore.sessionStore
+    this.settingsStore = networkStore.rootStore.settingsStore
   }
 
   @observable
@@ -33,7 +29,6 @@ export default class IpfsStore {
     logger.info('ipfs node started')
     this.starting = false
     this.node = node
-    this.stopLoading('ipfs-node:start')
   }
 
   @action.bound
@@ -41,7 +36,6 @@ export default class IpfsStore {
     logger.info('ipfs node stopped')
     this.stopping = false
     this.node = null
-    this.stopLoading('ipfs-node:stop')
   }
 
   @action.bound
@@ -49,7 +43,6 @@ export default class IpfsStore {
     const { username } = this.sessionStore
     if (this.starting || !username) return
     this.starting = true
-    this.startLoading('ipfs-node:start')
     logger.info('Starting js-ipfs node')
     this.stop()
     const settings = this.settingsStore.networkSettings.ipfs
@@ -66,7 +59,6 @@ export default class IpfsStore {
     const { username } = this.sessionStore
     if (this.starting || !username) return
     this.starting = true
-    this.startLoading('ipfs-node:start')
     logger.debug('Activating go-ipfs node')
     this.stop()
     this.starting = false
@@ -77,7 +69,6 @@ export default class IpfsStore {
   stop () {
     if (this.stopping || !this.node) return
     this.stopping = true
-    this.startLoading('ipfs-node:stop')
     logger.info('Stopping ipfs node')
     this.node.once('stop', () => this.onStopped())
     this.node.stop()

@@ -2,7 +2,9 @@
 
 import { action, computed, configure, keys, observable, reaction, values } from 'mobx'
 
-import ChannelStore from 'stores/ChannelStore'
+import ChannelStore from './ChannelStore'
+import IpfsStore from './IpfsStore'
+import OrbitStore from './OrbitStore'
 
 import Logger from 'utils/logger'
 
@@ -13,9 +15,9 @@ const logger = new Logger()
 export default class NetworkStore {
   constructor (rootStore) {
     this.rootStore = rootStore
-    this.ipfsStore = rootStore.ipfsStore
-    this.orbitStore = rootStore.orbitStore
     this.sessionStore = rootStore.sessionStore
+    this.ipfsStore = new IpfsStore(this)
+    this.orbitStore = new OrbitStore(this)
 
     this.onUsernameChanged = this.onUsernameChanged.bind(this)
 
@@ -155,5 +157,13 @@ export default class NetworkStore {
   removeChannel (channelName) {
     this.channels[channelName].stop()
     delete this.channels[channelName]
+  }
+
+  useJsIPFS () {
+    return this.ipfsStore.useJsIPFS()
+  }
+
+  useGoIPFS () {
+    return this.ipfsStore.useGoIPFS()
   }
 }

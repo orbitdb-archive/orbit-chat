@@ -14,6 +14,6 @@
     }
   },
   "orbit": {
-    "dataDir": "/orbit"
+    "root": "/orbit"
   }
 }

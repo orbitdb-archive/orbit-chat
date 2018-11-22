@@ -10,18 +10,15 @@ configure({ enforceActions: 'observed' })
 const logger = new Logger()
 
 export default class OrbitStore {
-  constructor (rootStore) {
-    this.rootStore = rootStore
-    this.sessionStore = this.rootStore.sessionStore
-    this.settingsStore = this.rootStore.settingsStore
-
-    this.startLoading = this.rootStore.uiStore.startLoading
-    this.stopLoading = this.rootStore.uiStore.stopLoading
+  constructor (networkStore) {
+    this.networkStore = networkStore
+    this.sessionStore = networkStore.rootStore.sessionStore
+    this.settingsStore = networkStore.rootStore.settingsStore
 
     this.onIpfsChanged = this.onIpfsChanged.bind(this)
 
     // React to ipfs node changes
-    reaction(() => this.rootStore.ipfsStore.node, this.onIpfsChanged)
+    reaction(() => this.networkStore.ipfsStore.node, this.onIpfsChanged)
   }
 
   @observable
@@ -43,7 +40,6 @@ export default class OrbitStore {
     logger.info('orbit node started')
     this.starting = false
     this.node = node
-    this.stopLoading('orbit-node:start')
   }
 
   @action.bound
@@ -51,22 +47,18 @@ export default class OrbitStore {
     logger.info('orbit node stopped')
     this.stopping = false
     this.node = null
-    this.stopLoading('orbit-node:stop')
   }
 
   @action.bound
   init (ipfs) {
     if (this.starting || !ipfs) return
     this.starting = true
-    this.startLoading('orbit-node:start')
     logger.info('Starting orbit node')
     this.stop()
     const settings = this.settingsStore.networkSettings.orbit
     const options = {
-      // path where to keep generates keys
-      keystorePath: `${settings.dataDir}/data/keys`,
-      // path to orbit-db cache file
-      cachePath: `${settings.dataDir}/data/orbit-db`,
+      // path to orbit-db file
+      directory: `${settings.root}/data/orbit-db`,
       // how many messages to retrieve from history on joining a channel
       maxHistory: 1
     }
@@ -79,7 +71,6 @@ export default class OrbitStore {
   stop () {
     if (this.stopping || !this.node) return
     this.stopping = true
-    this.startLoading('orbit-node:stop')
     logger.info('Stopping orbit node')
     this.node.events.once('disconnected', () => this.onStopped())
     this.node.disconnect()

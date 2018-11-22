@@ -24,7 +24,7 @@
     "not dead"
   ],
   "dependencies": {
-    "autolinker": "^1.7.1",
+    "autolinker": "^1.8.1",
     "classnames": "^2.2.6",
     "date-fns": "^1.29.0",
     "domkit": "0.0.1",
@@ -32,7 +32,7 @@
     "i18next": "^12.0.0",
     "ipfs": "^0.33.1",
     "mobx": "^5.5.2",
-    "mobx-react": "^5.3.6",
+    "mobx-react": "^5.4.2",
     "orbit_": "git://github.com/orbitdb/orbit-core.git#dev/overall-refactor",
     "pleasejs": "^0.4.2",
     "prop-types": "^15.6.2",
@@ -74,7 +74,7 @@
     "sass-loader": "^7.1.0",
     "style-loader": "^0.23.0",
     "url-loader": "^1.1.1",
-    "webpack": "^4.20.2",
+    "webpack": "^4.26.0",
     "webpack-cli": "^3.1.2",
     "webpack-dev-server": "^3.1.9"
   }

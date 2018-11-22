@@ -90,7 +90,7 @@ class ControlPanel extends React.Component {
     const { redirectTo } = this.state
     if (redirectTo) return <Redirect to={redirectTo} />
 
-    const { ipfsStore, networkStore, sessionStore, uiStore } = this.context
+    const { networkStore, sessionStore, uiStore } = this.context
 
     if (!uiStore.isControlPanelOpen) return null
 
@@ -161,7 +161,7 @@ class ControlPanel extends React.Component {
               <button
                 className="startIpfsButton submitButton"
                 style={{ ...uiStore.theme }}
-                onClick={() => ipfsStore.useJsIPFS()}>
+                onClick={() => networkStore.useJsIPFS()}>
                 {t('controlPanel.startJsIpfs')}
               </button>
             ) : (
