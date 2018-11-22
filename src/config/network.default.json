@@ -15,5 +15,6 @@
   },
   "orbit": {
     "root": "/orbit"
-  }
+  },
+  "channels": []
 }

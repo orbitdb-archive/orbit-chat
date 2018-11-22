@@ -49,16 +49,6 @@ export default class SettingsStore {
   }
 
   @action.bound
-  updateNetworkSettings (settings) {
-    Object.assign(this.networkSettings, settings)
-  }
-
-  @action.bound
-  updateUiSettings (settings) {
-    Object.assign(this.uiSettings, settings)
-  }
-
-  @action.bound
   load (username) {
     let networkSettings = {}
     let uiSettings = {}

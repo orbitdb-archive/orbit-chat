@@ -15,7 +15,8 @@ const logger = new Logger()
 export default class NetworkStore {
   constructor (rootStore) {
     this.rootStore = rootStore
-    this.sessionStore = rootStore.sessionStore
+    this.session = rootStore.sessionStore
+    this.settings = rootStore.settingsStore
     this.ipfsStore = new IpfsStore(this)
     this.orbitStore = new OrbitStore(this)
 
@@ -28,7 +29,7 @@ export default class NetworkStore {
     reaction(() => this.orbitStore.node, this.onOrbitChanged)
 
     // React to user changes
-    reaction(() => this.sessionStore.username, this.onUsernameChanged)
+    reaction(() => this.session.username, this.onUsernameChanged)
   }
 
   networkName = 'Orbit DEV Network'
@@ -91,11 +92,7 @@ export default class NetworkStore {
 
     this._orbit = newOrbit
 
-    if (this.orbit) {
-      this.orbit.events.on('joined', this.onJoinedChannel)
-      this.orbit.events.on('left', this.onLeftChannel)
-      this.orbit.events.on('peers', this.onSwarmPeerUpdate)
-    }
+    if (this.orbit) this.onOrbitStarted(this.orbit)
   }
 
   @action.bound
@@ -103,16 +100,41 @@ export default class NetworkStore {
     if (this.channelNames.indexOf(channelName) !== -1) return
     const channelSetup = Object.assign({}, this.orbit.channels[channelName], { network: this })
     this.channels[channelName] = new ChannelStore(channelSetup)
+
+    this.settings.networkSettings.channels = [
+      ...this.settings.networkSettings.channels.filter(c => c !== channelName),
+      channelName
+    ]
   }
 
   @action.bound
   onLeftChannel (channelName) {
     this.removeChannel(channelName)
+
+    this.settings.networkSettings.channels = this.settings.networkSettings.channels.filter(
+      c => c !== channelName
+    )
   }
 
   @action.bound
   onSwarmPeerUpdate (peers) {
     this.swarmPeers = peers
+  }
+
+  onOrbitStarted (orbit) {
+    orbit.events.on('joined', this.onJoinedChannel)
+    orbit.events.on('left', this.onLeftChannel)
+    orbit.events.on('peers', this.onSwarmPeerUpdate)
+
+    this.settings.networkSettings.channels.map(c => {
+      this.joinChannel(c)
+    })
+  }
+
+  onOrbitStopped (orbit) {
+    orbit.events.removeListener('joined', this.onJoinedChannel)
+    orbit.events.removeListener('left', this.onLeftChannel)
+    orbit.events.removeListener('peers', this.onSwarmPeerUpdate)
   }
 
   onUsernameChanged (newUsername) {
@@ -133,14 +155,8 @@ export default class NetworkStore {
   @action.bound
   stopOrbit () {
     this.channelNames.map(this.removeChannel)
-
     this.swarmPeers = []
-
-    if (this.orbit) {
-      this.orbit.events.removeListener('joined', this.onJoinedChannel)
-      this.orbit.events.removeListener('left', this.onLeftChannel)
-      this.orbit.events.removeListener('peers', this.onSwarmPeerUpdate)
-    }
+    if (this.orbit) this.onOrbitStopped(this.orbit)
   }
 
   joinChannel (channelName) {
