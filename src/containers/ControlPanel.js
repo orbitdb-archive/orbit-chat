@@ -35,6 +35,9 @@ class ControlPanel extends React.Component {
     this.onJoinChannel = this.onJoinChannel.bind(this)
     this.redirect = this.redirect.bind(this)
     this.isClosable = this.isClosable.bind(this)
+    this.renderJoinChannelInput = this.renderJoinChannelInput.bind(this)
+    this.renderChannelsList = this.renderChannelsList.bind(this)
+    this.renderBottomRow = this.renderBottomRow.bind(this)
   }
 
   componentDidMount () {
@@ -84,6 +87,101 @@ class ControlPanel extends React.Component {
         this.onClose()
       })
     })
+  }
+
+  renderJoinChannelInput (transitionProps) {
+    const { networkStore, uiStore } = this.context
+    const { t } = this.props
+
+    return networkStore.isOnline ? (
+      <CSSTransitionGroup
+        {...transitionProps}
+        transitionName="joinChannelAnimation"
+        className="joinChannelInput">
+        <JoinChannel
+          onSubmit={this.onJoinChannel}
+          autoFocus
+          // requirePassword={this.state.requirePassword}
+          theme={{ ...uiStore.theme }}
+          t={t}
+          inputRef={el => (this.joinChannelInput = el)}
+        />
+      </CSSTransitionGroup>
+    ) : !networkStore.starting ? (
+      <button
+        className="startIpfsButton submitButton"
+        style={{ ...uiStore.theme }}
+        onClick={() => networkStore.useJsIPFS()}>
+        {t('controlPanel.startJsIpfs')}
+      </button>
+    ) : (
+      <div style={{ position: 'relative' }}>
+        <Spinner loading={true} color="rgba(255, 255, 255, 0.7)" size="16px" />
+      </div>
+    )
+  }
+
+  renderChannelsList (channels) {
+    const { uiStore } = this.context
+    const { t } = this.props
+
+    return (
+      <div className="RecentChannelsView">
+        <div className="RecentChannels">
+          {channels.map(c => (
+            <div
+              className={classNames('row link', {
+                active: uiStore.currentChannelName === c.name
+              })}
+              key={c.name}>
+              <ChannelLink
+                channel={c}
+                theme={{ ...uiStore.theme }}
+                onClick={e => {
+                  e.preventDefault()
+                  this.redirect(`/channel/${c.name}`)
+                }}
+              />
+              <span
+                className="closeChannelButton"
+                onClick={() => {
+                  if (uiStore.currentChannelName === c.name) this.redirect('/')
+                  c.leave()
+                }}>
+                {t('controlPanel.closeChannel')}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
+  }
+
+  renderBottomRow () {
+    const { sessionStore, uiStore } = this.context
+
+    return (
+      <div className="bottomRow">
+        <div
+          className="icon flaticon-gear94"
+          onClick={() => this.redirect('/settings')}
+          style={{ ...uiStore.theme }}
+          key="settingsIcon"
+        />
+        <div
+          className="icon flaticon-sharing7"
+          // onClick={this.props.onOpenSwarmView}
+          style={{ ...uiStore.theme }}
+          key="swarmIcon"
+        />
+        <div
+          className="icon flaticon-prohibition35"
+          onClick={() => sessionStore.logout()}
+          style={{ ...uiStore.theme }}
+          key="disconnectIcon"
+        />
+      </div>
+    )
   }
 
   render () {
@@ -143,32 +241,7 @@ class ControlPanel extends React.Component {
 
             <div className="username">{sessionStore.username}</div>
 
-            {networkStore.isOnline ? (
-              <CSSTransitionGroup
-                {...transitionProps}
-                transitionName="joinChannelAnimation"
-                className="joinChannelInput">
-                <JoinChannel
-                  onSubmit={this.onJoinChannel}
-                  autoFocus
-                  // requirePassword={this.state.requirePassword}
-                  theme={{ ...uiStore.theme }}
-                  t={t}
-                  inputRef={el => (this.joinChannelInput = el)}
-                />
-              </CSSTransitionGroup>
-            ) : !networkStore.starting ? (
-              <button
-                className="startIpfsButton submitButton"
-                style={{ ...uiStore.theme }}
-                onClick={() => networkStore.useJsIPFS()}>
-                {t('controlPanel.startJsIpfs')}
-              </button>
-            ) : (
-              <div style={{ position: 'relative' }}>
-                <Spinner loading={true} color="rgba(255, 255, 255, 0.7)" size="16px" />
-              </div>
-            )}
+            {this.renderJoinChannelInput(transitionProps)}
 
             <div
               className={classNames({
@@ -182,49 +255,10 @@ class ControlPanel extends React.Component {
               {...transitionProps}
               transitionName="joinChannelAnimation"
               className="openChannels">
-              <div className="RecentChannelsView">
-                <div className="RecentChannels">
-                  {channels.map(c => (
-                    <div className="row link" key={c.name}>
-                      <ChannelLink
-                        channel={c}
-                        theme={{ ...uiStore.theme }}
-                        onClick={this.onClose}
-                      />
-                      <span
-                        className="closeChannelButton"
-                        onClick={() => {
-                          if (uiStore.currentChannelName === c.name) this.redirect('/')
-                          c.leave()
-                        }}>
-                        {t('controlPanel.closeChannel')}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              {this.renderChannelsList(channels)}
             </CSSTransitionGroup>
 
-            <div className="bottomRow">
-              <div
-                className="icon flaticon-gear94"
-                onClick={() => this.redirect('/settings')}
-                style={{ ...uiStore.theme }}
-                key="settingsIcon"
-              />
-              <div
-                className="icon flaticon-sharing7"
-                // onClick={this.props.onOpenSwarmView}
-                style={{ ...uiStore.theme }}
-                key="swarmIcon"
-              />
-              <div
-                className="icon flaticon-prohibition35"
-                onClick={() => sessionStore.logout()}
-                style={{ ...uiStore.theme }}
-                key="disconnectIcon"
-              />
-            </div>
+            {this.renderBottomRow()}
           </div>
         </CSSTransitionGroup>
         <CSSTransitionGroup
