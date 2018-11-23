@@ -1,6 +1,6 @@
 'use strict'
 
-import { action, computed, configure, observable, runInAction } from 'mobx'
+import { action, computed, configure, observable, reaction, runInAction, values } from 'mobx'
 
 import { throttleFunc } from 'utils/throttle'
 
@@ -23,6 +23,12 @@ export default class ChannelStore {
   @observable
   loadingNewMessages = false
 
+  @observable
+  sendingMessage = false
+
+  @observable
+  storableState = {}
+
   sendQueue = []
   sending = false
 
@@ -35,8 +41,8 @@ export default class ChannelStore {
     this.name = name
 
     this.stop = this.stop.bind(this)
-    this.sendMessage = this.sendMessage.bind(this)
     this.processSendQueue = throttleFunc(this.processSendQueue.bind(this))
+    this.saveState = this.saveState.bind(this)
 
     this.peerInterval = setInterval(this.updatePeers, 1000)
     this.processSendQueueInterval = setInterval(this.processSendQueue, 10)
@@ -48,7 +54,12 @@ export default class ChannelStore {
     this.feed.events.on('replicated', this.onReplicated.bind(this))
     this.feed.events.on('write', this.onWrite.bind(this))
 
+    this.loadState()
+
     this.feed.load()
+
+    // Save channel state on changes
+    reaction(() => values(this.storableState), this.saveState)
   }
 
   @computed
@@ -76,15 +87,22 @@ export default class ChannelStore {
     return false
   }
 
+  get storagekey () {
+    const username = this.network.session.username
+    if (!username) throw new Error('No logged in user')
+    return `orbit-chat.${username}.channel-states`
+  }
+
   @action.bound
   updateMessages (messages) {
     const oldHashes = this.messageHashes
+    const { lastReadTimestamp = 0 } = this.storableState
 
     const newMessages = messages
       // Filter out messages we already have
       .filter(m => oldHashes.indexOf(m.Hash) === -1)
       // Set messages as unread
-      .map(m => Object.assign(m, { unread: true }))
+      .map(m => Object.assign(m, { unread: m.Post.meta.ts > lastReadTimestamp }))
 
     this.messages = this.messages
       .concat(newMessages)
@@ -102,11 +120,17 @@ export default class ChannelStore {
   @action.bound
   markMessageAsRead (message) {
     message.unread = false
+
+    // Check if we need to update the last read timestamp
+    const { lastReadTimestamp } = this.storableState
+    if (!lastReadTimestamp || message.Post.meta.ts > lastReadTimestamp) {
+      this.storableState.lastReadTimestamp = message.Post.meta.ts
+    }
   }
 
   @action.bound
   markAllMessagesAsRead () {
-    this.messages = this.messages.map(m => Object.assign(m, { unread: false }))
+    this.messages = this.messages.map(this.markMessageAsRead)
   }
 
   @action // Called while loading from local filesystem
@@ -124,7 +148,7 @@ export default class ChannelStore {
     this.loadingHistory = false
   }
 
-  @action // Called while loading from IPFS
+  @action // Called while loading from IPFS (receiving new messages)
   onReplicateProgress (...args) {
     const entry = this.parseMessage(args[2])
     this.replicationBatch.push(entry)
@@ -139,9 +163,10 @@ export default class ChannelStore {
     this.loadingNewMessages = false
   }
 
-  // Called when the user writes a message
+  @action // Called when the user writes a message
   onWrite (...args) {
     this.updateMessages([this.parseMessage(args[2][0])])
+    this.sendingMessage = false
   }
 
   @action
@@ -180,7 +205,10 @@ export default class ChannelStore {
     return this.network.ipfs.pubsub.peers(this.feed.address.toString())
   }
 
+  @action.bound
   sendMessage (text) {
+    this.sendingMessage = true
+
     // TODO: fix the compatibility issue here (exlcude incompatible browsers)
     // eslint-disable-next-line compat/compat
     return new Promise((resolve, reject) => {
@@ -202,5 +230,23 @@ export default class ChannelStore {
     }
 
     this.sending = false
+  }
+
+  getStoredStates () {
+    return JSON.parse(localStorage.getItem(this.storagekey)) || {}
+  }
+
+  @action.bound
+  loadState () {
+    try {
+      Object.assign(this.storableState, this.getStoredStates()[this.name] || {})
+    } catch (err) {}
+  }
+
+  saveState () {
+    try {
+      const states = Object.assign(this.getStoredStates(), { [this.name]: this.storableState })
+      localStorage.setItem(this.storagekey, JSON.stringify(states))
+    } catch (err) {}
   }
 }

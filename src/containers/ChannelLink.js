@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { NavLink } from 'react-router-dom'
+import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
@@ -31,4 +32,4 @@ ChannelLink.propTypes = {
   theme: PropTypes.object.isRequired
 }
 
-export default ChannelLink
+export default observer(ChannelLink)

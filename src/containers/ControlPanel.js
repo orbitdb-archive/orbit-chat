@@ -10,7 +10,7 @@ import classNames from 'classnames'
 
 import RootStoreContext from 'context/RootStoreContext'
 
-import ChannelLink from 'components/ChannelLink'
+import ChannelLink from 'containers/ChannelLink'
 
 import BackgroundAnimation from 'components/BackgroundAnimation'
 import JoinChannel from 'components/JoinChannel'

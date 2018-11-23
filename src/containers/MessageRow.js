@@ -4,6 +4,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import classNames from 'classnames'
+import IntersectObserver from 'react-intersection-observer'
 
 import MessageTimestamp from 'components/MessageTimestamp'
 import MessageUser from 'components/MessageUser'
@@ -16,6 +17,7 @@ function MessageRow ({
   colorifyUsernames,
   useEmojis,
   emojiSet,
+  onInViewChange,
   useLargeMessage,
   useMonospaceFont,
   highlightWords
@@ -23,7 +25,11 @@ function MessageRow ({
   const isCommand = message.Post.content && message.Post.content.startsWith('/me')
 
   return (
-    <div className={classNames('Message', { large: useLargeMessage, monospace: useMonospaceFont })}>
+    <IntersectObserver
+      tag="div"
+      onChange={onInViewChange}
+      triggerOnce={true}
+      className={classNames('Message', { large: useLargeMessage, monospace: useMonospaceFont })}>
       <MessageTimestamp message={message} />
       <MessageUser message={message} colorify={colorifyUsernames} isCommand={isCommand} />
       <MessageContent
@@ -33,7 +39,7 @@ function MessageRow ({
         isCommand={isCommand}
         highlightWords={highlightWords}
       />
-    </div>
+    </IntersectObserver>
   )
 }
 
@@ -42,6 +48,7 @@ MessageRow.propTypes = {
   colorifyUsernames: PropTypes.bool,
   useEmojis: PropTypes.bool,
   emojiSet: PropTypes.string.isRequired,
+  onInViewChange: PropTypes.func.isRequired,
   useLargeMessage: PropTypes.bool,
   useMonospaceFont: PropTypes.bool,
   highlightWords: PropTypes.array

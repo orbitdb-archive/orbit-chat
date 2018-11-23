@@ -21,6 +21,7 @@ export default class NetworkStore {
     this.orbitStore = new OrbitStore(this)
 
     this.onUsernameChanged = this.onUsernameChanged.bind(this)
+    this.joinChannel = this.joinChannel.bind(this)
 
     // React to ipfs changes
     reaction(() => this.ipfsStore.node, this.onIpfsChanged)
@@ -101,6 +102,8 @@ export default class NetworkStore {
     const channelSetup = Object.assign({}, this.orbit.channels[channelName], { network: this })
     this.channels[channelName] = new ChannelStore(channelSetup)
 
+    // Save the channel to localstorage
+    // so user will connect to it automatically next time
     this.settings.networkSettings.channels = [
       ...this.settings.networkSettings.channels.filter(c => c !== channelName),
       channelName
@@ -111,6 +114,7 @@ export default class NetworkStore {
   onLeftChannel (channelName) {
     this.removeChannel(channelName)
 
+    // Remove the channel from localstorage
     this.settings.networkSettings.channels = this.settings.networkSettings.channels.filter(
       c => c !== channelName
     )
@@ -126,9 +130,8 @@ export default class NetworkStore {
     orbit.events.on('left', this.onLeftChannel)
     orbit.events.on('peers', this.onSwarmPeerUpdate)
 
-    this.settings.networkSettings.channels.map(c => {
-      this.joinChannel(c)
-    })
+    // Join all channnels that are saved in localstorage for current user
+    this.settings.networkSettings.channels.map(this.joinChannel)
   }
 
   onOrbitStopped (orbit) {

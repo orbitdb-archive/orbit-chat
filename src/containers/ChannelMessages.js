@@ -79,6 +79,9 @@ class ChannelMessages extends React.Component {
           useLargeMessage={useLargeMessage}
           useMonospaceFont={useMonospaceFont}
           highlightWords={[sessionStore.username]}
+          onInViewChange={inView => {
+            if (message.unread && inView) channel.markMessageAsRead(message)
+          }}
           {...rest}
         />
       )

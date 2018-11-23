@@ -40,7 +40,7 @@ class ChannelControls extends React.Component {
     return (
       <div className="Controls">
         <Spinner
-          loading={channel.loadingNewMessages}
+          loading={channel.loadingNewMessages || channel.sendingMessage}
           color="rgba(255, 255, 255, 0.7)"
           size="16px"
         />

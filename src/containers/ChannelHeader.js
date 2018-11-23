@@ -8,7 +8,7 @@ import { withNamespaces } from 'react-i18next'
 
 import RootStoreContext from 'context/RootStoreContext'
 
-import ChannelLink from 'components/ChannelLink'
+import ChannelLink from 'containers/ChannelLink'
 
 import 'styles/Header.scss'
 
