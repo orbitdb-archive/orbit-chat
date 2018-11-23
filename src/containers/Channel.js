@@ -5,14 +5,14 @@ import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
 
-import RootStoreContext from 'context/RootStoreContext'
+import Logger from '../utils/logger'
 
-import ChannelControls from 'containers/ChannelControls'
-import ChannelMessages from 'containers/ChannelMessages'
+import RootStoreContext from '../context/RootStoreContext'
 
-import Logger from 'utils/logger'
+import ChannelControls from './ChannelControls'
+import ChannelMessages from './ChannelMessages'
 
-import 'styles/Channel.scss'
+import '../styles/Channel.scss'
 
 const logger = new Logger()
 

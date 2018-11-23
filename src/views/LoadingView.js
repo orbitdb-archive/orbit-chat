@@ -6,11 +6,11 @@ import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
 import { CSSTransitionGroup } from 'react-transition-group'
 
-import RootStoreContext from 'context/RootStoreContext'
+import RootStoreContext from '../context/RootStoreContext'
 
-import BackgroundAnimation from 'components/BackgroundAnimation'
+import BackgroundAnimation from '../components/BackgroundAnimation'
 
-import 'styles/LoadingView.scss'
+import '../styles/LoadingView.scss'
 
 class LoadingView extends React.Component {
   static contextType = RootStoreContext

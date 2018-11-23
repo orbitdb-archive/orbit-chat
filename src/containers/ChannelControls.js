@@ -4,11 +4,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 
-import SendMessage from 'containers/SendMessage'
+import Logger from '../utils/logger'
 
-import Spinner from 'components/Spinner'
+import Spinner from '../components/Spinner'
 
-import Logger from 'utils/logger'
+import SendMessage from './SendMessage'
 
 const logger = new Logger()
 

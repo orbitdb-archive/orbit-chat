@@ -2,7 +2,7 @@
 
 import { action, configure, observable, computed, runInAction } from 'mobx'
 
-import Logger from 'utils/logger'
+import Logger from '../utils/logger'
 
 configure({ enforceActions: 'observed' })
 

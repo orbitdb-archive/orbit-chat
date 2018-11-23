@@ -2,7 +2,7 @@
 
 import React from 'react'
 
-import { base58 } from 'utils/base-x'
+import { base58 } from '../../utils/base-x'
 
 // Returns an array of React elements
 function reactIpfsLink (

@@ -6,11 +6,11 @@ import { observer } from 'mobx-react'
 import { CSSTransitionGroup } from 'react-transition-group'
 import { withNamespaces } from 'react-i18next'
 
-import RootStoreContext from 'context/RootStoreContext'
+import RootStoreContext from '../context/RootStoreContext'
 
-import ChannelLink from 'containers/ChannelLink'
+import ChannelLink from './ChannelLink'
 
-import 'styles/Header.scss'
+import '../styles/Header.scss'
 
 class ChannelHeader extends React.Component {
   static contextType = RootStoreContext

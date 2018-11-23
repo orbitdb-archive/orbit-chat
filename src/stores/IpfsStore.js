@@ -3,7 +3,7 @@
 import { action, configure, observable } from 'mobx'
 import IPFS from 'ipfs'
 
-import Logger from 'utils/logger'
+import Logger from '../utils/logger'
 
 configure({ enforceActions: 'observed' })
 

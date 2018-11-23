@@ -6,14 +6,14 @@ import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
 import { CSSTransitionGroup } from 'react-transition-group'
 
-import RootStoreContext from 'context/RootStoreContext'
+import settingsOptions from '../config/setting.options.json'
 
-import settingsOptions from 'config/setting.options.json'
+import locales from '../locales'
+import themes from '../themes'
 
-import locales from 'locales'
-import themes from 'themes'
+import RootStoreContext from '../context/RootStoreContext'
 
-import 'styles/SettingsView.scss'
+import '../styles/SettingsView.scss'
 
 settingsOptions.themeName.options = Object.keys(themes)
 settingsOptions.language.options = Object.keys(locales)

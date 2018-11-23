@@ -2,8 +2,8 @@
 
 import { action, configure, observable, reaction, values, computed } from 'mobx'
 
-import defaulNetworkSettings from 'config/network.default.json'
-import defaultUiSettings from 'config/ui.default.json'
+import defaulNetworkSettings from '../config/network.default.json'
+import defaultUiSettings from '../config/ui.default.json'
 
 configure({ enforceActions: 'observed' })
 

@@ -6,11 +6,11 @@ import { observer } from 'mobx-react'
 import classNames from 'classnames'
 import IntersectObserver from 'react-intersection-observer'
 
-import MessageTimestamp from 'components/MessageTimestamp'
-import MessageUser from 'components/MessageUser'
-import MessageContent from 'components/MessageContent'
+import MessageTimestamp from '../components/MessageTimestamp'
+import MessageUser from '../components/MessageUser'
+import MessageContent from '../components/MessageContent'
 
-import 'styles/Message.scss'
+import '../styles/Message.scss'
 
 function MessageRow ({
   message,

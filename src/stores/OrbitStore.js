@@ -3,7 +3,7 @@
 import { action, configure, observable, reaction } from 'mobx'
 import Orbit from 'orbit_'
 
-import Logger from 'utils/logger'
+import Logger from '../utils/logger'
 
 configure({ enforceActions: 'observed' })
 

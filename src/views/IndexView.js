@@ -3,7 +3,7 @@
 import React from 'react'
 import { observer } from 'mobx-react'
 
-import RootStoreContext from 'context/RootStoreContext'
+import RootStoreContext from '../context/RootStoreContext'
 
 class IndexView extends React.Component {
   static contextType = RootStoreContext

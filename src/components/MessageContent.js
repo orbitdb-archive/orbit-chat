@@ -4,7 +4,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import TextMessage from 'components/TextMessage'
+import TextMessage from './TextMessage'
 
 function MessageContent ({ message, isCommand, ...rest }) {
   let content

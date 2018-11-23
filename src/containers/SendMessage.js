@@ -6,9 +6,9 @@ import { withNamespaces } from 'react-i18next'
 import { CSSTransitionGroup } from 'react-transition-group'
 import { emojiIndex } from 'emoji-mart'
 
-import EmojiPicker from 'components/EmojiPicker'
+import EmojiPicker from '../components/EmojiPicker'
 
-import 'styles/SendMessage.scss'
+import '../styles/SendMessage.scss'
 
 class SendMessage extends React.Component {
   static propTypes = {

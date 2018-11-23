@@ -8,16 +8,16 @@ import { observer } from 'mobx-react'
 import { CSSTransitionGroup } from 'react-transition-group'
 import classNames from 'classnames'
 
-import RootStoreContext from 'context/RootStoreContext'
+import RootStoreContext from '../context/RootStoreContext'
 
-import ChannelLink from 'containers/ChannelLink'
+import BackgroundAnimation from '../components/BackgroundAnimation'
+import JoinChannel from '../components/JoinChannel'
+import Spinner from '../components/Spinner'
 
-import BackgroundAnimation from 'components/BackgroundAnimation'
-import JoinChannel from 'components/JoinChannel'
-import Spinner from 'components/Spinner'
+import ChannelLink from './ChannelLink'
 
-import 'styles/flaticon.css'
-import 'styles/ControlPanel.scss'
+import '../styles/flaticon.css'
+import '../styles/ControlPanel.scss'
 
 class ControlPanel extends React.Component {
   static contextType = RootStoreContext

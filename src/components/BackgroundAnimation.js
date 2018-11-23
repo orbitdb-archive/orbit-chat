@@ -3,7 +3,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import 'styles/BackgroundAnimation.scss'
+import '../styles/BackgroundAnimation.scss'
 
 const defaultDelay = 0.2
 

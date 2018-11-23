@@ -7,7 +7,7 @@ import reactEmoji from './react-emoji'
 import reactIpfsLink from './react-ipfs-link'
 import reactHighlight from './react-highlight'
 
-import { flatten } from 'utils/flatten'
+import { flatten } from '../../utils/flatten'
 
 function process (strFunc, input, options = {}, wordIndex = 0) {
   if (!input) return null

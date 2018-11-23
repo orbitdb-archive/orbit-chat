@@ -6,13 +6,13 @@ import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
 
-import RootStoreContext from 'context/RootStoreContext'
+import Logger from '../utils/logger'
 
-import Channel from 'containers/Channel'
+import RootStoreContext from '../context/RootStoreContext'
 
-import Logger from 'utils/logger'
+import Channel from '../containers/Channel'
 
-import 'styles/ChannelView.scss'
+import '../styles/ChannelView.scss'
 
 const logger = new Logger()
 

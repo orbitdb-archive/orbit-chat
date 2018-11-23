@@ -5,18 +5,18 @@ import { Route, Switch } from 'react-router-dom'
 import { hot } from 'react-hot-loader'
 import { observer } from 'mobx-react'
 
-import RootStoreContext from 'context/RootStoreContext'
+import RootStoreContext from '../context/RootStoreContext'
 
-import ChannelView from 'views/ChannelView'
-import IndexView from 'views/IndexView'
-import LoginView from 'views/LoginView'
-import SettingsView from 'views/SettingsView'
+import __PrivateRoute from '../components/PrivateRoute'
 
-import ControlPanel from 'containers/ControlPanel'
-import ChannelHeader from 'containers/ChannelHeader'
+import ControlPanel from '../containers/ControlPanel'
+import ChannelHeader from '../containers/ChannelHeader'
 // import DevTools from 'containers/DevTools'
 
-import __PrivateRoute from 'components/PrivateRoute'
+import ChannelView from './ChannelView'
+import IndexView from './IndexView'
+import LoginView from './LoginView'
+import SettingsView from './SettingsView'
 
 import 'styles/App.scss'
 import 'styles/Scrollbars.scss'

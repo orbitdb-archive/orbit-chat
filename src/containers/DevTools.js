@@ -4,9 +4,9 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { observer } from 'mobx-react'
 
-import RootStoreContext from 'context/RootStoreContext'
+import RootStoreContext from '../context/RootStoreContext'
 
-import 'styles/DevTools.scss'
+import '../styles/DevTools.scss'
 
 @observer
 class DebugChannelList extends React.Component {

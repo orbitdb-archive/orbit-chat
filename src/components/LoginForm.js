@@ -4,12 +4,12 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransitionGroup } from 'react-transition-group'
 
-import Logger from 'utils/logger'
+import Logger from '../utils/logger'
 
-import 'styles/SubmitButton.scss'
-import 'styles/InputField.scss'
+import '../styles/SubmitButton.scss'
+import '../styles/InputField.scss'
 
-import uportLogo from 'images/uport.png'
+import uportLogo from '../images/uport.png'
 
 const logger = new Logger()
 

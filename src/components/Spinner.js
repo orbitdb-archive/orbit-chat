@@ -3,7 +3,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import MoonLoader from 'components/MoonLoader'
+import MoonLoader from './MoonLoader'
 
 function Spinner ({ className, theme, ...rest }) {
   return (

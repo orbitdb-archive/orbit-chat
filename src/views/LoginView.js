@@ -9,14 +9,14 @@ import { CSSTransitionGroup } from 'react-transition-group'
 
 import { version } from '../../package.json'
 
-import RootStoreContext from 'context/RootStoreContext'
+import Logger from '../utils/logger'
 
-import BackgroundAnimation from 'components/BackgroundAnimation'
-import LoginForm from 'components/LoginForm'
+import RootStoreContext from '../context/RootStoreContext'
 
-import Logger from 'utils/logger'
+import BackgroundAnimation from '../components/BackgroundAnimation'
+import LoginForm from '../components/LoginForm'
 
-import 'styles/LoginView.scss'
+import '../styles/LoginView.scss'
 
 const logger = new Logger()
 

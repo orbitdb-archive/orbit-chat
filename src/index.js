@@ -7,15 +7,16 @@ import { I18nextProvider } from 'react-i18next'
 
 import { version } from '../package.json'
 
-import i18n from 'config/i18n.config'
+import i18n from './config/i18n.config'
 
-import RootStore from 'stores/RootStore'
-import RootStoreContext from 'context/RootStoreContext'
+import RootStore from './stores/RootStore'
 
-import App from 'views/App'
+import RootStoreContext from './context/RootStoreContext'
 
-import 'styles/normalize.css'
-import 'styles/Main.scss'
+import App from './views/App'
+
+import './styles/normalize.css'
+import './styles/Main.scss'
 
 const rootStore = new RootStore(i18n)
 

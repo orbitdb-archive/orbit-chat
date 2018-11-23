@@ -1,3 +1,5 @@
+'use strict'
+
 /*
  * base58.js
  *  - encodes integers to and decodes from a base58 (or your own) base58 alphabet

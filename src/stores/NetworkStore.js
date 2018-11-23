@@ -6,7 +6,7 @@ import ChannelStore from './ChannelStore'
 import IpfsStore from './IpfsStore'
 import OrbitStore from './OrbitStore'
 
-import Logger from 'utils/logger'
+import Logger from '../utils/logger'
 
 configure({ enforceActions: 'observed' })
 

@@ -2,9 +2,9 @@
 
 import { action, computed, configure, observable, reaction } from 'mobx'
 
-import { throttleEvent } from 'utils/throttle'
+import { throttleEvent } from '../utils/throttle'
 
-import Themes from 'themes'
+import Themes from '../themes'
 
 configure({ enforceActions: 'observed' })
 throttleEvent('resize', 'optimizedResize', window)

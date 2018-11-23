@@ -3,7 +3,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { getFormattedDateString } from 'utils/format-time'
+import { getFormattedDateString } from '../utils/format-time'
 
 function MessageDateSeparator ({ date, locale }) {
   return <div className="dateSeparator">{getFormattedDateString(date, locale)}</div>

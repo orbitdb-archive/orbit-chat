@@ -6,7 +6,7 @@ import { observer } from 'mobx-react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import 'styles/ChannelLink.scss'
+import '../styles/ChannelLink.scss'
 
 function ChannelLink ({ channel, theme, ...rest }) {
   return (

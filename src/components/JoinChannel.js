@@ -1,7 +1,9 @@
+'use strict'
+
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import 'styles/JoinChannel.scss'
+import '../styles/JoinChannel.scss'
 
 function JoinChannel ({ t, onSubmit, theme, inputRef }) {
   return (

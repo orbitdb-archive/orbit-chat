@@ -5,7 +5,7 @@ import PropTypes from 'prop-types'
 import { Emoji } from 'emoji-mart'
 
 import 'emoji-mart/css/emoji-mart.css'
-import 'styles/EmojiPicker.scss'
+import '../styles/EmojiPicker.scss'
 
 class EmojiPicker extends React.Component {
   static propTypes = {

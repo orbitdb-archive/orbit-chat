@@ -2,9 +2,8 @@
 
 import { action, computed, configure, observable, reaction, runInAction, values } from 'mobx'
 
-import { throttleFunc } from 'utils/throttle'
-
-import Logger from 'utils/logger'
+import { throttleFunc } from '../utils/throttle'
+import Logger from '../utils/logger'
 
 configure({ enforceActions: 'observed' })
 
