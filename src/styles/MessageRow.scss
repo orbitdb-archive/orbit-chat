@@ -23,7 +23,6 @@ $timestamp-color:  rgba(240, 240, 240, 0.6);
 
   overflow: hidden;
   background-color: rgb(35, 35, 35);
-  font-weight: bold;
 
   &__Timestamp {
     display: flex;
@@ -80,6 +79,7 @@ $timestamp-color:  rgba(240, 240, 240, 0.6);
     // background-repeat: no-repeat;
   }
 }
+
 .size-normal {
   .Message {
     align-items: baseline;
@@ -122,6 +122,22 @@ $timestamp-color:  rgba(240, 240, 240, 0.6);
       font-style: italic;
       margin-left: .5em;
     }
+  }
+}
+
+.font-normal {
+  .Message{
+    font-size: 1em;
+    font-weight: bold;
+
+  }
+}
+
+.font-monospace {
+  .Message {
+    font-family: "Roboto Mono";
+    font-size: .9em;
+    font-weight: normal;
   }
 }
 

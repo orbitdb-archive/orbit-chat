@@ -276,8 +276,6 @@ input[type=button], .channelOptionsButton {
   .dateSeparator {
     display: flex;
     justify-content: flex-start;
-    padding-left: 0.3em;
-    font-weight: bold;
     font-size: 0.7em;
     color: rgb(228, 228, 228);
     background-color: rgb(35, 35, 35);
@@ -304,6 +302,35 @@ input[type=button], .channelOptionsButton {
   .messagesEnd {
     display: block;
     height: 0;
+  }
+
+  &.size-normal {
+    .dateSeparator{
+      font-size: .7em;
+      margin-left: .3em;
+    }
+  }
+
+  &.size-large {
+    .dateSeparator {
+      font-size: .8em;
+      margin-left: .8em;
+    }
+  }
+
+  &.font-normal {
+    .dateSeparator {
+      font-weight: bold;
+      padding-bottom: .2em;
+    }
+  }
+
+  &.font-monospace {
+    .dateSeparator {
+      font-family: "Roboto Mono";
+      font-weight: normal;
+      padding-bottom: .4em;
+    }
   }
 
 }

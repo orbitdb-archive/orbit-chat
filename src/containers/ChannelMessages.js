@@ -94,7 +94,8 @@ class ChannelMessages extends React.Component {
         className={classNames('Messages', {
           'size-normal': !useLargeMessage,
           'size-large': useLargeMessage,
-          monospace: useMonospaceFont
+          'font-normal': !useMonospaceFont,
+          'font-monospace': useMonospaceFont
         })}
         ref={this.messagesEl}>
         <FirstMessage
