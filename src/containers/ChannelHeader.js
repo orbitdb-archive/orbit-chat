@@ -10,7 +10,7 @@ import RootStoreContext from '../context/RootStoreContext'
 
 import ChannelLink from './ChannelLink'
 
-import '../styles/Header.scss'
+import '../styles/ChannelHeader.scss'
 
 class ChannelHeader extends React.Component {
   static contextType = RootStoreContext

@@ -8,38 +8,42 @@ import defaultUiSettings from '../config/ui.default.json'
 configure({ enforceActions: 'observed' })
 
 export default class SettingsStore {
+  constructor (rootStore) {
+    this.rootStore = rootStore
+    this.sessionStore = rootStore.sessionStore
+
+    this._saveNetworkSettings = this._saveNetworkSettings.bind(this)
+    this._saveUiSettings = this._saveUiSettings.bind(this)
+    this._updateLanguage = this._updateLanguage.bind(this)
+
+    // Reload settings when user changes
+    reaction(() => this.sessionStore.username, this._load)
+
+    // Need to react to language changes
+    // since we need to call 'i18n.changeLanguage'
+    reaction(() => this.uiSettings.language, this._updateLanguage)
+
+    // Save network settings when they change
+    reaction(() => values(this.networkSettings), this._saveNetworkSettings)
+
+    // Save ui settings when they change
+    reaction(() => values(this.uiSettings), this._saveUiSettings)
+
+    this._load()
+  }
+
+  // Public instance variables
+
   @observable
   networkSettings = {}
 
   @observable
   uiSettings = {}
 
-  constructor (rootStore) {
-    this.rootStore = rootStore
-    this.sessionStore = rootStore.sessionStore
-
-    this.saveNetworkSettings = this.saveNetworkSettings.bind(this)
-    this.saveUiSettings = this.saveUiSettings.bind(this)
-    this.updateLanguage = this.updateLanguage.bind(this)
-
-    // Reload settings when user changes
-    reaction(() => this.sessionStore.username, this.load)
-
-    // Need to react to language changes
-    // since we need to call 'i18n.changeLanguage'
-    reaction(() => this.uiSettings.language, this.updateLanguage)
-
-    // Save network settings when they change
-    reaction(() => values(this.networkSettings), this.saveNetworkSettings)
-
-    // Save ui settings when they change
-    reaction(() => values(this.uiSettings), this.saveUiSettings)
-
-    this.load()
-  }
+  // Private instance getters
 
   @computed
-  get settingsKeys () {
+  get _settingsKeys () {
     const username = this.sessionStore.username
     if (!username) throw new Error('No logged in user')
     return {
@@ -48,8 +52,10 @@ export default class SettingsStore {
     }
   }
 
+  // Private instance actions
+
   @action.bound
-  load (username) {
+  _load (username) {
     let networkSettings = {}
     let uiSettings = {}
 
@@ -59,7 +65,7 @@ export default class SettingsStore {
 
     // Get user defined settings from local storage
     try {
-      const { networkKey, uiKey } = this.settingsKeys
+      const { networkKey, uiKey } = this._settingsKeys
       networkSettings = JSON.parse(localStorage.getItem(networkKey)) || {}
       uiSettings = JSON.parse(localStorage.getItem(uiKey)) || {}
     } catch (err) {}
@@ -80,21 +86,23 @@ export default class SettingsStore {
     Object.assign(this.uiSettings, defaultUiSettingsCopy, uiSettings)
   }
 
-  saveNetworkSettings () {
+  // Private instance methods
+
+  _saveNetworkSettings () {
     try {
-      const { networkKey } = this.settingsKeys
+      const { networkKey } = this._settingsKeys
       localStorage.setItem(networkKey, JSON.stringify(this.networkSettings))
     } catch (err) {}
   }
 
-  saveUiSettings () {
+  _saveUiSettings () {
     try {
-      const { uiKey } = this.settingsKeys
+      const { uiKey } = this._settingsKeys
       localStorage.setItem(uiKey, JSON.stringify(this.uiSettings))
     } catch (err) {}
   }
 
-  updateLanguage (lng) {
+  _updateLanguage (lng) {
     this.rootStore.i18n.changeLanguage(lng)
   }
 }

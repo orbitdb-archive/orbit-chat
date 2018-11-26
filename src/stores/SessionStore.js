@@ -16,10 +16,12 @@ export default class SessionStore {
     this.logout = this.logout.bind(this)
   }
 
-  @observable.struct
+  // Private instance variables
+
+  @observable
   _user = null
 
-  _prevUser = null
+  // Public instance variable getters
 
   @computed
   get username () {
@@ -32,28 +34,26 @@ export default class SessionStore {
     return !!(this._user && this._user.username)
   }
 
-  get prevUsername () {
-    if (!this._prevUser || !this._prevUser.username) return null
-    return this._prevUser.username || null
-  }
+  // Private instance actions
 
   // Async so the API is consistend if async is needed in the future
   @action.bound
-  async setUser (user) {
+  async _setUser (user) {
     if (user && !user.username) throw new Error('"user.username" is not defined')
     runInAction(() => {
-      this._prevUser = this._user
       this._user = user
     })
   }
 
+  // Public instance methods
+
   login (user) {
     logger.info('User login')
-    return this.setUser(user)
+    return this._setUser(user)
   }
 
   logout () {
     logger.info('User logout')
-    return this.setUser(null)
+    return this._setUser(null)
   }
 }

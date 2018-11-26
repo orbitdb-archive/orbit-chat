@@ -4,8 +4,8 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
+import classNames from 'classnames'
 
-import { throttleFunc } from '../utils/throttle'
 import Logger from '../utils/logger'
 
 import RootStoreContext from '../context/RootStoreContext'
@@ -30,7 +30,6 @@ class ChannelMessages extends React.Component {
     this.messagesEl = React.createRef()
     this.messagesEnd = React.createRef()
 
-    this.onScroll = throttleFunc(this.onScroll.bind(this))
     this.scrollToBottom = this.scrollToBottom.bind(this)
   }
 
@@ -40,11 +39,6 @@ class ChannelMessages extends React.Component {
 
   componentDidUpdate () {
     this.scrollToBottom()
-  }
-
-  onScroll (e) {
-    // if (!this.messagesEl.current) return
-    // const scrollTop = this.messagesEl.current.scrollTop
   }
 
   scrollToBottom () {
@@ -57,7 +51,7 @@ class ChannelMessages extends React.Component {
 
   renderMessages () {
     const { sessionStore, uiStore } = this.context
-    const { colorifyUsernames, useLargeMessage, useMonospaceFont, language } = uiStore
+    const { colorifyUsernames, language } = uiStore
     const { t, channel, ...rest } = this.props
 
     let prevDate
@@ -76,8 +70,6 @@ class ChannelMessages extends React.Component {
           key={message.Hash}
           message={message}
           colorifyUsernames={colorifyUsernames}
-          useLargeMessage={useLargeMessage}
-          useMonospaceFont={useMonospaceFont}
           highlightWords={[sessionStore.username]}
           onInViewChange={inView => {
             if (message.unread && inView) channel.markMessageAsRead(message)
@@ -91,12 +83,15 @@ class ChannelMessages extends React.Component {
   }
 
   render () {
+    const { useLargeMessage, useMonospaceFont } = this.context.uiStore
     const { t, channel } = this.props
 
     const messageEls = this.renderMessages()
 
     return (
-      <div className="Messages" onScroll={this.onScroll} ref={this.messagesEl}>
+      <div
+        className={classNames('Messages', { large: useLargeMessage, monospace: useMonospaceFont })}
+        ref={this.messagesEl}>
         <FirstMessage
           t={t}
           channelName={channel.name}

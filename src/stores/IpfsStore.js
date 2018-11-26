@@ -62,7 +62,6 @@ export default class IpfsStore {
     logger.debug('Activating go-ipfs node')
     this.stop()
     this.starting = false
-    this.stopLoading('ipfs-node:stop')
   }
 
   @action.bound
