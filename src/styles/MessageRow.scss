@@ -15,33 +15,26 @@ $timestamp-color:  rgba(240, 240, 240, 0.6);
   margin-left: 0em !important;
 }
 
+
 .Message {
   display: flex;
   flex: 1 1 100%;
   flex-direction: row;
-  justify-content: flex-start;
-  align-items: baseline;
-  background-color: rgb(35, 35, 35);
-  padding-bottom: 0.15em;
-
-  font-weight: bold;
 
   overflow: hidden;
+  background-color: rgb(35, 35, 35);
+  font-weight: bold;
 
-  .Timestamp {
+  &__Timestamp {
     display: flex;
     color: $timestamp-color;
     font-size: 0.8em;
-    padding-left: 0.25em;
-    padding-right: 0.5em;
-    border-right: 1px solid rgba(255, 255, 255, 0.2);
   }
 
-  .Content {
-    margin-left: 0.2em;
-    margin-right: 0.5em;
+  &__Content {
     display: flex;
     flex: 1;
+    margin: 0 .5em;
   }
 
   .popout {
@@ -50,12 +43,7 @@ $timestamp-color:  rgba(240, 240, 240, 0.6);
     right: 0;
   }
 
-  .row {
-    display: flex;
-    align-items: flex-start;
-  }
-
-  .Popup {
+  &__Popup {
     border: 1px solid rgb(48, 48, 48);
     font-size: 0.75em;
     margin-right: 0.5em;
@@ -64,11 +52,19 @@ $timestamp-color:  rgba(240, 240, 240, 0.6);
     padding: 1.0em;
   }
 
-  .Avatar {
+  &__User {
+    display: flex;
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: bold;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  &__Avatar {
     width: 2.25rem;
     height: 2.25rem;
-    margin: 0em 0.25em 0em 0.5em;
-    margin-top: 0.1em;
+    margin-left: .5em;
+    margin-top: .1em;
     background-color: rgba(255, 255, 255, 0.1);
 
     display: flex;
@@ -84,30 +80,59 @@ $timestamp-color:  rgba(240, 240, 240, 0.6);
     // background-repeat: no-repeat;
   }
 }
+.size-normal {
+  .Message {
+    align-items: baseline;
+    padding-bottom: .15em;
 
-.User {
-  color: rgba(255, 255, 255, 0.95);
-  font-weight: bold;
-  padding-left: 0.5em;
-  cursor: pointer;
-  user-select: none;
+    &__User {
+      margin-left: .5em;
+    }
+
+    &__Timestamp {
+      border-right: 1px solid rgba(255, 255, 255, 0.2);
+      font-style: normal;
+      margin-left: .3em;
+      padding-right: .5em;
+    }
+  }
+}
+
+.size-large {
+  .Message {
+    padding-bottom: .5em;
+
+    .content-wrapper {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      margin-left: .2em;
+      flex: 1;
+    }
+
+    &__Details{
+      display: flex;
+      flex-direction: row;
+      align-items: baseline;
+      margin: 0 .5em .1em .5em;
+    }
+
+    &__Timestamp {
+      border:none;
+      font-style: italic;
+      margin-left: .5em;
+    }
+  }
 }
 
 .TextMessage {
-  padding-left: 0.3em;
-  padding-right: 0.3em;
   display: flex;
   flex: 1 0;
   align-items: center;
-
-  color: rgb(196, 196, 190);
-
   overflow-wrap: break-word;
   word-wrap: break-word;
-  -webkit-hyphens: auto;
-  -ms-hyphens: auto;
-  -moz-hyphens: auto;
   hyphens: auto;
+  color: rgb(196, 196, 190);
 
   a {
     color: rgba(128, 196, 255, 0.8);

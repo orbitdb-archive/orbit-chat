@@ -20,7 +20,7 @@ function MessageContent ({ message, isCommand, ...rest }) {
     default:
       content = message.Post.content
   }
-  return <div className={classNames('Content', { command: isCommand })}>{content}</div>
+  return <div className={classNames('Message__Content', { command: isCommand })}>{content}</div>
 }
 
 MessageContent.propTypes = {

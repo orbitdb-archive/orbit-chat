@@ -51,7 +51,7 @@ class ChannelMessages extends React.Component {
 
   renderMessages () {
     const { sessionStore, uiStore } = this.context
-    const { colorifyUsernames, language } = uiStore
+    const { colorifyUsernames, useLargeMessage, language } = uiStore
     const { t, channel, ...rest } = this.props
 
     let prevDate
@@ -70,6 +70,7 @@ class ChannelMessages extends React.Component {
           key={message.Hash}
           message={message}
           colorifyUsernames={colorifyUsernames}
+          useLargeMessage={useLargeMessage}
           highlightWords={[sessionStore.username]}
           onInViewChange={inView => {
             if (message.unread && inView) channel.markMessageAsRead(message)
@@ -90,7 +91,11 @@ class ChannelMessages extends React.Component {
 
     return (
       <div
-        className={classNames('Messages', { large: useLargeMessage, monospace: useMonospaceFont })}
+        className={classNames('Messages', {
+          'size-normal': !useLargeMessage,
+          'size-large': useLargeMessage,
+          monospace: useMonospaceFont
+        })}
         ref={this.messagesEl}>
         <FirstMessage
           t={t}

@@ -7,6 +7,7 @@ import IntersectObserver from 'react-intersection-observer'
 
 import MessageTimestamp from '../components/MessageTimestamp'
 import MessageUser from '../components/MessageUser'
+import MessageUserAvatar from '../components/MessageUserAvatar'
 import MessageContent from '../components/MessageContent'
 
 import '../styles/MessageRow.scss'
@@ -14,6 +15,7 @@ import '../styles/MessageRow.scss'
 function MessageRow ({
   message,
   colorifyUsernames,
+  useLargeMessage,
   useEmojis,
   emojiSet,
   onInViewChange,
@@ -21,17 +23,43 @@ function MessageRow ({
 }) {
   const isCommand = message.Post.content && message.Post.content.startsWith('/me')
 
+  const messageTimestamp = <MessageTimestamp message={message} />
+
+  const messageUser = (
+    <MessageUser message={message} colorify={colorifyUsernames} isCommand={isCommand} />
+  )
+
+  const messageContent = (
+    <MessageContent
+      message={message}
+      useEmojis={useEmojis}
+      emojiSet={emojiSet}
+      isCommand={isCommand}
+      highlightWords={highlightWords}
+    />
+  )
+
+  const content = useLargeMessage ? (
+    // Need to wrap elements and change their ordering
+    <div className="content-wrapper">
+      <div className="Message__Details">
+        {messageUser}
+        {messageTimestamp}
+      </div>
+      {messageContent}
+    </div>
+  ) : (
+    <>
+      {messageTimestamp}
+      {messageUser}
+      {messageContent}
+    </>
+  )
+
   return (
     <IntersectObserver tag="div" onChange={onInViewChange} triggerOnce={true} className="Message">
-      <MessageTimestamp message={message} />
-      <MessageUser message={message} colorify={colorifyUsernames} isCommand={isCommand} />
-      <MessageContent
-        message={message}
-        useEmojis={useEmojis}
-        emojiSet={emojiSet}
-        isCommand={isCommand}
-        highlightWords={highlightWords}
-      />
+      {useLargeMessage ? <MessageUserAvatar message={message} /> : null}
+      {content}
     </IntersectObserver>
   )
 }
@@ -39,6 +67,7 @@ function MessageRow ({
 MessageRow.propTypes = {
   message: PropTypes.object.isRequired,
   colorifyUsernames: PropTypes.bool,
+  useLargeMessage: PropTypes.bool,
   useEmojis: PropTypes.bool,
   emojiSet: PropTypes.string.isRequired,
   onInViewChange: PropTypes.func.isRequired,
@@ -47,6 +76,7 @@ MessageRow.propTypes = {
 
 MessageRow.defaultProps = {
   colorifyUsernames: true,
+  useLargeMessage: false,
   useEmojis: true,
   highlightWords: []
 }

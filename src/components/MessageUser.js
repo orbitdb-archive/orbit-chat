@@ -11,7 +11,7 @@ function MessageUser ({ message, colorify, isCommand }) {
   const color = colorify && user ? createColor(user.name) : 'rgb(250, 250, 250)'
 
   return (
-    <div className={classNames('User', { command: isCommand })} style={{ color }}>
+    <div className={classNames('Message__User', { command: isCommand })} style={{ color }}>
       {user ? user.name : ''}
     </div>
   )
