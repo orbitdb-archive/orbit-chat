@@ -8,6 +8,7 @@ import Logger from '../utils/logger'
 
 import Spinner from '../components/Spinner'
 
+import ChannelStatus from './ChannelStatus'
 import SendMessage from './SendMessage'
 
 const logger = new Logger()
@@ -45,6 +46,7 @@ class ChannelControls extends React.Component {
           size="16px"
         />
         <SendMessage onSendMessage={this.sendMessage} {...rest} />
+        <ChannelStatus channel={channel} {...rest} />
       </div>
     )
   }

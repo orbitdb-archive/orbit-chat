@@ -233,7 +233,7 @@ input[type=button], .channelOptionsButton {
   }
 }
 
-.statusMessage {
+.ChannelStatus {
   bottom: 1.2em;
   right: 1em;
   margin-right: 0.5em;
@@ -254,14 +254,6 @@ input[type=button], .channelOptionsButton {
   letter-spacing: 1px;
 
   background-color: rgba(48, 48, 48, 0.5);
-}
-
-.statusMessage:hover {
-  background-color: rgba(48, 48, 48, 1);
-}
-
-.statusMessage:active {
-  background-color: $main-color;
 }
 
 .Messages {

@@ -2,7 +2,11 @@
   "channel": {
     "beginningOf": "Beginning of #{{channel}}",
     "loadingHistory": "Loading history...",
-    "sendMessagePlaceholder": "Type a message..."
+    "sendMessagePlaceholder": "Type a message...",
+    "status": {
+      "users": "user",
+      "users_plural": "users"
+    }
   },
   "configuration": "Configuration",
   "controlPanel": {

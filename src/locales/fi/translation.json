@@ -2,7 +2,11 @@
   "channel": {
     "beginningOf": "Kanavan #{{channel}} alku",
     "loadingHistory": "Ladataan historiaa...",
-    "sendMessagePlaceholder": "Kirjoita viesti..."
+    "sendMessagePlaceholder": "Kirjoita viesti...",
+    "status": {
+      "users": "käyttäjä",
+      "users_plural": "käyttäjää"
+    }
   },
   "configuration": "Asetukset",
   "controlPanel": {
@@ -67,7 +71,7 @@
   },
   "userProfile": {
     "identityProvider": "Identiteetin tarjoaja",
-    "signingKey": "Allekirjoitus avain"
+    "signingKey": "Allekirjoitusavain"
   },
   "version": "Versio",
   "viewNames": {
