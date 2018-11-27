@@ -65,6 +65,10 @@
       }
     }
   },
+  "userProfile": {
+    "identityProvider": "Identity provider",
+    "signingKey": "Signing key"
+  },
   "version": "Version",
   "viewNames": {
     "settings": "Settings"

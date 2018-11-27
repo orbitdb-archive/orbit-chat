@@ -65,6 +65,10 @@
       }
     }
   },
+  "userProfile": {
+    "identityProvider": "Identiteetin tarjoaja",
+    "signingKey": "Allekirjoitus avain"
+  },
   "version": "Versio",
   "viewNames": {
     "settings": "Asetukset"

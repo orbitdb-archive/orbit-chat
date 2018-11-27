@@ -37,6 +37,7 @@ class ChannelView extends React.Component {
   componentWillUnmount () {
     const { uiStore } = this.context
     uiStore.setCurrentChannelName(null)
+    uiStore.closeUserProfilePanel()
   }
 
   checkNetwork () {

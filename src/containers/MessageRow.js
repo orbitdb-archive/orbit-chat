@@ -19,6 +19,7 @@ function MessageRow ({
   useEmojis,
   emojiSet,
   onInViewChange,
+  onMessageUserClick,
   highlightWords
 }) {
   const isCommand = message.Post.content && message.Post.content.startsWith('/me')
@@ -26,7 +27,12 @@ function MessageRow ({
   const messageTimestamp = <MessageTimestamp message={message} />
 
   const messageUser = (
-    <MessageUser message={message} colorify={colorifyUsernames} isCommand={isCommand} />
+    <MessageUser
+      message={message}
+      colorify={colorifyUsernames}
+      isCommand={isCommand}
+      onClick={onMessageUserClick}
+    />
   )
 
   const messageContent = (
@@ -71,6 +77,7 @@ MessageRow.propTypes = {
   useEmojis: PropTypes.bool,
   emojiSet: PropTypes.string.isRequired,
   onInViewChange: PropTypes.func.isRequired,
+  onMessageUserClick: PropTypes.func,
   highlightWords: PropTypes.array
 }
 

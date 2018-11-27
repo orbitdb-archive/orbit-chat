@@ -2,9 +2,13 @@
 
 import { action, computed, configure, observable, reaction } from 'mobx'
 
+import { throttleEvent } from '../utils/throttle'
+
 import Themes from '../themes'
 
 configure({ enforceActions: 'observed' })
+
+throttleEvent('resize', 'optimizedResize', window)
 
 /**
  * UiStore acts as an interface between SettingsStore and the user.
@@ -15,15 +19,25 @@ export default class UiStore {
     this.rootStore = rootStore
     this.settingsStore = this.rootStore.settingsStore
 
+    window.addEventListener('optimizedResize', this._onWindowResize)
+
     reaction(
       () => this._title,
       title => {
         document.title = title
       }
     )
+
+    this._windowDimensions = this._getWindowDimensions()
   }
 
   // Private instance variables
+
+  @observable
+  _windowDimensions = {
+    width: 0,
+    height: 0
+  }
 
   @observable
   _currentChannelName = null
@@ -32,7 +46,22 @@ export default class UiStore {
   _isControlPanelOpen = false
 
   @observable
+  _userProfilePanelPosition = null
+
+  @observable
+  _userProfilePanelUser = null
+
+  @observable
   _title = 'Orbit'
+
+  // Private static methods
+
+  _getWindowDimensions () {
+    return {
+      width: window.innerWidth,
+      height: window.innerHeight
+    }
+  }
 
   // Public instance variable getters
 
@@ -47,11 +76,33 @@ export default class UiStore {
   }
 
   @computed
+  get userProfilePanelPosition () {
+    return this._userProfilePanelPosition
+  }
+
+  @computed
+  get userProfilePanelUser () {
+    return this._userProfilePanelUser
+  }
+
+  @computed
   get title () {
     return this._title
   }
 
-  // Public instance variable setters
+  @computed
+  get windowDimensions () {
+    return this._windowDimensions
+  }
+
+  // Private instance actions
+
+  @action.bound
+  _onWindowResize () {
+    this._windowDimensions = this._getWindowDimensions()
+  }
+
+  // Public instance actions
 
   @action.bound
   setCurrentChannelName (val) {
@@ -69,13 +120,20 @@ export default class UiStore {
   }
 
   @action.bound
-  toggleControlPanel () {
-    this._isControlPanelOpen = !this._isControlPanelOpen
+  setTitle (val) {
+    this._title = val
   }
 
   @action.bound
-  setTitle (val) {
-    this._title = val
+  openUserProfilePanel (userProfile, position) {
+    this._userProfilePanelPosition = position
+    this._userProfilePanelUser = userProfile
+  }
+
+  @action.bound
+  closeUserProfilePanel () {
+    this._userProfilePanelPosition = null
+    this._userProfilePanelUser = null
   }
 
   // SettingsStore interface

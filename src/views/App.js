@@ -11,7 +11,7 @@ import __PrivateRoute from '../components/PrivateRoute'
 
 import ControlPanel from '../containers/ControlPanel'
 import ChannelHeader from '../containers/ChannelHeader'
-// import DevTools from 'containers/DevTools'
+import MessageUserProfilePanel from '../containers/MessageUserProfilePanel'
 
 import ChannelView from './ChannelView'
 import IndexView from './IndexView'
@@ -40,10 +40,9 @@ class App extends React.Component {
   static contextType = RootStoreContext
 
   render () {
-    // const devTools = process.env.NODE_ENV === 'development' ? <DevTools /> : null
-
     return (
       <div className="App view">
+        <PrivateRoute component={MessageUserProfilePanel} />
         <PrivateRoute component={ControlPanel} />
 
         <Route exact path="/channel/:channel" component={ChannelHeader} />
@@ -55,7 +54,6 @@ class App extends React.Component {
           <PrivateRoute exact path="/settings" component={SettingsView} />
           <PrivateRoute component={IndexView} />
         </Switch>
-        {/* {devTools} */}
       </div>
     )
   }

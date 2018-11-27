@@ -7,6 +7,7 @@ import { withNamespaces } from 'react-i18next'
 import classNames from 'classnames'
 
 import Logger from '../utils/logger'
+import getMousePosition from '../utils/mouse-position'
 
 import RootStoreContext from '../context/RootStoreContext'
 
@@ -31,6 +32,7 @@ class ChannelMessages extends React.Component {
     this.messagesEnd = React.createRef()
 
     this.scrollToBottom = this.scrollToBottom.bind(this)
+    this.onMessageUserClick = this.onMessageUserClick.bind(this)
   }
 
   componentDidMount () {
@@ -47,6 +49,17 @@ class ChannelMessages extends React.Component {
     // Smooth scroll will cause the chat input field to bounce when sending
     // messages so we use the default ("auto")
     this.messagesEnd.current.scrollIntoView()
+  }
+
+  onMessageUserClick (evt, userProfile) {
+    const { uiStore } = this.context
+
+    evt.persist()
+    evt.stopPropagation()
+
+    const mousePosition = getMousePosition(evt)
+
+    uiStore.openUserProfilePanel(userProfile, mousePosition)
   }
 
   renderMessages () {
@@ -75,6 +88,7 @@ class ChannelMessages extends React.Component {
           onInViewChange={inView => {
             if (message.unread && inView) channel.markMessageAsRead(message)
           }}
+          onMessageUserClick={this.onMessageUserClick}
           {...rest}
         />
       )
