@@ -217,8 +217,7 @@ export default class ChannelStore {
     } catch (err) {}
   }
 
-  async _processSendQueue () {
-    if (this._sendQueue.length === 0 || this.sending) return
+    if (this._sendQueue.length === 0 || this._sending) return
 
     this._sending = true
     const task = this._sendQueue.shift()
