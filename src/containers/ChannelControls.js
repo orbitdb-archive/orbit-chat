@@ -14,48 +14,39 @@ import SendMessage from './SendMessage'
 
 const logger = new Logger()
 
-class ChannelControls extends React.Component {
-  static propTypes = {
-    channel: PropTypes.object.isRequired
-  }
-
-  constructor (props) {
-    super(props)
-    this.sendMessage = this.sendMessage.bind(this)
-    this.sendFiles = this.sendFiles.bind(this)
-  }
-
-  async sendMessage (text) {
+function ChannelControls ({ channel, ...rest }) {
+  async function sendMessage (text) {
     try {
-      await this.props.channel.sendMessage(text)
+      await channel.sendMessage(text)
     } catch (err) {
       logger.error(err)
     }
   }
 
-  async sendFiles (files) {
+  async function sendFiles (files) {
     try {
-      await this.props.channel.sendFiles(files)
+      await channel.sendFiles(files)
     } catch (err) {
       logger.error(err)
     }
   }
 
-  render () {
-    const { channel, ...rest } = this.props
-    return (
-      <div className="Controls">
-        <Spinner
-          loading={channel.loadingNewMessages || channel.sendingMessage}
-          color="rgba(255, 255, 255, 0.7)"
-          size="16px"
-        />
-        <SendMessage onSendMessage={this.sendMessage} {...rest} />
-        <FileUploadButton onSelectFiles={this.sendFiles} {...rest} />
-        <ChannelStatus channel={channel} {...rest} />
-      </div>
-    )
-  }
+  return (
+    <div className="Controls">
+      <Spinner
+        loading={channel.loadingNewMessages || channel.sendingMessage}
+        color="rgba(255, 255, 255, 0.7)"
+        size="16px"
+      />
+      <SendMessage onSendMessage={sendMessage} {...rest} />
+      <FileUploadButton onSelectFiles={sendFiles} {...rest} />
+      <ChannelStatus channel={channel} {...rest} />
+    </div>
+  )
+}
+
+ChannelControls.propTypes = {
+  channel: PropTypes.object.isRequired
 }
 
 export default observer(ChannelControls)

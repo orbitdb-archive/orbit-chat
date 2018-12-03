@@ -12,76 +12,58 @@ import ChannelLink from './ChannelLink'
 
 import '../styles/ChannelHeader.scss'
 
-class ChannelHeader extends React.Component {
-  static contextType = RootStoreContext
-
-  static propTypes = {
-    t: PropTypes.func.isRequired,
-    match: PropTypes.object.isRequired
-  }
-
-  constructor (props) {
-    super(props)
-    this.onChannelClick = this.onChannelClick.bind(this)
-    this.onHeaderClick = this.onHeaderClick.bind(this)
-  }
-
-  onChannelClick (e) {
+function ChannelHeader ({ t, match }, { networkStore, uiStore }) {
+  function onChannelClick (e) {
     // Stop propagation to Header
     e.stopPropagation()
     // No other actions needed since ChannelLink is doing the rest
   }
 
-  onHeaderClick (e) {
-    const { uiStore } = this.context
+  function onHeaderClick (e) {
     uiStore.openControlPanel()
   }
 
-  render () {
-    const { networkStore, uiStore } = this.context
-    const {
-      t,
-      match: {
-        path,
-        params: { channel: currentChannelName }
-      }
-    } = this.props
+  const {
+    path,
+    params: { channel: currentChannelName }
+  } = match
 
-    const otherChannels = networkStore.channelsAsArray
-      .filter(c => c.name !== currentChannelName)
-      .sort((a, b) => a.name.localeCompare(b.name))
-      .map(c => (
-        <ChannelLink
-          key={c.name}
-          channel={c}
-          theme={{ ...uiStore.theme }}
-          onClick={this.onChannelClick}
-        />
-      ))
+  const otherChannels = networkStore.channelsAsArray
+    .filter(c => c.name !== currentChannelName)
+    .sort((a, b) => a.name.localeCompare(b.name))
+    .map(c => (
+      <ChannelLink key={c.name} channel={c} theme={{ ...uiStore.theme }} onClick={onChannelClick} />
+    ))
 
-    const overrideName = t(`viewNames.${path.slice(1)}`)
+  const overrideName = t(`viewNames.${path.slice(1)}`)
 
-    return (
-      <div className="Header" onClick={this.onHeaderClick}>
-        <div className="ChannelName">
-          <div className="currentChannel">
-            <CSSTransitionGroup
-              component="div"
-              transitionName="channelHeaderAnimation"
-              transitionEnter={true}
-              transitionLeave={false}
-              transitionAppear={false}
-              transitionAppearTimeout={0}
-              transitionEnterTimeout={1000}
-              transitionLeaveTimeout={0}>
-              <span>{currentChannelName ? `#${currentChannelName}` : overrideName}</span>
-            </CSSTransitionGroup>
-          </div>
-          {otherChannels}
+  return (
+    <div className="Header" onClick={onHeaderClick}>
+      <div className="ChannelName">
+        <div className="currentChannel">
+          <CSSTransitionGroup
+            component="div"
+            transitionName="channelHeaderAnimation"
+            transitionEnter={true}
+            transitionLeave={false}
+            transitionAppear={false}
+            transitionAppearTimeout={0}
+            transitionEnterTimeout={1000}
+            transitionLeaveTimeout={0}>
+            <span>{currentChannelName ? `#${currentChannelName}` : overrideName}</span>
+          </CSSTransitionGroup>
         </div>
+        {otherChannels}
       </div>
-    )
-  }
+    </div>
+  )
+}
+
+ChannelHeader.contextType = RootStoreContext
+
+ChannelHeader.propTypes = {
+  t: PropTypes.func.isRequired,
+  match: PropTypes.object.isRequired
 }
 
 export default withNamespaces()(observer(ChannelHeader))
