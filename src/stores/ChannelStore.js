@@ -48,6 +48,9 @@ export default class ChannelStore {
   _sendQueue = []
   _sending = false
 
+  @observable
+  _sendingMessageCounter = 0
+
   _loadBatch = []
   _replicationBatch = []
 
@@ -64,9 +67,6 @@ export default class ChannelStore {
 
   @observable
   loadingNewMessages = false
-
-  @observable
-  sendingMessage = false
 
   // Public instance getters
 
@@ -93,6 +93,11 @@ export default class ChannelStore {
   @computed
   get hasMentions () {
     return false
+  }
+
+  @computed
+  get sendingMessage () {
+    return this._sendingMessageCounter > 0
   }
 
   @computed
@@ -158,9 +163,10 @@ export default class ChannelStore {
     this.loadingNewMessages = false
   }
 
-  @action // Called when the user writes a message
+  @action // Called when the user writes a message (text or file)
   _onWrite (...args) {
     this._updateMessages([this.parseMessage(args[2][0])])
+    if (this._sendingMessageCounter > 0) this._sendingMessageCounter -= 1
   }
 
   @action
@@ -192,13 +198,47 @@ export default class ChannelStore {
 
   @action.bound
   sendMessage (text) {
-    this.sendingMessage = true
+    this._sendingMessageCounter += 1
 
     // TODO: fix the compatibility issue here (exlcude incompatible browsers)
     // eslint-disable-next-line compat/compat
     return new Promise((resolve, reject) => {
       this._sendQueue.push({ text, resolve, reject })
     })
+  }
+
+  @action.bound
+  sendFiles (files) {
+    const promises = []
+    for (let i = 0; i < files.length; i++) {
+      promises.push(
+        // TODO: fix the compatibility issue here (exlcude incompatible browsers)
+        // eslint-disable-next-line compat/compat
+        new Promise((resolve, reject) => {
+          runInAction(() => {
+            this._sendingMessageCounter += 1
+          })
+          const f = files[i]
+          const reader = new FileReader()
+          reader.onload = event => {
+            this._sendQueue.push({
+              file: {
+                filename: f.name,
+                buffer: event.target.result,
+                meta: { mimeType: f.type, size: f.size }
+              },
+              resolve,
+              reject
+            })
+          }
+          reader.readAsArrayBuffer(f)
+        })
+      )
+    }
+
+    // TODO: fix the compatibility issue here (exlcude incompatible browsers)
+    // eslint-disable-next-line compat/compat
+    return Promise.all(promises)
   }
 
   // Private instance methods
@@ -218,19 +258,26 @@ export default class ChannelStore {
     } catch (err) {}
   }
 
+  _processSendQueue () {
     if (this._sendQueue.length === 0 || this._sending) return
 
     this._sending = true
+
     const task = this._sendQueue.shift()
 
-    try {
-      const r = await this.network.orbit.send(this.name, task.text)
-      task.resolve(r)
-    } catch (e) {
-      task.reject(e)
+    let promise
+
+    if (task.text) {
+      promise = this.network.orbit.send(this.name, task.text)
+    } else if (task.file) {
+      promise = this.network.orbit.addFile(this.name, task.file)
     }
 
-    this._sending = false
+    if (promise && promise.then) {
+      promise.then(task.resolve, task.reject).finally(() => {
+        this._sending = false
+      })
+    } else this._sending = false
   }
 
   // Public instance methods

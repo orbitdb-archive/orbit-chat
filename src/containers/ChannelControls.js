@@ -6,6 +6,7 @@ import { observer } from 'mobx-react'
 
 import Logger from '../utils/logger'
 
+import FileUploadButton from '../components/FileUploadButton'
 import Spinner from '../components/Spinner'
 
 import ChannelStatus from './ChannelStatus'
@@ -21,7 +22,7 @@ class ChannelControls extends React.Component {
   constructor (props) {
     super(props)
     this.sendMessage = this.sendMessage.bind(this)
-    this.sendFile = this.sendFile.bind(this)
+    this.sendFiles = this.sendFiles.bind(this)
   }
 
   async sendMessage (text) {
@@ -32,8 +33,12 @@ class ChannelControls extends React.Component {
     }
   }
 
-  async sendFile () {
-    logger.warn('onSendFiles not implemented')
+  async sendFiles (files) {
+    try {
+      await this.props.channel.sendFiles(files)
+    } catch (err) {
+      logger.error(err)
+    }
   }
 
   render () {
@@ -46,6 +51,7 @@ class ChannelControls extends React.Component {
           size="16px"
         />
         <SendMessage onSendMessage={this.sendMessage} {...rest} />
+        <FileUploadButton onSelectFiles={this.sendFiles} {...rest} />
         <ChannelStatus channel={channel} {...rest} />
       </div>
     )
