@@ -16,7 +16,9 @@ export default class ChannelStore {
     this.name = name
 
     this.leave = this.leave.bind(this)
+    this.parseMessage = this.parseMessage.bind(this)
     this.stop = this.stop.bind(this)
+
     this._processSendQueue = throttleFunc(this._processSendQueue.bind(this))
     this._saveState = this._saveState.bind(this)
 
@@ -128,7 +130,7 @@ export default class ChannelStore {
 
   @action // Called while loading from local filesystem
   _onLoadProgress (...args) {
-    const entry = ChannelStore.parseMessage(args[2])
+    const entry = this.parseMessage(args[2])
     this._loadBatch.push(entry)
     this.loadingHistory = true
   }
@@ -143,7 +145,7 @@ export default class ChannelStore {
 
   @action // Called while loading from IPFS (receiving new messages)
   _onReplicateProgress (...args) {
-    const entry = ChannelStore.parseMessage(args[2])
+    const entry = this.parseMessage(args[2])
     this._replicationBatch.push(entry)
     this.loadingNewMessages = true
   }
@@ -158,8 +160,7 @@ export default class ChannelStore {
 
   @action // Called when the user writes a message
   _onWrite (...args) {
-    this._updateMessages([ChannelStore.parseMessage(args[2][0])])
-    this.sendingMessage = false
+    this._updateMessages([this.parseMessage(args[2][0])])
   }
 
   @action
@@ -232,17 +233,18 @@ export default class ChannelStore {
     this._sending = false
   }
 
-  // Public class methods
+  // Public instance methods
+  leave () {
+    this.network.leaveChannel(this.name)
+  }
 
-  static parseMessage (entry) {
+  parseMessage (entry) {
     try {
       return JSON.parse(entry.payload.value)
     } catch (err) {
-      logger.warn('Failed to parse payload from message:', err)
+      logger.warn(`Channel '${this.name}' failed to parse payload from message. Error:`, err)
     }
   }
-
-  // Public instance methods
 
   stop () {
     clearInterval(this.peerInterval)
@@ -254,9 +256,5 @@ export default class ChannelStore {
     this.feed.events.removeListener('replicate.progress', this._onReplicateProgress)
     this.feed.events.removeListener('replicated', this._onReplicated)
     this.feed.events.removeListener('write', this._onWrite)
-  }
-
-  leave () {
-    this.network.leaveChannel(this.name)
   }
 }
