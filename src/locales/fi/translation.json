@@ -1,6 +1,12 @@
 {
   "channel": {
     "beginningOf": "Kanavan #{{channel}} alku",
+    "file": {
+      "download": "Lataa",
+      "previewLoading": "$t(loading)...",
+      "open": "Avaa",
+      "unableToDisplay": "Tiedostoa ei ole mahdollista näyttää"
+    },
     "loadingHistory": "Ladataan historiaa...",
     "sendMessagePlaceholder": "Kirjoita viesti...",
     "status": {

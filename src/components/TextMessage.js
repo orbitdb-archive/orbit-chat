@@ -6,7 +6,9 @@ import { CSSTransitionGroup } from 'react-transition-group'
 
 import textProcessor from './textProcessor'
 
-function TextMessage ({ text, highlightWords, useEmojis, emojiSet }) {
+import '../styles/TextMessage.scss'
+
+function TextMessage ({ text, highlightWords, useEmojis, emojiSet, animationProps }) {
   let content = text.startsWith('/me ') ? text.substring(4, text.length) : text
 
   content = textProcessor.ipfsfy(content, { useAutolink: true })
@@ -18,16 +20,7 @@ function TextMessage ({ text, highlightWords, useEmojis, emojiSet }) {
 
   return (
     <div className="TextMessage">
-      <CSSTransitionGroup
-        transitionName="textAnimation"
-        transitionAppear={true}
-        transitionEnter={false}
-        transitionLeave={false}
-        transitionAppearTimeout={200}
-        transitionEnterTimeout={0}
-        transitionLeaveTimeout={0}>
-        {content}
-      </CSSTransitionGroup>
+      <CSSTransitionGroup {...animationProps}>{content}</CSSTransitionGroup>
     </div>
   )
 }
@@ -36,7 +29,8 @@ TextMessage.propTypes = {
   text: PropTypes.string.isRequired,
   highlightWords: PropTypes.array,
   useEmojis: PropTypes.bool.isRequired,
-  emojiSet: PropTypes.string.isRequired
+  emojiSet: PropTypes.string.isRequired,
+  animationProps: PropTypes.object.isRequired
 }
 
 TextMessage.defaultProps = {

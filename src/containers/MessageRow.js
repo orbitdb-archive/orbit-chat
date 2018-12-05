@@ -16,11 +16,10 @@ function MessageRow ({
   message,
   colorifyUsernames,
   useLargeMessage,
-  useEmojis,
-  emojiSet,
+  highlightWords,
   onInViewChange,
   onMessageUserClick,
-  highlightWords
+  ...rest
 }) {
   const isCommand = message.Post.content && message.Post.content.startsWith('/me')
 
@@ -38,10 +37,19 @@ function MessageRow ({
   const messageContent = (
     <MessageContent
       message={message}
-      useEmojis={useEmojis}
-      emojiSet={emojiSet}
       isCommand={isCommand}
       highlightWords={highlightWords}
+      animationProps={{
+        transitionName: 'messageAnimation',
+        transitionAppear: true,
+        transitionEnter: true,
+        transitionLeave: false,
+        transitionAppearTimeout: 200,
+        transitionEnterTimeout: 1000,
+        component: 'div',
+        className: 'content'
+      }}
+      {...rest}
     />
   )
 
@@ -76,9 +84,10 @@ MessageRow.propTypes = {
   useLargeMessage: PropTypes.bool,
   useEmojis: PropTypes.bool,
   emojiSet: PropTypes.string.isRequired,
+  highlightWords: PropTypes.array,
   onInViewChange: PropTypes.func.isRequired,
   onMessageUserClick: PropTypes.func,
-  highlightWords: PropTypes.array
+  loadFile: PropTypes.func.isRequired
 }
 
 MessageRow.defaultProps = {

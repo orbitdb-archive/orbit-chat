@@ -1,6 +1,12 @@
 {
   "channel": {
     "beginningOf": "Beginning of #{{channel}}",
+    "file": {
+      "download": "Download",
+      "previewLoading": "$t(loading)...",
+      "open": "Open",
+      "unableToDisplay": "Unable to display file"
+    },
     "loadingHistory": "Loading history...",
     "sendMessagePlaceholder": "Type a message...",
     "status": {

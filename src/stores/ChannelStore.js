@@ -16,6 +16,7 @@ export default class ChannelStore {
     this.name = name
 
     this.leave = this.leave.bind(this)
+    this.loadFile = this.loadFile.bind(this)
     this.parseMessage = this.parseMessage.bind(this)
     this.stop = this.stop.bind(this)
 
@@ -283,6 +284,29 @@ export default class ChannelStore {
   // Public instance methods
   leave () {
     this.network.leaveChannel(this.name)
+  }
+
+  loadFile (hash, asURL, asStream) {
+    // TODO: fix the compatibility issue here (exlcude incompatible browsers)
+    // eslint-disable-next-line compat/compat
+    return new Promise((resolve, reject) => {
+      // TODO: Handle electron
+      const stream = this.network.orbit.getFile(hash)
+      if (asStream) resolve({ buffer: null, url: null, stream })
+      else {
+        let buffer = new Uint8Array(0)
+        stream.on('error', reject)
+        stream.on('data', chunk => {
+          const tmp = new Uint8Array(buffer.length + chunk.length)
+          tmp.set(buffer)
+          tmp.set(chunk, buffer.length)
+          buffer = tmp
+        })
+        stream.on('end', () => {
+          resolve({ buffer, url: null, stream: null })
+        })
+      }
+    })
   }
 
   parseMessage (entry) {

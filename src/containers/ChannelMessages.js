@@ -81,6 +81,7 @@ class ChannelMessages extends React.Component {
       els.push(
         <MessageRow
           key={message.Hash}
+          t={t}
           message={message}
           colorifyUsernames={colorifyUsernames}
           useLargeMessage={useLargeMessage}
@@ -89,6 +90,7 @@ class ChannelMessages extends React.Component {
             if (message.unread && inView) channel.markMessageAsRead(message)
           }}
           onMessageUserClick={this.onMessageUserClick}
+          loadFile={channel.loadFile}
           {...rest}
         />
       )

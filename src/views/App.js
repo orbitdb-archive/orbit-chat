@@ -2,7 +2,7 @@
 
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
-import { hot } from 'react-hot-loader'
+import { hot, setConfig } from 'react-hot-loader'
 import { observer } from 'mobx-react'
 
 import RootStoreContext from '../context/RootStoreContext'
@@ -20,6 +20,11 @@ import SettingsView from './SettingsView'
 
 import 'styles/App.scss'
 import 'styles/Scrollbars.scss'
+
+setConfig({
+  pureSFC: true,
+  pureRender: true
+})
 
 const loginPath = '/connect'
 
