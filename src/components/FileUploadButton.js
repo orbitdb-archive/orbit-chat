@@ -12,7 +12,9 @@ function FileUploadButton ({ onSelectFiles, theme }) {
   }
 
   function handleFileSelect () {
-    onSelectFiles(fileInput.current.files)
+    const files = fileInput.current.files
+    if (files) onSelectFiles(files)
+    fileInput.current.value = null
   }
 
   return (
