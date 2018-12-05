@@ -7,7 +7,7 @@ import classNames from 'classnames'
 import FileMessage from './FileMessage'
 import TextMessage from './TextMessage'
 
-function MessageContent ({ message, isCommand, ...rest }) {
+function MessageContent ({ isCommand, message, ...rest }) {
   let content
 
   const post = message.Post
@@ -20,9 +20,9 @@ function MessageContent ({ message, isCommand, ...rest }) {
       content = (
         <FileMessage
           hash={post.hash}
+          meta={post.meta}
           name={post.name}
           size={post.size}
-          meta={post.meta}
           {...rest}
         />
       )
@@ -36,8 +36,8 @@ function MessageContent ({ message, isCommand, ...rest }) {
 }
 
 MessageContent.propTypes = {
-  message: PropTypes.object.isRequired,
-  isCommand: PropTypes.bool
+  isCommand: PropTypes.bool,
+  message: PropTypes.object.isRequired
 }
 
 MessageContent.defaultProps = {

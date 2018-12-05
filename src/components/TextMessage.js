@@ -8,7 +8,7 @@ import textProcessor from './textProcessor'
 
 import '../styles/TextMessage.scss'
 
-function TextMessage ({ text, highlightWords, useEmojis, emojiSet, animationProps }) {
+function TextMessage ({ animationProps, emojiSet, highlightWords, text, useEmojis }) {
   let content = text.startsWith('/me ') ? text.substring(4, text.length) : text
 
   content = textProcessor.ipfsfy(content, { useAutolink: true })
@@ -26,11 +26,11 @@ function TextMessage ({ text, highlightWords, useEmojis, emojiSet, animationProp
 }
 
 TextMessage.propTypes = {
-  text: PropTypes.string.isRequired,
-  highlightWords: PropTypes.array,
-  useEmojis: PropTypes.bool.isRequired,
+  animationProps: PropTypes.object.isRequired,
   emojiSet: PropTypes.string.isRequired,
-  animationProps: PropTypes.object.isRequired
+  highlightWords: PropTypes.array,
+  text: PropTypes.string.isRequired,
+  useEmojis: PropTypes.bool.isRequired
 }
 
 TextMessage.defaultProps = {
