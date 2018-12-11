@@ -4,8 +4,10 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransitionGroup } from 'react-transition-group'
 
+import TextFile from './TextFile'
+
 import Logger from '../utils/logger'
-import { isAudio, isHighlightable, isImage, isVideo, toArrayBuffer } from '../utils/file-helpers'
+import { isAudio, isImage, isVideo, toArrayBuffer } from '../utils/file-helpers'
 
 const logger = new Logger()
 
@@ -29,11 +31,16 @@ async function loadPreviewContent (loadFunc, hash, meta, name) {
 
     if (buffer || url || stream) {
       if (isAudio(name)) {
+        // Audio
         return <audio src={srcUrl} controls autoPlay={true} />
       } else if (isImage(name)) {
+        // Image
         return <img src={srcUrl} />
       } else if (isVideo(name)) {
+        // Video
       } else {
+        // Text
+        return <TextFile blob={blob} filename={name} />
       }
     }
 

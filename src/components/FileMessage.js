@@ -6,13 +6,7 @@ import { CSSTransitionGroup } from 'react-transition-group'
 
 import FilePreview from './FilePreview'
 
-import {
-  getHumanReadableSize,
-  isAudio,
-  isHighlightable,
-  isImage,
-  isVideo
-} from '../utils/file-helpers'
+import { getHumanReadableSize, isAudio, isText, isImage, isVideo } from '../utils/file-helpers'
 
 import '../styles/FileMessage.scss'
 
@@ -20,10 +14,7 @@ function FileMessage ({ t, animationProps, hash, name, size, ...rest }) {
   const [showPreview, setShowPreview] = useState(false)
 
   async function handleNameClick () {
-    if (
-      !showPreview &&
-      (!isImage(name) && !isHighlightable(name) && !isAudio(name) && !isVideo(name))
-    ) {
+    if (!showPreview && (!isImage(name) && !isText(name) && !isAudio(name) && !isVideo(name))) {
       return
     }
     setShowPreview(!showPreview)

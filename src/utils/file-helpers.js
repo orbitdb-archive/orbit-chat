@@ -21,9 +21,9 @@ export function isAudio (filename) {
   return ext === 'mp3' || ext === 'ogg' || ext === 'wav'
 }
 
-export function isHighlightable (filename) {
+export function isText (filename) {
   const ext = getFileExtension(filename)
-  return hljs.getLanguage(ext) || ext === 'txt'
+  return ext === 'txt' || hljs.getLanguage(ext)
 }
 
 export function isImage (filename) {
