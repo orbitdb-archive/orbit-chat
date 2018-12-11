@@ -6,7 +6,7 @@ import classNames from 'classnames'
 
 import hljs from 'highlight.js'
 
-import 'highlight.js/styles/darkula.css'
+import 'highlight.js/styles/atom-one-dark.css'
 
 function Highlight ({ children, extension, ...rest }) {
   const element = React.createRef()

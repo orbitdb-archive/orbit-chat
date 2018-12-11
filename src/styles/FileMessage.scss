@@ -59,6 +59,10 @@ $directory-link-hover-color2: rgba(240, 240, 240, 0.9);
     overflow-x: auto;
     overflow-y: auto;
     width: 100%;
+
+    .hljs {
+      background: none;
+    }
   }
 
   .download {
