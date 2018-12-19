@@ -4,7 +4,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import createColor from '../utils/create-color'
+import createColor from '../../utils/create-color'
 
 function MessageUser ({ message, colorify, isCommand, onClick }) {
   const user = message.Post.meta.from

@@ -4,49 +4,46 @@ import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransitionGroup } from 'react-transition-group'
 
-import TextFile from './TextFile'
+import PreviewAudioFile from './PreviewAudioFile'
+import PreviewImageFile from './PreviewImageFile'
+import PreviewTextFile from './PreviewTextFile'
+import PreviewVideoFile from './PreviewVideoFile'
 
-import Logger from '../utils/logger'
-import { isAudio, isImage, isVideo, toArrayBuffer } from '../utils/file-helpers'
+import Logger from '../../utils/logger'
+import { isAudio, isImage, isVideo, toArrayBuffer } from '../../utils/file-helpers'
 
 const logger = new Logger()
 
 async function loadPreviewContent (loadFunc, hash, meta, name) {
   // TODO: Handle electron
 
-  try {
-    const { buffer, url, stream } = await loadFunc(hash)
+  const fileIsAudio = isAudio(name)
+  const fileIsImage = isImage(name)
+  const fileIsVideo = isVideo(name)
 
-    let blob = new Blob([])
+  const asStream = fileIsVideo
+  const { buffer, url, stream } = await loadFunc(hash, asStream)
 
-    if (buffer instanceof Blob) {
-      blob = buffer
-    } else if (buffer && meta.mimeType) {
-      blob = new Blob([toArrayBuffer(buffer)], { type: meta.mimeType })
+  let blob = new Blob([])
+
+  if (buffer instanceof Blob) {
+    blob = buffer
+  } else if (buffer && meta.mimeType) {
+    blob = new Blob([toArrayBuffer(buffer)], { type: meta.mimeType })
+  }
+
+  const srcUrl = buffer ? window.URL.createObjectURL(blob) : url
+
+  if (buffer || url || stream) {
+    if (fileIsAudio) {
+      return <PreviewAudioFile src={srcUrl} />
+    } else if (fileIsImage) {
+      return <PreviewImageFile src={srcUrl} />
+    } else if (fileIsVideo) {
+      return <PreviewVideoFile stream={stream} filename={name} />
+    } else {
+      return <PreviewTextFile blob={blob} filename={name} />
     }
-
-    const srcUrl = buffer ? window.URL.createObjectURL(blob) : url
-
-    const todoErrorMsg = 'Only audio and image files are supported'
-
-    if (buffer || url || stream) {
-      if (isAudio(name)) {
-        // Audio
-        return <audio src={srcUrl} controls autoPlay={true} />
-      } else if (isImage(name)) {
-        // Image
-        return <img src={srcUrl} />
-      } else if (isVideo(name)) {
-        // Video
-      } else {
-        // Text
-        return <TextFile blob={blob} filename={name} />
-      }
-    }
-
-    throw new Error(todoErrorMsg)
-  } catch (e) {
-    throw e
   }
 }
 

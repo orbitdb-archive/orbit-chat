@@ -33,11 +33,7 @@ function ChannelControls ({ channel, ...rest }) {
 
   return (
     <div className="Controls">
-      <Spinner
-        loading={channel.loadingNewMessages || channel.sendingMessage}
-        color="rgba(255, 255, 255, 0.7)"
-        size="16px"
-      />
+      <Spinner loading={channel.loadingNewMessages || channel.sendingMessage} />
       <SendMessage onSendMessage={sendMessage} {...rest} />
       <FileUploadButton onSelectFiles={sendFiles} {...rest} />
       <ChannelStatus channel={channel} {...rest} />

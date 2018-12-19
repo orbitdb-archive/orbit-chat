@@ -3,11 +3,11 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 
-import Highlight from './Highlight'
+import Highlight from '../Highlight'
 
-import { getFileExtension } from '../utils/file-helpers'
+import { getFileExtension } from '../../utils/file-helpers'
 
-function TextFile ({ blob, filename, ...rest }) {
+function PreviewTextFile ({ blob, filename, ...rest }) {
   const [fileContent, setfileContent] = useState(null)
 
   useEffect(
@@ -26,15 +26,15 @@ function TextFile ({ blob, filename, ...rest }) {
       }
       fileReader.readAsText(blob, 'utf-8')
     },
-    [blob, filename]
+    [filename]
   )
 
   return fileContent || null
 }
 
-TextFile.propTypes = {
+PreviewTextFile.propTypes = {
   blob: PropTypes.object.isRequired,
   filename: PropTypes.string.isRequired
 }
 
-export default TextFile
+export default PreviewTextFile

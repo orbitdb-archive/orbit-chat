@@ -116,7 +116,7 @@ class ControlPanel extends React.Component {
       </button>
     ) : (
       <div style={{ position: 'relative' }}>
-        <Spinner loading={true} color="rgba(255, 255, 255, 0.7)" size="16px" />
+        <Spinner />
       </div>
     )
   }

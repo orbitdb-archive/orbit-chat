@@ -11,8 +11,8 @@ import getMousePosition from '../utils/mouse-position'
 
 import RootStoreContext from '../context/RootStoreContext'
 
-import FirstMessage from '../components/FirstMessage'
-import MessageDateSeparator from '../components/MessageDateSeparator'
+import { FirstMessage } from '../components/MessageTypes'
+import MessagesDateSeparator from '../components/MessagesDateSeparator'
 
 import MessageRow from './MessageRow'
 
@@ -75,7 +75,7 @@ class ChannelMessages extends React.Component {
 
       if (date.getDate() !== prevDate) {
         prevDate = date.getDate()
-        els.push(<MessageDateSeparator key={date} date={date} locale={language} />)
+        els.push(<MessagesDateSeparator key={date} date={date} locale={language} />)
       }
 
       els.push(

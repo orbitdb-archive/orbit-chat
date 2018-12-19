@@ -4,9 +4,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransitionGroup } from 'react-transition-group'
 
-import textProcessor from './textProcessor'
+import textProcessor from '../textProcessor'
 
-import '../styles/TextMessage.scss'
+import '../../styles/TextMessage.scss'
 
 function TextMessage ({ animationProps, emojiSet, highlightWords, text, useEmojis }) {
   let content = text.startsWith('/me ') ? text.substring(4, text.length) : text

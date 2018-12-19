@@ -286,7 +286,7 @@ export default class ChannelStore {
     this.network.leaveChannel(this.name)
   }
 
-  loadFile (hash, asURL, asStream) {
+  loadFile (hash, asStream) {
     // TODO: fix the compatibility issue here (exlcude incompatible browsers)
     // eslint-disable-next-line compat/compat
     return new Promise((resolve, reject) => {

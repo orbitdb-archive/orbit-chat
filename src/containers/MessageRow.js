@@ -5,10 +5,12 @@ import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import IntersectObserver from 'react-intersection-observer'
 
-import MessageTimestamp from '../components/MessageTimestamp'
-import MessageUser from '../components/MessageUser'
-import MessageUserAvatar from '../components/MessageUserAvatar'
-import MessageContent from '../components/MessageContent'
+import {
+  MessageContent,
+  MessageTimestamp,
+  MessageUser,
+  MessageUserAvatar
+} from '../components/MessageParts'
 
 import '../styles/MessageRow.scss'
 

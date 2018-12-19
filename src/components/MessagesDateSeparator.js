@@ -5,17 +5,17 @@ import PropTypes from 'prop-types'
 
 import { getFormattedDateString } from '../utils/format-time'
 
-function MessageDateSeparator ({ date, locale }) {
+function MessagesDateSeparator ({ date, locale }) {
   return <div className="dateSeparator">{getFormattedDateString(date, locale)}</div>
 }
 
-MessageDateSeparator.propTypes = {
+MessagesDateSeparator.propTypes = {
   date: PropTypes.object.isRequired,
   locale: PropTypes.string
 }
 
-MessageDateSeparator.defaultProps = {
+MessagesDateSeparator.defaultProps = {
   locale: 'en'
 }
 
-export default MessageDateSeparator
+export default MessagesDateSeparator

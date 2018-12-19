@@ -4,8 +4,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
 
-import FileMessage from './FileMessage'
-import TextMessage from './TextMessage'
+import { FileMessage, TextMessage } from '../MessageTypes'
 
 function MessageContent ({ isCommand, message, ...rest }) {
   let content

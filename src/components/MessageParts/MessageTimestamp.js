@@ -3,7 +3,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-import { getFormattedTimestamp } from '../utils/format-time'
+import { getFormattedTimestamp } from '../../utils/format-time'
 
 function MessageTimestamp ({ message }) {
   return <span className="Message__Timestamp">{getFormattedTimestamp(message.Post.meta.ts)}</span>
