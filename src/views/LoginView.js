@@ -30,9 +30,8 @@ class LoginView extends React.Component {
   constructor (props) {
     super(props)
     this.onConfigure = this.onConfigure.bind(this)
-    this.onBackgroundClick = this.onBackgroundClick.bind(this)
     this.onLogin = this.onLogin.bind(this)
-    this.loginForm = React.createRef()
+    this.focusUsernameInput = this.focusUsernameInput.bind(this)
   }
 
   componentDidMount () {
@@ -45,10 +44,6 @@ class LoginView extends React.Component {
     logger.warn('Settings view not implemented')
   }
 
-  onBackgroundClick () {
-    this.loginForm.current.focusUsername()
-  }
-
   onLogin (e, username) {
     const { sessionStore } = this.context
 
@@ -59,6 +54,10 @@ class LoginView extends React.Component {
         logger.error(e)
       })
     }
+  }
+
+  focusUsernameInput () {
+    if (this.usernameInputRef) this.usernameInputRef.current.focus()
   }
 
   render () {
@@ -79,13 +78,13 @@ class LoginView extends React.Component {
           transitionAppearTimeout={5000}
           transitionEnterTimeout={5000}
           transitionLeaveTimeout={5000}>
-          <h1>Orbit</h1>
+          <h1 onClick={this.focusUsernameInput}>Orbit</h1>
         </CSSTransitionGroup>
         <LoginForm
-          ref={this.loginForm}
-          onSubmit={this.onLogin}
           t={t}
           theme={{ ...uiStore.theme }}
+          onSubmit={this.onLogin}
+          setUsernameInputRef={ref => (this.usernameInputRef = ref)}
         />
         <div className="Version">
           {t('version')}: {version}
@@ -100,7 +99,7 @@ class LoginView extends React.Component {
         <BackgroundAnimation
           size={480}
           theme={{ ...uiStore.theme }}
-          onClick={this.onBackgroundClick}
+          onClick={this.focusUsernameInput}
         />
       </div>
     )
