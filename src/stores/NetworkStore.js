@@ -15,7 +15,7 @@ const logger = new Logger()
 export default class NetworkStore {
   constructor (rootStore) {
     this.rootStore = rootStore
-    this.sessionStore = rootStore.sessionStore
+    this.session = rootStore.sessionStore
     this.settings = rootStore.settingsStore
     this.ipfsStore = new IpfsStore(this)
     this.orbitStore = new OrbitStore(this)
@@ -24,7 +24,7 @@ export default class NetworkStore {
 
     // Stop if user logs out
     reaction(
-      () => this.sessionStore.username,
+      () => this.session.username,
       username => {
         if (!username) this.stop()
       }
