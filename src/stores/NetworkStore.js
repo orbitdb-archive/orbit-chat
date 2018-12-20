@@ -15,12 +15,20 @@ const logger = new Logger()
 export default class NetworkStore {
   constructor (rootStore) {
     this.rootStore = rootStore
-    this.session = rootStore.sessionStore
+    this.sessionStore = rootStore.sessionStore
     this.settings = rootStore.settingsStore
     this.ipfsStore = new IpfsStore(this)
     this.orbitStore = new OrbitStore(this)
 
     this.joinChannel = this.joinChannel.bind(this)
+
+    // Stop if user logs out
+    reaction(
+      () => this.sessionStore.username,
+      username => {
+        if (!username) this.stop()
+      }
+    )
 
     // React to ipfs changes
     reaction(() => this.ipfsStore.node, this._onIpfsChanged)
