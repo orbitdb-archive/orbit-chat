@@ -199,9 +199,15 @@ export default class ChannelStore {
 
   @action.bound
   sendMessage (text) {
+    // TODO: fix the compatibility issues here (exlcude incompatible browsers)
+
+    if (typeof text !== 'string' || text === '') {
+      // eslint-disable-next-line compat/compat
+      return Promise.resolve()
+    }
+
     this._sendingMessageCounter += 1
 
-    // TODO: fix the compatibility issue here (exlcude incompatible browsers)
     // eslint-disable-next-line compat/compat
     return new Promise((resolve, reject) => {
       this._sendQueue.push({ text, resolve, reject })
@@ -259,6 +265,7 @@ export default class ChannelStore {
     } catch (err) {}
   }
 
+  @action
   _processSendQueue () {
     if (this._sendQueue.length === 0 || this._sending) return
 
@@ -275,7 +282,15 @@ export default class ChannelStore {
     }
 
     if (promise && promise.then) {
-      promise.then(task.resolve, task.reject).finally(() => {
+      // Wrap the tasks reject function so we can decrement the '_sendingMessageCounter'
+      const wrappedReject = (...args) => {
+        runInAction(() => {
+          if (this._sendingMessageCounter > 0) this._sendingMessageCounter -= 1
+        })
+        task.reject(...args)
+      }
+
+      promise.then(task.resolve, wrappedReject).finally(() => {
         this._sending = false
       })
     } else this._sending = false

@@ -20,6 +20,7 @@ function ChannelControls ({ channel, ...rest }) {
       await channel.sendMessage(text)
     } catch (err) {
       logger.error(err)
+      throw err
     }
   }
 
@@ -28,6 +29,7 @@ function ChannelControls ({ channel, ...rest }) {
       await channel.sendFiles(files)
     } catch (err) {
       logger.error(err)
+      throw err
     }
   }
 
