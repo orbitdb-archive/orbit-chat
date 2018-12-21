@@ -6,7 +6,8 @@
   "scripts": {
     "dev": "./node_modules/.bin/webpack-dev-server --mode=development",
     "build": "./node_modules/.bin/webpack --mode=production",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint src/"
   },
   "repository": {
     "type": "git",
@@ -19,8 +20,9 @@
   },
   "homepage": "https://github.com/orbitdb/orbit-chat#readme",
   "browserslist": [
+    "> 0.5%",
     "last 2 versions",
-    "> 1%",
+    "Firefox ESR",
     "not dead"
   ],
   "dependencies": {

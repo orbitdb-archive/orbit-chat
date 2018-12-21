@@ -199,16 +199,12 @@ export default class ChannelStore {
 
   @action.bound
   sendMessage (text) {
-    // TODO: fix the compatibility issues here (exlcude incompatible browsers)
-
     if (typeof text !== 'string' || text === '') {
-      // eslint-disable-next-line compat/compat
       return Promise.resolve()
     }
 
     this._sendingMessageCounter += 1
 
-    // eslint-disable-next-line compat/compat
     return new Promise((resolve, reject) => {
       this._sendQueue.push({ text, resolve, reject })
     })
@@ -219,8 +215,6 @@ export default class ChannelStore {
     const promises = []
     for (let i = 0; i < files.length; i++) {
       promises.push(
-        // TODO: fix the compatibility issue here (exlcude incompatible browsers)
-        // eslint-disable-next-line compat/compat
         new Promise((resolve, reject) => {
           runInAction(() => {
             this._sendingMessageCounter += 1
@@ -243,8 +237,6 @@ export default class ChannelStore {
       )
     }
 
-    // TODO: fix the compatibility issue here (exlcude incompatible browsers)
-    // eslint-disable-next-line compat/compat
     return Promise.all(promises)
   }
 
@@ -302,8 +294,6 @@ export default class ChannelStore {
   }
 
   loadFile (hash, asStream) {
-    // TODO: fix the compatibility issue here (exlcude incompatible browsers)
-    // eslint-disable-next-line compat/compat
     return new Promise((resolve, reject) => {
       // TODO: Handle electron
       const stream = this.network.orbit.getFile(hash)

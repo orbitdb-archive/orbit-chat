@@ -28,6 +28,7 @@
     "prefer-const": "error"
   },
   "settings": {
+    "polyfills": ["promises", "promise-finally"],
     "react": {
       "version": "16.5"
     }
