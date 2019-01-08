@@ -51,7 +51,7 @@ class ChannelMessages extends React.Component {
     this.messagesEnd.current.scrollIntoView()
   }
 
-  onMessageUserClick (evt, userProfile) {
+  onMessageUserClick (evt, profile, identity) {
     const { uiStore } = this.context
 
     evt.persist()
@@ -59,7 +59,7 @@ class ChannelMessages extends React.Component {
 
     const mousePosition = getMousePosition(evt)
 
-    uiStore.openUserProfilePanel(userProfile, mousePosition)
+    uiStore.openUserProfilePanel({ identity, profile }, mousePosition)
   }
 
   renderMessages () {
@@ -71,7 +71,7 @@ class ChannelMessages extends React.Component {
 
     // Reduce so we can put the date separators in
     return channel.messages.reduce((els, message) => {
-      const date = new Date(message.Post.meta.ts)
+      const date = new Date(message.meta.ts)
 
       if (date.getDate() !== prevDate) {
         prevDate = date.getDate()
@@ -80,7 +80,7 @@ class ChannelMessages extends React.Component {
 
       els.push(
         <MessageRow
-          key={message.Hash}
+          key={message.hash}
           t={t}
           message={message}
           colorifyUsernames={colorifyUsernames}

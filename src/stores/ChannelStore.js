@@ -73,7 +73,7 @@ export default class ChannelStore {
 
   @computed
   get messageHashes () {
-    return this.messages.map(m => m.Hash)
+    return this.messages.map(m => m.hash)
   }
 
   @computed
@@ -117,13 +117,11 @@ export default class ChannelStore {
 
     const newMessages = messages
       // Filter out messages we already have
-      .filter(m => oldHashes.indexOf(m.Hash) === -1)
+      .filter(m => oldHashes.indexOf(m.hash) === -1)
       // Set messages as unread
-      .map(m => Object.assign(m, { unread: m.Post.meta.ts > lastReadTimestamp }))
+      .map(m => Object.assign(m, { unread: m.meta.ts > lastReadTimestamp }))
 
-    this.messages = this.messages
-      .concat(newMessages)
-      .sort((a, b) => a.Post.meta.ts - b.Post.meta.ts)
+    this.messages = this.messages.concat(newMessages).sort((a, b) => a.meta.ts - b.meta.ts)
   }
 
   @action.bound
@@ -136,8 +134,8 @@ export default class ChannelStore {
 
   @action // Called while loading from local filesystem
   _onLoadProgress (...args) {
-    const entry = this.parseMessage(args[2])
-    this._loadBatch.push(entry)
+    const entry = args[2]
+    this._loadBatch.push(this.parseMessage(entry))
     this.loadingHistory = true
   }
 
@@ -151,8 +149,8 @@ export default class ChannelStore {
 
   @action // Called while loading from IPFS (receiving new messages)
   _onReplicateProgress (...args) {
-    const entry = this.parseMessage(args[2])
-    this._replicationBatch.push(entry)
+    const entry = args[2]
+    this._replicationBatch.push(this.parseMessage(entry))
     this.loadingNewMessages = true
   }
 
@@ -166,7 +164,9 @@ export default class ChannelStore {
 
   @action // Called when the user writes a message (text or file)
   _onWrite (...args) {
-    this._updateMessages([this.parseMessage(args[2][0])])
+    const entry = args[2][0]
+    const messages = [this.parseMessage(entry)]
+    this._updateMessages(messages)
     if (this._sendingMessageCounter > 0) this._sendingMessageCounter -= 1
   }
 
@@ -192,8 +192,8 @@ export default class ChannelStore {
 
     // Check if we need to update the last read timestamp
     const { lastReadTimestamp } = this._storableState
-    if (!lastReadTimestamp || message.Post.meta.ts > lastReadTimestamp) {
-      this._storableState.lastReadTimestamp = message.Post.meta.ts
+    if (!lastReadTimestamp || message.meta.ts > lastReadTimestamp) {
+      this._storableState.lastReadTimestamp = message.meta.ts
     }
   }
 
@@ -316,7 +316,10 @@ export default class ChannelStore {
 
   parseMessage (entry) {
     try {
-      return JSON.parse(entry.payload.value)
+      const message = entry.payload.value
+      message.hash = entry.hash
+      message.userIdentity = entry.identity
+      return message
     } catch (err) {
       logger.warn(`Channel '${this.name}' failed to parse payload from message. Error:`, err)
     }

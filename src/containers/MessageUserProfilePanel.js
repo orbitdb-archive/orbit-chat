@@ -23,8 +23,7 @@ function MessageUserProfilePanel ({ t }, { uiStore }) {
 
   const user = userProfilePanelUser
 
-  const country = Countries[user.location]
-  const location = country ? country + ', Earth' : 'Earth'
+  const country = Countries[user.profile.location]
 
   const { x: left, y: top } = userProfilePanelPosition
   const translateHorizontal = left > windowDimensions.width / 2 ? '-100%' : '0'
@@ -50,13 +49,15 @@ function MessageUserProfilePanel ({ t }, { uiStore }) {
         transitionLeaveTimeout={0}>
         <img className="picture" src={earthImg} />
       </CSSTransitionGroup>
-      <div className="name">{user.name}</div>
-      <div className="country">{location}</div>
+      <div className="name">{user.profile.name}</div>
+      <div className="country">{country ? country + ', Earth' : 'Earth'}</div>
       <dl className="profileDataContainer">
-        <dt>{t('userProfile.identityProvider')}:</dt>
-        <dd>{user.identityProvider.provider}</dd>
-        <dt>{t('userProfile.signingKey')}:</dt>
-        <dd>{user.signKey}</dd>
+        <dt>{t('userProfile.identityType')}:</dt>
+        <dd>{user.identity.type}</dd>
+        <dt>{t('userProfile.identityId')}:</dt>
+        <dd className="code">{user.identity.id}</dd>
+        <dt>{t('userProfile.identityPublicKey')}:</dt>
+        <dd className="code">{user.identity.publicKey}</dd>
       </dl>
     </div>
   )

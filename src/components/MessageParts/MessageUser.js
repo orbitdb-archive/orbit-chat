@@ -7,17 +7,22 @@ import classNames from 'classnames'
 import createColor from '../../utils/create-color'
 
 function MessageUser ({ message, colorify, isCommand, onClick }) {
-  const user = message.Post.meta.from
-  const color = colorify && user ? createColor(user.name) : 'rgb(250, 250, 250)'
+  const {
+    userIdentity,
+    meta: { from: userProfile }
+  } = message
+
+  const color =
+    colorify && userIdentity ? createColor(userIdentity.publicKey) : 'rgb(250, 250, 250)'
 
   return (
     <div
       className={classNames('Message__User', { command: isCommand })}
       style={{ color }}
       onClick={evt => {
-        if (typeof onClick === 'function') onClick(evt, user)
+        if (typeof onClick === 'function') onClick(evt, userProfile, userIdentity)
       }}>
-      {user ? user.name : ''}
+      {userProfile ? userProfile.name : ''}
     </div>
   )
 }

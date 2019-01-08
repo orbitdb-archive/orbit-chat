@@ -13,6 +13,8 @@ $height: 27.25vh;
   margin-left: -20px;
   padding: 1.0em;
 
+  max-width: 300px;
+
   .close {
     position: absolute;
     right: 0.7em;
@@ -63,7 +65,14 @@ $height: 27.25vh;
     dd {
       font-style: italic;
       font-size: 0.8em;
+      white-space: pre-wrap;
+      word-break: break-all;
       margin: 0;
+
+      &.code {
+        font-family: monospace;
+        font-size: 1em;
+      }
     }
   }
 

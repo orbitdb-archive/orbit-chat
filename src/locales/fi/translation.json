@@ -76,8 +76,9 @@
     }
   },
   "userProfile": {
-    "identityProvider": "Identiteetin tarjoaja",
-    "signingKey": "Allekirjoitusavain"
+    "identityType": "Identiteetin tarjoaja",
+    "identityId": "Identiteetin tunniste",
+    "identityPublicKey": "Julkinen avain"
   },
   "version": "Versio",
   "viewNames": {

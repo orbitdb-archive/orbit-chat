@@ -125,9 +125,9 @@ export default class UiStore {
   }
 
   @action.bound
-  openUserProfilePanel (userProfile, position) {
+  openUserProfilePanel (user, position) {
     this._userProfilePanelPosition = position
-    this._userProfilePanelUser = userProfile
+    this._userProfilePanelUser = user
   }
 
   @action.bound

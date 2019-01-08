@@ -76,8 +76,9 @@
     }
   },
   "userProfile": {
-    "identityProvider": "Identity provider",
-    "signingKey": "Signing key"
+    "identityType": "Identity provider",
+    "identityId": "Identity id",
+    "identityPublicKey": "Public key"
   },
   "version": "Version",
   "viewNames": {

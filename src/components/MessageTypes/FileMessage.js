@@ -10,8 +10,10 @@ import { getHumanReadableSize, isAudio, isText, isImage, isVideo } from '../../u
 
 import '../../styles/FileMessage.scss'
 
-function FileMessage ({ t, animationProps, hash, name, size, ...rest }) {
+function FileMessage ({ t, animationProps, hash, meta, ...rest }) {
   const [showPreview, setShowPreview] = useState(false)
+
+  const { name, size, mimeType } = meta
 
   async function handleNameClick () {
     if (!showPreview && (!isImage(name) && !isText(name) && !isAudio(name) && !isVideo(name))) {
@@ -41,6 +43,7 @@ function FileMessage ({ t, animationProps, hash, name, size, ...rest }) {
           animationProps={animationProps}
           hash={hash}
           name={name}
+          mimeType={mimeType}
           show={showPreview}
           {...rest}
         />
@@ -53,8 +56,11 @@ FileMessage.propTypes = {
   t: PropTypes.func.isRequired,
   animationProps: PropTypes.object.isRequired,
   hash: PropTypes.string.isRequired,
-  name: PropTypes.string.isRequired,
-  size: PropTypes.number.isRequired
+  meta: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    size: PropTypes.number.isRequired,
+    mimeType: PropTypes.string.isRequired
+  }).isRequired
 }
 
 export default FileMessage

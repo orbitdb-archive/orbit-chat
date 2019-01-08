@@ -14,7 +14,7 @@ import { isAudio, isImage, isVideo, toArrayBuffer } from '../../utils/file-helpe
 
 const logger = new Logger()
 
-async function loadPreviewContent (loadFunc, hash, meta, name) {
+async function loadPreviewContent (loadFunc, hash, name, mimeType) {
   // TODO: Handle electron
 
   const fileIsAudio = isAudio(name)
@@ -28,8 +28,8 @@ async function loadPreviewContent (loadFunc, hash, meta, name) {
 
   if (buffer instanceof Blob) {
     blob = buffer
-  } else if (buffer && meta.mimeType) {
-    blob = new Blob([toArrayBuffer(buffer)], { type: meta.mimeType })
+  } else if (buffer && mimeType) {
+    blob = new Blob([toArrayBuffer(buffer)], { type: mimeType })
   }
 
   const srcUrl = buffer ? window.URL.createObjectURL(blob) : url
@@ -47,7 +47,7 @@ async function loadPreviewContent (loadFunc, hash, meta, name) {
   }
 }
 
-function FilePreview ({ t, animationProps, hash, loadFile, meta, name, show }) {
+function FilePreview ({ t, animationProps, hash, loadFile, name, mimeType, show }) {
   const [previewContent, setPreviewContent] = useState(t('channel.file.previewLoading'))
 
   let isMounted // track whether component is mounted
@@ -59,7 +59,7 @@ function FilePreview ({ t, animationProps, hash, loadFile, meta, name, show }) {
       if (!show) {
         setPreviewContent(t('channel.file.previewLoading'))
       } else {
-        loadPreviewContent(loadFile, hash, meta, name)
+        loadPreviewContent(loadFile, hash, name, mimeType)
           .then(html => {
             if (isMounted) setPreviewContent(html)
           })
@@ -93,8 +93,8 @@ FilePreview.propTypes = {
   animationProps: PropTypes.object.isRequired,
   hash: PropTypes.string.isRequired,
   loadFile: PropTypes.func.isRequired,
-  meta: PropTypes.object.isRequired,
   name: PropTypes.string.isRequired,
+  mimeType: PropTypes.string.isRequired,
   show: PropTypes.bool.isRequired
 }
 

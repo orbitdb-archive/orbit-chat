@@ -23,7 +23,7 @@ function MessageRow ({
   onMessageUserClick,
   ...rest
 }) {
-  const isCommand = message.Post.content && message.Post.content.startsWith('/me')
+  const isCommand = message.content && message.content.startsWith('/me')
 
   const messageTimestamp = <MessageTimestamp message={message} />
 
