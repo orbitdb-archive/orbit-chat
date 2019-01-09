@@ -1,6 +1,7 @@
 'use strict'
 
 import React from 'react'
+import { hot, setConfig } from 'react-hot-loader'
 import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { withNamespaces } from 'react-i18next'
@@ -18,6 +19,11 @@ import ChannelLink from './ChannelLink'
 
 import '../styles/flaticon.css'
 import '../styles/ControlPanel.scss'
+
+setConfig({
+  pureSFC: true,
+  pureRender: true
+})
 
 class ControlPanel extends React.Component {
   static contextType = RootStoreContext
@@ -272,4 +278,4 @@ class ControlPanel extends React.Component {
   }
 }
 
-export default withNamespaces()(observer(ControlPanel))
+export default hot(module)(withNamespaces()(observer(ControlPanel)))

@@ -1,6 +1,7 @@
 'use strict'
 
 import React from 'react'
+import { hot, setConfig } from 'react-hot-loader'
 import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
@@ -17,6 +18,11 @@ import BackgroundAnimation from '../components/BackgroundAnimation'
 import LoginForm from '../components/LoginForm'
 
 import '../styles/LoginView.scss'
+
+setConfig({
+  pureSFC: true,
+  pureRender: true
+})
 
 const logger = new Logger()
 
@@ -106,4 +112,4 @@ class LoginView extends React.Component {
   }
 }
 
-export default withNamespaces()(observer(LoginView))
+export default hot(module)(withNamespaces()(observer(LoginView)))

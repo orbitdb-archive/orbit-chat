@@ -1,6 +1,7 @@
 'use strict'
 
 import React from 'react'
+import { hot, setConfig } from 'react-hot-loader'
 import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
@@ -13,6 +14,11 @@ import RootStoreContext from '../context/RootStoreContext'
 import Channel from '../containers/Channel'
 
 import '../styles/ChannelView.scss'
+
+setConfig({
+  pureSFC: true,
+  pureRender: true
+})
 
 const logger = new Logger()
 
@@ -82,4 +88,4 @@ class ChannelView extends React.Component {
   }
 }
 
-export default withNamespaces()(observer(ChannelView))
+export default hot(module)(withNamespaces()(observer(ChannelView)))

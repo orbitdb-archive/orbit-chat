@@ -1,9 +1,15 @@
 'use strict'
 
 import React from 'react'
+import { hot, setConfig } from 'react-hot-loader'
 import { observer } from 'mobx-react'
 
 import RootStoreContext from '../context/RootStoreContext'
+
+setConfig({
+  pureSFC: true,
+  pureRender: true
+})
 
 class IndexView extends React.Component {
   static contextType = RootStoreContext
@@ -25,4 +31,4 @@ class IndexView extends React.Component {
   }
 }
 
-export default observer(IndexView)
+export default hot(module)(observer(IndexView))
