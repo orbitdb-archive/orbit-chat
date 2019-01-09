@@ -15,7 +15,6 @@ import RootStoreContext from '../context/RootStoreContext'
 import PrivateRouteWithContext from '../containers/PrivateRouteWithContext'
 import ControlPanel from '../containers/ControlPanel'
 import ChannelHeader from '../containers/ChannelHeader'
-import MessageUserProfilePanel from '../containers/MessageUserProfilePanel'
 
 import ChannelView from './ChannelView'
 import IndexView from './IndexView'
@@ -36,10 +35,6 @@ const loginPath = '/connect'
 function AppView () {
   return (
     <div className="App view">
-      {/* Render the profile panel of a user */}
-      {/* This is the panel that is shown when a username is clicked in chat  */}
-      <MessageUserProfilePanel />
-
       {/* Only render ControlPanel when logged in */}
       <PrivateRouteWithContext component={ControlPanel} />
 
