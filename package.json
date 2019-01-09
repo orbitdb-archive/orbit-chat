@@ -12,7 +12,8 @@
   "standard": {
     "parser": "babel-eslint",
     "env": {
-      "browser": true
+      "browser": true,
+      "node": true
     }
   },
   "repository": {
