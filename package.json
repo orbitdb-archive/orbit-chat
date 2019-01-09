@@ -9,11 +9,23 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint src/"
   },
+  "standard": {
+    "parser": "babel-eslint",
+    "env": {
+      "browser": true,
+      "node": true
+    }
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/orbitdb/orbit-chat.git"
   },
-  "author": "orbitdb",
+  "keywords": [
+    "orbitdb",
+    "orbit",
+    "orbit-chat",
+    "orbit-web"
+  ],
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/orbitdb/orbit-chat/issues"
