@@ -1,7 +1,6 @@
 'use strict'
 
 import React from 'react'
-import { hot, setConfig } from 'react-hot-loader'
 import PropTypes from 'prop-types'
 import { withNamespaces } from 'react-i18next'
 import { observer } from 'mobx-react'
@@ -15,11 +14,6 @@ import BackgroundAnimation from '../components/BackgroundAnimation'
 
 import '../styles/MessageUserProfilePanel.scss'
 import earthImg from '../images/earth.png'
-
-setConfig({
-  pureSFC: true,
-  pureRender: true
-})
 
 class MessageUserProfilePanel extends React.Component {
   static contextType = RootStoreContext
@@ -84,4 +78,4 @@ class MessageUserProfilePanel extends React.Component {
   }
 }
 
-export default hot(module)(withNamespaces()(observer(MessageUserProfilePanel)))
+export default withNamespaces()(observer(MessageUserProfilePanel))

@@ -12,6 +12,7 @@ import Logger from '../utils/logger'
 import RootStoreContext from '../context/RootStoreContext'
 
 import Channel from '../containers/Channel'
+import MessageUserProfilePanel from '../containers/MessageUserProfilePanel'
 
 import '../styles/ChannelView.scss'
 
@@ -82,6 +83,11 @@ class ChannelView extends React.Component {
 
     return (
       <div className="ChannelView">
+        {/* Render the profile panel of a user */}
+        {/* This is the panel that is shown when a username is clicked in chat  */}
+        <MessageUserProfilePanel />
+
+        {/* Render the channel */}
         <Channel channelName={channelName} />
       </div>
     )
