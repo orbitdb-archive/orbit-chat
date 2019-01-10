@@ -49,7 +49,6 @@ async function loadPreviewContent (loadFunc, hash, name, mimeType) {
 
 function FilePreview ({ t, animationProps, hash, loadFile, name, mimeType, show }) {
   const [previewContent, setPreviewContent] = useState(t('channel.file.previewLoading'))
-
   let isMounted // track whether component is mounted
 
   useEffect(
