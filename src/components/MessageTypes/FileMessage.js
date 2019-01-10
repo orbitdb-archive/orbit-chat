@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { CSSTransitionGroup } from 'react-transition-group'
+import { TransitionGroup } from 'react-transition-group'
 
 import FilePreview from '../FilePreview'
 
@@ -27,7 +27,7 @@ function FileMessage ({ t, animationProps, hash, meta, ...rest }) {
 
   return (
     <div className="FileMessage">
-      <CSSTransitionGroup {...animationProps}>
+      <div>
         <span className="name" onClick={handleNameClick}>
           {name}
         </span>
@@ -47,7 +47,7 @@ function FileMessage ({ t, animationProps, hash, meta, ...rest }) {
           show={showPreview}
           {...rest}
         />
-      </CSSTransitionGroup>
+      </div>
     </div>
   )
 }

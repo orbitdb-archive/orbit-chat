@@ -2,7 +2,7 @@
 
 import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
-import { CSSTransitionGroup } from 'react-transition-group'
+import { TransitionGroup, CSSTransition } from 'react-transition-group'
 
 import Logger from '../utils/logger'
 
@@ -25,44 +25,56 @@ function LoginForm ({ t, theme, onSubmit, setUsernameInputRef }) {
     }
   })
 
+  const transitionOptions = {
+    classNames: 'loginScreenAnimation',
+    appear: true,
+    component: 'div',
+    className: 'inputs',
+    timeout: {
+      appear: 5000,
+      enter: 5000,
+      exit: 5000
+    }
+  }
+
   return (
     <form onSubmit={e => onSubmit(e, usernameInputRef.current.value.trim())}>
-      <CSSTransitionGroup
-        transitionName="loginScreenAnimation"
-        transitionAppear={true}
-        component="div"
-        className="inputs"
-        transitionAppearTimeout={5000}
-        transitionEnterTimeout={5000}
-        transitionLeaveTimeout={5000}>
-        <div className="usernameRow" onClick={() => usernameInputRef.current.focus()}>
-          <input
-            ref={usernameInputRef}
-            type="text"
-            placeholder={t('login.nickname')}
-            maxLength="32"
-            autoFocus
-            style={theme}
-            onChange={() => setCurrentLength(usernameInputRef.current.value.length)}
-          />
-        </div>
-        <div className="connectButtonRow">
-          <span className="hint">
-            {currentLength > 0 ? t('login.pressEnterToLogin') : t('login.orLoginWith')}
-          </span>
-          <input type="submit" value="Connect" style={{ display: 'none' }} />
-        </div>
-        <div className="lastRow">
-          {currentLength === 0 ? (
-            <img
-              onClick={() => logger.warn('Uport Login not implemented')}
-              className="logo"
-              src={uportLogo}
-              height="64"
+      <TransitionGroup>
+        <CSSTransition {...transitionOptions} className="usernameRow">
+          <div>
+            <input
+              ref={usernameInputRef}
+              type="text"
+              placeholder={t('login.nickname')}
+              maxLength="32"
+              autoFocus
+              style={theme}
+              onChange={() => setCurrentLength(usernameInputRef.current.value.length)}
+              onClick={() => usernameInputRef.current.focus()}
             />
-          ) : null}
-        </div>
-      </CSSTransitionGroup>
+          </div>
+        </CSSTransition>
+        <CSSTransition {...transitionOptions} className="connectButtonRow">
+          <div>
+            <span className="hint">
+              {currentLength > 0 ? t('login.pressEnterToLogin') : t('login.orLoginWith')}
+            </span>
+            <input type="submit" value="Connect" style={{ display: 'none' }} />
+          </div>
+        </CSSTransition>
+        <CSSTransition {...transitionOptions} className="lastRow">
+          <div>
+            {currentLength === 0 ? (
+              <img
+                onClick={() => logger.warn('Uport Login not implemented')}
+                className="logo"
+                src={uportLogo}
+                height="64"
+              />
+            ) : null}
+          </div>
+        </CSSTransition>
+      </TransitionGroup>
     </form>
   )
 }

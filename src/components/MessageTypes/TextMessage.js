@@ -2,7 +2,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { CSSTransitionGroup } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 
 import textProcessor from '../textProcessor'
 
@@ -20,7 +20,7 @@ function TextMessage ({ animationProps, emojiSet, highlightWords, text, useEmoji
 
   return (
     <div className="TextMessage">
-      <CSSTransitionGroup {...animationProps}>{content}</CSSTransitionGroup>
+      <CSSTransition {...animationProps}>{content}</CSSTransition>
     </div>
   )
 }

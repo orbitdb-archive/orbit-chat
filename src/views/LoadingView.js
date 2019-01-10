@@ -4,7 +4,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
-import { CSSTransitionGroup } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 
 import RootStoreContext from '../context/RootStoreContext'
 
@@ -28,21 +28,20 @@ class LoadingView extends React.Component {
     const { t } = this.props
 
     const transitionProps = {
-      transitionAppear: true,
-      transitionAppearTimeout: 5000,
-      transitionEnterTimeout: 5000,
-      transitionLeaveTimeout: 5000
+      appear: true,
+      timeout: { appear: 5000, enter: 5000, exit: 5000 }
     }
 
     return (
       <div className="LoadingView">
-        <CSSTransitionGroup
+        <CSSTransition
           className="header"
           component="div"
-          transitionName="loadingHeaderAnimation"
-          {...transitionProps}>
+          classNames="loadingHeaderAnimation"
+          {...transitionProps}
+        >
           <h1>{t('loading')}</h1>
-        </CSSTransitionGroup>
+        </CSSTransition>
         <BackgroundAnimation size={480} theme={{ ...uiStore.theme }} />
       </div>
     )

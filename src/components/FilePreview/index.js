@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { CSSTransitionGroup } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 
 import PreviewAudioFile from './PreviewAudioFile'
 import PreviewImageFile from './PreviewImageFile'
@@ -81,9 +81,11 @@ function FilePreview ({ t, animationProps, hash, loadFile, name, mimeType, show 
 
   return (
     <div className="FilePreview">
-      <CSSTransitionGroup {...animationProps}>
-        <span className="preview smallText">{previewContent}</span>
-      </CSSTransitionGroup>
+      <CSSTransition {...animationProps}>
+        <div>
+          <span className="preview smallText">{previewContent}</span>
+        </div>
+      </CSSTransition>
     </div>
   )
 }

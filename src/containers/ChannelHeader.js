@@ -4,7 +4,7 @@ import React from 'react'
 import { hot, setConfig } from 'react-hot-loader'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import { CSSTransitionGroup } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 import { withNamespaces } from 'react-i18next'
 
 import RootStoreContext from '../context/RootStoreContext'
@@ -63,17 +63,16 @@ class ChannelHeader extends React.Component {
       <div className="Header" onClick={onHeaderClick}>
         <div className="ChannelName">
           <div className="currentChannel">
-            <CSSTransitionGroup
+            <CSSTransition
               component="div"
-              transitionName="channelHeaderAnimation"
-              transitionEnter={true}
-              transitionLeave={false}
-              transitionAppear={false}
-              transitionAppearTimeout={0}
-              transitionEnterTimeout={1000}
-              transitionLeaveTimeout={0}>
+              classNames="channelHeaderAnimation"
+              enter={true}
+              exit={false}
+              appear={false}
+              timeout={{ appear: 0, enter: 1000, exit: 0 }}
+            >
               <span>{currentChannelName ? `#${currentChannelName}` : overrideName}</span>
-            </CSSTransitionGroup>
+            </CSSTransition>
           </div>
           {otherChannels}
         </div>

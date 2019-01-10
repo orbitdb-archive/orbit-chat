@@ -60,7 +60,7 @@ $channel-name-min-height: 1.6em;
   animation-timing-function: ease-out;
 }
 
-.channelHeaderAnimation-leave {
+.channelHeaderAnimation-exit {
   animation: fadeOutRight;
   animation-duration: .3s;
   animation-fill-mode: both;

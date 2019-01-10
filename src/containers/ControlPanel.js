@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { withNamespaces } from 'react-i18next'
 import { observer } from 'mobx-react'
-import { CSSTransitionGroup } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 import classNames from 'classnames'
 
 import RootStoreContext from '../context/RootStoreContext'
@@ -100,10 +100,11 @@ class ControlPanel extends React.Component {
     const { t } = this.props
 
     return networkStore.isOnline ? (
-      <CSSTransitionGroup
+      <CSSTransition
         {...transitionProps}
         transitionName="joinChannelAnimation"
-        className="joinChannelInput">
+        classNames="joinChannelInput"
+      >
         <JoinChannel
           onSubmit={this.onJoinChannel}
           autoFocus
@@ -112,12 +113,13 @@ class ControlPanel extends React.Component {
           t={t}
           inputRef={el => (this.joinChannelInput = el)}
         />
-      </CSSTransitionGroup>
+      </CSSTransition>
     ) : !networkStore.starting ? (
       <button
         className="startIpfsButton submitButton"
         style={{ ...uiStore.theme }}
-        onClick={() => networkStore.useJsIPFS()}>
+        onClick={() => networkStore.useJsIPFS()}
+      >
         {t('controlPanel.startJsIpfs')}
       </button>
     ) : (
@@ -139,7 +141,8 @@ class ControlPanel extends React.Component {
               className={classNames('row link', {
                 active: uiStore.currentChannelName === c.name
               })}
-              key={c.name}>
+              key={c.name}
+            >
               <ChannelLink
                 channel={c}
                 theme={{ ...uiStore.theme }}
@@ -153,7 +156,8 @@ class ControlPanel extends React.Component {
                 onClick={() => {
                   if (uiStore.currentChannelName === c.name) this.redirect('/')
                   c.leave()
-                }}>
+                }}
+              >
                 {t('controlPanel.closeChannel')}
               </span>
             </div>
@@ -204,25 +208,25 @@ class ControlPanel extends React.Component {
 
     const transitionProps = {
       component: 'div',
-      transitionAppear: true,
-      transitionAppearTimeout: 5000,
-      transitionEnterTimeout: 5000,
-      transitionLeaveTimeout: 5000
+      appear: true,
+      timeout: { appear: 5000, enter: 5000, exit: 5000 }
     }
 
     const channels = networkStore.channelsAsArray.sort((a, b) => a.name.localeCompare(b.name))
 
     return (
       <React.Fragment>
-        <CSSTransitionGroup
+        <CSSTransition
           {...transitionProps}
-          transitionName={leftSide ? 'openPanelAnimationLeft' : 'openPanelAnimationRight'}>
-          <div
-            className={classNames('ControlPanel', {
+          classNames={leftSide ? 'openPanelAnimationLeft' : 'openPanelAnimationRight'}
+          className={classNames('ControlPanel', {
               left: leftSide,
               right: !leftSide,
               'no-close': !this.isClosable()
-            })}>
+            })}
+        >
+          <div
+          >
             <div style={{ opacity: 0.8, zIndex: -1 }}>
               <BackgroundAnimation
                 size={320}
@@ -231,19 +235,20 @@ class ControlPanel extends React.Component {
                 style={{ alignItems: 'flex-start' }}
               />
             </div>
-            <CSSTransitionGroup
+            <CSSTransition
               {...transitionProps}
-              transitionName={leftSide ? 'panelHeaderAnimationLeft' : 'panelHeaderAnimationRight'}>
-              <div className="header" onClick={this.onClose}>
+              classNames={leftSide ? 'panelHeaderAnimationLeft' : 'panelHeaderAnimationRight'} className="header" onClick={this.onClose}
+            >
+              <div>
                 <div className="logo">Orbit</div>
               </div>
-            </CSSTransitionGroup>
+            </CSSTransition>
 
-            <CSSTransitionGroup {...transitionProps} transitionName="networkNameAnimation">
-              <div className="networkName">
+            <CSSTransition {...transitionProps} classNames="networkNameAnimation"  className="networkName">
+              <div>
                 <div className="text">{networkStore.networkName}</div>
               </div>
-            </CSSTransitionGroup>
+            </CSSTransition>
 
             <div className="username">{sessionStore.username}</div>
 
@@ -253,26 +258,31 @@ class ControlPanel extends React.Component {
               className={classNames({
                 panelHeader: channels.length > 0,
                 hidden: channels.length === 0
-              })}>
+              })}
+            >
               {t('controlPanel.channels')}
             </div>
 
-            <CSSTransitionGroup
+            <CSSTransition
               {...transitionProps}
-              transitionName="joinChannelAnimation"
-              className="openChannels">
+              classNames="joinChannelAnimation"
+              className="openChannels"
+            >
               {this.renderChannelsList(channels)}
-            </CSSTransitionGroup>
+            </CSSTransition>
 
             {this.renderBottomRow()}
           </div>
-        </CSSTransitionGroup>
-        <CSSTransitionGroup
+        </CSSTransition>
+        <CSSTransition
           {...transitionProps}
-          transitionName="darkenerAnimation"
+          classNames="darkenerAnimation"
           className={classNames('darkener', { 'no-close': !this.isClosable() })}
           onClick={this.onClose}
-        />
+          component="div"
+        >
+          <div></div>
+        </CSSTransition>
       </React.Fragment>
     )
   }

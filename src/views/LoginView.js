@@ -6,7 +6,7 @@ import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
-import { CSSTransitionGroup } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 
 import { version } from '../../package.json'
 
@@ -76,16 +76,15 @@ class LoginView extends React.Component {
 
     return (
       <div className="LoginView">
-        <CSSTransitionGroup
+        <CSSTransition
           className="header"
-          transitionName="loginHeaderAnimation"
-          transitionAppear={true}
+          classNames="loginHeaderAnimation"
+          appear={true}
           component="div"
-          transitionAppearTimeout={5000}
-          transitionEnterTimeout={5000}
-          transitionLeaveTimeout={5000}>
+          timeout={{ appear: 5000, enter: 5000, exit: 5000 }}
+        >
           <h1 onClick={this.focusUsernameInput}>Orbit</h1>
-        </CSSTransitionGroup>
+        </CSSTransition>
         <LoginForm
           t={t}
           theme={{ ...uiStore.theme }}
@@ -99,7 +98,8 @@ class LoginView extends React.Component {
           type="button"
           className="ConfigurationButton submitButton"
           style={{ ...uiStore.theme }}
-          onClick={this.onConfigure}>
+          onClick={this.onConfigure}
+        >
           {t('configuration')}
         </button>
         <BackgroundAnimation

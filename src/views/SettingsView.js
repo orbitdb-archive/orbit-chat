@@ -5,7 +5,7 @@ import { hot, setConfig } from 'react-hot-loader'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
-import { CSSTransitionGroup } from 'react-transition-group'
+import { TransitionGroup } from 'react-transition-group'
 
 import settingsOptions from '../config/setting.options.json'
 
@@ -97,7 +97,7 @@ class SettingsView extends React.Component {
     }
 
     return (
-      <CSSTransitionGroup
+      <TransitionGroup
         key={field.name}
         transitionName="rowAnimation"
         transitionAppear={true}
@@ -111,7 +111,7 @@ class SettingsView extends React.Component {
         {field.description ? (
           <span className="description">{t(`settings.descriptions.${field.description}`)}</span>
         ) : null}
-      </CSSTransitionGroup>
+      </TransitionGroup>
     )
   }
 

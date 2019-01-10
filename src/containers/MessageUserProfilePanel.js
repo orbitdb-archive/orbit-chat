@@ -4,7 +4,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { withNamespaces } from 'react-i18next'
 import { observer } from 'mobx-react'
-import { CSSTransitionGroup } from 'react-transition-group'
+import { CSSTransition } from 'react-transition-group'
 
 import Countries from '../config/countries.json'
 
@@ -54,15 +54,14 @@ class MessageUserProfilePanel extends React.Component {
         <span className="close" onClick={uiStore.closeUserProfilePanel}>
           X
         </span>
-        <CSSTransitionGroup
-          transitionName="profilePictureAnimation"
-          transitionAppear={true}
+        <CSSTransition
+          classNames="profilePictureAnimation"
+          appear={true}
           component="div"
-          transitionAppearTimeout={1500}
-          transitionEnterTimeout={0}
-          transitionLeaveTimeout={0}>
+          timeout={{ appear: 1500, enter: 0, exit: 0 }}
+        >
           <img className="picture" src={earthImg} />
-        </CSSTransitionGroup>
+        </CSSTransition>
         <div className="name">{user.profile.name}</div>
         <div className="country">{country ? country + ', Earth' : 'Earth'}</div>
         <dl className="profileDataContainer">
