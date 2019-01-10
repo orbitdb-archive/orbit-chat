@@ -34,7 +34,7 @@ export default class ChannelStore {
 
     this._loadState()
 
-    this.feed.load(1)
+    this.feed.load(20)
 
     // Save channel state on changes
     reaction(() => values(this._storableState), this._saveState)
@@ -53,6 +53,9 @@ export default class ChannelStore {
 
   _loadEntriesBatch = []
   _replicateEntriesBatch = []
+
+  @observable
+  _replicationStatus = {}
 
   // Public instance variables
 
@@ -140,6 +143,11 @@ export default class ChannelStore {
     return `orbit-chat.${username}.channel-states`
   }
 
+  @computed
+  get hasMoreHistory () {
+    return this._replicationStatus.progress < this._replicationStatus.max
+  }
+
   // Private instance actions
 
   @action.bound
@@ -166,8 +174,14 @@ export default class ChannelStore {
     })
   }
 
+  @action.bound
+  _updateReplicationStatus () {
+    Object.assign(this._replicationStatus, this.feed.replicationStatus)
+  }
+
   @action // Called while loading from local filesystem
   _onLoadProgress (...args) {
+    this._updateReplicationStatus()
     const entry = args[2]
     this._loadEntriesBatch.push(entry)
     this.loadingHistory = true
@@ -175,6 +189,7 @@ export default class ChannelStore {
 
   @action // Called when done loading from local filesystem
   _onLoaded () {
+    this._updateReplicationStatus()
     const entries = this._loadEntriesBatch.filter(e => e)
     this._loadEntriesBatch = []
     this._updateEntries(entries)
@@ -183,6 +198,7 @@ export default class ChannelStore {
 
   @action // Called while loading from IPFS (receiving new messages)
   _onReplicateProgress (...args) {
+    this._updateReplicationStatus()
     const entry = args[2]
     this._replicateEntriesBatch.push(entry)
     this.loadingNewMessages = true
@@ -190,6 +206,7 @@ export default class ChannelStore {
 
   @action // Called when done loading from IPFS
   _onReplicated () {
+    this._updateReplicationStatus()
     const entries = this._replicateEntriesBatch.filter(e => e)
     this._replicateEntriesBatch = []
     this._updateEntries(entries)
@@ -237,9 +254,7 @@ export default class ChannelStore {
 
   @action.bound
   sendMessage (text) {
-    if (typeof text !== 'string' || text === '') {
-      return Promise.resolve()
-    }
+    if (typeof text !== 'string' || text === '') return Promise.resolve()
 
     this._sendingMessageCounter += 1
 
@@ -350,6 +365,13 @@ export default class ChannelStore {
         })
       }
     })
+  }
+
+  async loadMore () {
+    if (!this.hasMoreHistory) return
+    const warnMsg = "'channel.loadMore' is not implemented"
+    logger.warn(warnMsg)
+    window.alert(warnMsg)
   }
 
   stop () {

@@ -289,6 +289,24 @@ input[type=button], .channelOptionsButton {
     padding: 0.5em;
     user-select: none;
     cursor: default;
+
+    &.hasMoreHistory{
+      cursor: pointer;
+
+      &::before {
+        content:"^";
+        margin-right: 4px;
+      }
+
+      &::after {
+        content:"^";
+        margin-left: 4px;
+      }
+
+      &:hover {
+        background-color: #303030;
+      }
+    }
   }
 
   .messagesEnd {

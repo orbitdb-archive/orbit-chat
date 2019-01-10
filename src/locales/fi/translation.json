@@ -8,6 +8,7 @@
       "unableToDisplay": "Tiedostoa ei ole mahdollista näyttää"
     },
     "loadingHistory": "Ladataan historiaa...",
+    "loadMore": "Klikkaa ladataksesi vanhempia viestejä",
     "sendMessagePlaceholder": "Kirjoita viesti...",
     "status": {
       "users": "käyttäjä",
