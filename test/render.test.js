@@ -8,7 +8,7 @@ import App from '../src/views/App'
 describe('<App />', () => {
   it('Should show <Login/> on entry', () => {
     const app = mount(<App />)
-    const loginIsMounted = !!app.find('.LoginView')
+    const loginIsMounted = app.find('.LoginView').exists()
     expect(loginIsMounted).to.equal(true)
   })
 })
