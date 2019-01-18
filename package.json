@@ -45,7 +45,7 @@
     "emoji-mart": "^2.9.1",
     "highlight.js": "^9.13.1",
     "i18next": "^12.0.0",
-    "ipfs": "^0.33.1",
+    "ipfs": "0.33.1",
     "mobx": "^5.5.2",
     "mobx-react": "^5.4.2",
     "orbit_": "git://github.com/orbitdb/orbit-core.git#dev/overall-refactor",
