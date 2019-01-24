@@ -18,25 +18,38 @@ function PreviewVideoFile ({ src, stream, filename, mimeType, ...rest }) {
     const source = new MediaSource()
     url = window.URL.createObjectURL(source)
 
-    source.addEventListener('sourceopen', e => {
-      const sourceBuffer = source.addSourceBuffer(codec)
-      const buf = []
+    source.readyState === 'closed' &&
+      source.addEventListener('sourceopen', e => {
+        const sourceBuffer = source.sourceBuffers.length === 0 && source.addSourceBuffer(codec)
+        const buf = []
 
-      sourceBuffer.addEventListener('updateend', () => {
-        if (buf.length > 0) sourceBuffer.appendBuffer(buf.shift())
-      })
+        if (sourceBuffer) {
+          sourceBuffer.addEventListener('updateend', () => {
+            if (buf.length > 0 && !sourceBuffer.updating) {
+              sourceBuffer.appendBuffer(buf.shift())
+            }
+          })
 
-      stream.on('data', data => {
-        if (!sourceBuffer.updating) sourceBuffer.appendBuffer(toArrayBuffer(data))
-        else buf.push(toArrayBuffer(data))
+          stream.on('data', data => {
+            if (!sourceBuffer.updating) {
+              if (buf.length > 0) {
+                sourceBuffer.appendBuffer(buf.shift())
+              } else {
+                sourceBuffer.appendBuffer(toArrayBuffer(data))
+              }
+            } else {
+              buf.push(toArrayBuffer(data))
+            }
+          })
+
+          stream.on('end', () => {
+            setTimeout(() => {
+              if (source.readyState === 'open' && !sourceBuffer.updating) source.endOfStream()
+            }, 100)
+          })
+          stream.on('error', e => console.error(e))
+        }
       })
-      stream.on('end', () => {
-        setTimeout(() => {
-          if (source.readyState === 'open') source.endOfStream()
-        }, 100)
-      })
-      stream.on('error', e => console.error(e))
-    })
   }
 
   return (
