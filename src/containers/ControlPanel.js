@@ -102,8 +102,8 @@ class ControlPanel extends React.Component {
     return networkStore.isOnline ? (
       <CSSTransition
         {...transitionProps}
-        transitionName="joinChannelAnimation"
-        classNames="joinChannelInput"
+        classNames="joinChannelAnimation"
+        className="joinChannelInput"
       >
         <JoinChannel
           onSubmit={this.onJoinChannel}
