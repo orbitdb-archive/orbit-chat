@@ -368,10 +368,35 @@ export default class ChannelStore {
   }
 
   async loadMore () {
+    // TODO: This is a bit hacky, but at the time of writing is the only way
+    // to load more entries
+
     if (!this.hasMoreHistory) return
-    const warnMsg = "'channel.loadMore' is not implemented"
-    logger.warn(warnMsg)
-    window.alert(warnMsg)
+
+    const log = this.feed._oplog
+    const Log = log.constructor
+
+    if (!Log.monkeyPatched) {
+      monkeyPatchIpfsLog(Log)
+      Log.monkeyPatched = true
+    }
+
+    const newLog = await Log.fromEntryHash(
+      this.feed._ipfs,
+      this.feed.access,
+      this.feed.identity,
+      log.tails[0].next[0],
+      log.id,
+      log.values.length + 10,
+      log.values,
+      this.feed._onLoadProgress.bind(this.feed)
+    )
+
+    await log.join(newLog)
+
+    await this.feed._updateIndex()
+
+    this.feed.events.emit('ready', this.feed.address.toString(), log.heads)
   }
 
   stop () {
@@ -384,5 +409,32 @@ export default class ChannelStore {
     this.feed.events.removeListener('replicate.progress', this._onReplicateProgress)
     this.feed.events.removeListener('replicated', this._onReplicated)
     this.feed.events.removeListener('write', this._onWrite)
+  }
+}
+
+function monkeyPatchIpfsLog (Log) {
+  Log.difference = (a, b) => {
+    // let stack = Object.keys(a._headsIndex)
+    const stack = Object.keys(a._entryIndex) // This is the only change
+    const traversed = {}
+    const res = {}
+
+    const pushToStack = hash => {
+      if (!traversed[hash] && !b.get(hash)) {
+        stack.push(hash)
+        traversed[hash] = true
+      }
+    }
+
+    while (stack.length > 0) {
+      const hash = stack.shift()
+      const entry = a.get(hash)
+      if (entry && !b.get(hash) && entry.id === b.id) {
+        res[entry.hash] = entry
+        traversed[entry.hash] = true
+        entry.next.forEach(pushToStack)
+      }
+    }
+    return res
   }
 }
