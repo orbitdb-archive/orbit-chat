@@ -1,5 +1,5 @@
-@import 'Animations';
-@import 'Colors';
+@import "Animations";
+@import "Colors";
 
 $channel-name-max-height: 5.5vmin;
 $channel-name-min-height: 1.5em;
@@ -28,17 +28,17 @@ $channel-name-min-height: 1.5em;
   justify-content: flex-start;
   flex: 1 1 100%;
 
-  box-shadow: 8px 0px 12px 0px rgba(0,0,0,0.2);
+  box-shadow: 8px 0px 12px 0px rgba(0, 0, 0, 0.2);
   font-weight: bold;
 
   &.left {
     left: 0;
-    border-left: '0';
+    border-left: "0";
   }
 
   &.right {
     right: 0;
-    border-right: '0';
+    border-right: "0";
   }
 
   .panelHeader {
@@ -114,13 +114,11 @@ $channel-name-min-height: 1.5em;
     }
   }
 
-  .joinChannelInput {
+  .joinChannel {
     display: flex;
     flex: 1 1 8%;
-    justify-content: stretch;
     box-sizing: border-box;
-    margin: 2em 0em;
-    margin-bottom: 1.0em;
+    margin: 2em 0em 1em 0em;
   }
 
   .spinner {
@@ -135,9 +133,10 @@ $channel-name-min-height: 1.5em;
   }
 
   .header {
-    display: flex;
-    flex: 1 1 100%;
-    justify-content: center;
+    display: block;
+    position: relative;
+    width: 100%;
+    text-align: center;
     box-sizing: border-box;
 
     font-weight: normal;
@@ -164,9 +163,10 @@ $channel-name-min-height: 1.5em;
   }
 
   .networkName {
-    display: flex;
-    flex: 1 1 100%;
-    justify-content: center;
+    display: block;
+    position: relative;
+    width: 100%;
+    text-align: center;
     box-sizing: border-box;
 
     padding: 0em 0.2em;
@@ -211,7 +211,7 @@ $channel-name-min-height: 1.5em;
 
     .icon {
       color: rgba(220, 220, 220, 0.2);
-      font-size: 1.0em;
+      font-size: 1em;
       padding: 0.5em;
       margin-bottom: 0.5em;
     }
@@ -221,7 +221,8 @@ $channel-name-min-height: 1.5em;
     }
   }
 
-  .submitButton, input[type=submit] {
+  .submitButton,
+  input[type="submit"] {
     display: flex;
     align-self: flex-end;
     margin: 0.75em;
@@ -234,7 +235,7 @@ $channel-name-min-height: 1.5em;
     align-self: center;
     color: $main-text-color;
     border: 1px solid $bar-background-color;
-    font-size: .8em;
+    font-size: 0.8em;
     line-height: 1.5;
   }
 }
@@ -246,7 +247,7 @@ $channel-name-min-height: 1.5em;
   width: 100%;
   height: 100%;
   z-index: 99;
-  background-color: rgba(0,0,0,0.33);
+  background-color: rgba(0, 0, 0, 0.33);
   cursor: pointer;
 
   .darkenerAnimation {
@@ -262,18 +263,15 @@ $channel-name-min-height: 1.5em;
   }
 }
 
-.RecentChannelsView {
+.openChannels {
   display: flex;
   flex-direction: column;
   flex: 1;
 
   .RecentChannels {
     overflow: auto;
-    margin: 1em;
-    margin-top: 0;
-    margin-bottom: 0;
+    margin: 0em 1em;
     box-sizing: border-box;
-
     font-weight: bold;
 
     .link {
@@ -296,33 +294,32 @@ $channel-name-min-height: 1.5em;
     display: flex;
     align-self: flex-end;
   }
-
 }
 
 .openPanelAnimationRight-appear {
   animation: slideFromRight;
-  animation-duration: .3s;
+  animation-duration: 0.3s;
   animation-fill-mode: both;
   animation-timing-function: ease-out;
 }
 
 .openPanelAnimationLeft-appear {
   animation: slideFromLeft;
-  animation-duration: .3s;
+  animation-duration: 0.3s;
   animation-fill-mode: both;
   animation-timing-function: ease-out;
 }
 
 .panelHeaderAnimationLeft-appear {
   animation: bounceInLeft;
-  animation-duration: .6s;
+  animation-duration: 0.6s;
   animation-fill-mode: both;
   animation-timing-function: ease-out;
 }
 
 .panelHeaderAnimationRight-appear {
   animation: bounceInRight;
-  animation-duration:.6s;
+  animation-duration: 0.6s;
   animation-fill-mode: both;
   animation-timing-function: ease-out;
 }

@@ -7,7 +7,7 @@ import '../styles/JoinChannel.scss'
 
 function JoinChannel ({ t, onSubmit, theme, inputRef }) {
   return (
-    <div className="JoinChannel">
+    <div className="joinChannel">
       <form onSubmit={onSubmit}>
         <div className="row">
           <span className="label">#</span>

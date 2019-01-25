@@ -220,13 +220,12 @@ class ControlPanel extends React.Component {
           {...transitionProps}
           classNames={leftSide ? 'openPanelAnimationLeft' : 'openPanelAnimationRight'}
           className={classNames('ControlPanel', {
-              left: leftSide,
-              right: !leftSide,
-              'no-close': !this.isClosable()
-            })}
+            left: leftSide,
+            right: !leftSide,
+            'no-close': !this.isClosable()
+          })}
         >
-          <div
-          >
+          <div>
             <div style={{ opacity: 0.8, zIndex: -1 }}>
               <BackgroundAnimation
                 size={320}
@@ -237,14 +236,20 @@ class ControlPanel extends React.Component {
             </div>
             <CSSTransition
               {...transitionProps}
-              classNames={leftSide ? 'panelHeaderAnimationLeft' : 'panelHeaderAnimationRight'} className="header" onClick={this.onClose}
+              classNames={leftSide ? 'panelHeaderAnimationLeft' : 'panelHeaderAnimationRight'}
+              className="header"
+              onClick={this.onClose}
             >
               <div>
                 <div className="logo">Orbit</div>
               </div>
             </CSSTransition>
 
-            <CSSTransition {...transitionProps} classNames="networkNameAnimation"  className="networkName">
+            <CSSTransition
+              {...transitionProps}
+              classNames="networkNameAnimation"
+              className="networkName"
+            >
               <div>
                 <div className="text">{networkStore.networkName}</div>
               </div>
@@ -281,7 +286,7 @@ class ControlPanel extends React.Component {
           onClick={this.onClose}
           component="div"
         >
-          <div></div>
+          <div />
         </CSSTransition>
       </React.Fragment>
     )
