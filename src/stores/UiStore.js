@@ -86,6 +86,11 @@ export default class UiStore {
   }
 
   @computed
+  get userProfilePanelIsOpen () {
+    return this._userProfilePanelPosition && this._userProfilePanelUser
+  }
+
+  @computed
   get title () {
     return this._title
   }

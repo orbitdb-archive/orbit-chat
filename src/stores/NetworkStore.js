@@ -177,9 +177,12 @@ export default class NetworkStore {
     await this.ipfsStore.stop()
   }
 
-  joinChannel (channelName) {
-    if (!this.orbit || this.channelNames.indexOf(channelName) !== -1) return
-    return this.orbit.join(channelName)
+  async joinChannel (channelName) {
+    if (!this.isOnline) throw new Error('Network is offline')
+
+    if (this.channelNames.indexOf(channelName) !== -1) return
+
+    await this.orbit.join(channelName)
   }
 
   leaveChannel (channelName) {

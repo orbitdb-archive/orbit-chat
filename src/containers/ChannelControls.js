@@ -1,10 +1,12 @@
 'use strict'
 
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
-import { observer } from 'mobx-react'
+import { Observer } from 'mobx-react'
 
 import Logger from '../utils/logger'
+
+import RootStoreContext from '../context/RootStoreContext'
 
 import FileUploadButton from '../components/FileUploadButton'
 import Spinner from '../components/Spinner'
@@ -14,7 +16,9 @@ import SendMessage from './SendMessage'
 
 const logger = new Logger()
 
-function ChannelControls ({ channel, ...rest }) {
+function ChannelControls ({ channel }) {
+  const { uiStore } = useContext(RootStoreContext)
+
   async function sendMessage (text) {
     try {
       await channel.sendMessage(text)
@@ -34,12 +38,21 @@ function ChannelControls ({ channel, ...rest }) {
   }
 
   return (
-    <div className="Controls">
-      <Spinner loading={channel.loadingNewMessages || channel.sendingMessage} />
-      <SendMessage onSendMessage={sendMessage} {...rest} />
-      <FileUploadButton onSelectFiles={sendFiles} {...rest} />
-      <ChannelStatus channel={channel} {...rest} />
-    </div>
+    <Observer>
+      {() => (
+        <div className="Controls">
+          <Spinner loading={channel.loadingNewMessages || channel.sendingMessage} />
+          <SendMessage
+            onSendMessage={sendMessage}
+            theme={uiStore.theme}
+            useEmojis={uiStore.useEmojis}
+            emojiSet={uiStore.emojiSet}
+          />
+          <FileUploadButton onSelectFiles={sendFiles} theme={uiStore.theme} />
+          <ChannelStatus channel={channel} theme={uiStore.theme} />
+        </div>
+      )}
+    </Observer>
   )
 }
 
@@ -47,4 +60,4 @@ ChannelControls.propTypes = {
   channel: PropTypes.object.isRequired
 }
 
-export default observer(ChannelControls)
+export default ChannelControls
