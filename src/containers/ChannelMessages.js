@@ -6,17 +6,14 @@ import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
 import classNames from 'classnames'
 
-import Logger from '../utils/logger'
 import getMousePosition from '../utils/mouse-position'
 
 import RootStoreContext from '../context/RootStoreContext'
 
+import MessageRow from '../components/MessageRow'
 import { FirstMessage } from '../components/MessageTypes'
 import MessagesDateSeparator from '../components/MessagesDateSeparator'
 
-import MessageRow from './MessageRow'
-
-const logger = new Logger()
 class ChannelMessages extends React.Component {
   static contextType = RootStoreContext
 
@@ -71,8 +68,8 @@ class ChannelMessages extends React.Component {
 
   renderMessages () {
     const { sessionStore, uiStore } = this.context
-    const { colorifyUsernames, useLargeMessage, language } = uiStore
-    const { t, channel, ...rest } = this.props
+    const { colorifyUsernames, useLargeMessage, language, theme, useEmojis, emojiSet } = uiStore
+    const { t, channel } = this.props
 
     let prevDate
 
@@ -98,7 +95,9 @@ class ChannelMessages extends React.Component {
           }}
           onMessageUserClick={this.onMessageUserClick}
           loadFile={channel.loadFile}
-          {...rest}
+          theme={theme}
+          useEmojis={useEmojis}
+          emojiSet={emojiSet}
         />
       )
 

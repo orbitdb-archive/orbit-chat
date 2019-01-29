@@ -1,6 +1,7 @@
 'use strict'
 
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Route, Redirect } from 'react-router-dom'
 
 function PrivateRoute ({ component: Component, loginPath, isAuthenticated, ...rest }) {
@@ -16,7 +17,14 @@ function PrivateRoute ({ component: Component, loginPath, isAuthenticated, ...re
       />
     )
   }
+
   return <Route {...rest} render={renderComponent} />
+}
+
+PrivateRoute.propTypes = {
+  component: PropTypes.func,
+  loginPath: PropTypes.string,
+  isAuthenticated: PropTypes.bool
 }
 
 export default PrivateRoute

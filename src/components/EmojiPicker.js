@@ -11,7 +11,8 @@ class EmojiPicker extends React.Component {
   static propTypes = {
     emojis: PropTypes.array.isRequired,
     emojiSize: PropTypes.number.isRequired,
-    emojiSet: PropTypes.string.isRequired
+    emojiSet: PropTypes.string.isRequired,
+    onChange: PropTypes.func.isRequired
   }
 
   static defaultProps = {}
