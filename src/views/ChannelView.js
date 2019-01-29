@@ -1,7 +1,7 @@
 'use strict'
 
 import React from 'react'
-import { hot, setConfig } from 'react-hot-loader'
+import { hot } from 'react-hot-loader'
 import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
@@ -16,15 +16,11 @@ import MessageUserProfilePanel from '../containers/MessageUserProfilePanel'
 
 import '../styles/ChannelView.scss'
 
-setConfig({
-  pureSFC: true,
-  pureRender: true
-})
-
 const logger = new Logger()
 
 class ChannelView extends React.Component {
   static contextType = RootStoreContext
+
   static propTypes = {
     t: PropTypes.func.isRequired,
     match: PropTypes.object.isRequired

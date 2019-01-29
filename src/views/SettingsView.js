@@ -1,7 +1,7 @@
 'use strict'
 
 import React from 'react'
-import { hot, setConfig } from 'react-hot-loader'
+import { hot } from 'react-hot-loader'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
@@ -15,11 +15,6 @@ import themes from '../themes'
 import RootStoreContext from '../context/RootStoreContext'
 
 import '../styles/SettingsView.scss'
-
-setConfig({
-  pureSFC: true,
-  pureRender: true
-})
 
 settingsOptions.themeName.options = Object.keys(themes)
 settingsOptions.language.options = Object.keys(locales)
