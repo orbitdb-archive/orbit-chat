@@ -22,9 +22,10 @@ function PrivateRoute ({ component: Component, loginPath, isAuthenticated, ...re
 }
 
 PrivateRoute.propTypes = {
-  component: PropTypes.func,
-  loginPath: PropTypes.string,
-  isAuthenticated: PropTypes.bool
+  component: PropTypes.func.isRequired,
+  loginPath: PropTypes.string.isRequired,
+  isAuthenticated: PropTypes.bool.isRequired,
+  location: PropTypes.object
 }
 
 export default PrivateRoute

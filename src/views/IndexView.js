@@ -1,6 +1,6 @@
 'use strict'
 
-import React, { useContext, useEffect } from 'react'
+import { useContext, useEffect } from 'react'
 import { hot } from 'react-hot-loader'
 
 import RootStoreContext from '../context/RootStoreContext'
