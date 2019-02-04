@@ -18,6 +18,7 @@ export default class UiStore {
   constructor (rootStore) {
     this.rootStore = rootStore
     this.settingsStore = this.rootStore.settingsStore
+    this.networkStore = this.rootStore.networkStore
 
     window.addEventListener('optimizedResize', this._onWindowResize)
 
@@ -25,6 +26,14 @@ export default class UiStore {
       () => this._title,
       title => {
         document.title = title
+      }
+    )
+
+    reaction(
+      () => this.networkStore.hasUnreadMessages,
+      () => {
+        const oldTitle = this._title.replace('* ', '')
+        this.setTitle(oldTitle)
       }
     )
 
@@ -126,7 +135,7 @@ export default class UiStore {
 
   @action.bound
   setTitle (val) {
-    this._title = val
+    this._title = this.networkStore.hasUnreadMessages ? `* ${val}` : val
   }
 
   @action.bound
