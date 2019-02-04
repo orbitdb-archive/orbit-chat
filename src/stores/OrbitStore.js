@@ -57,10 +57,10 @@ export default class OrbitStore {
     this.stop()
     const settings = this.settingsStore.networkSettings.orbit
     const options = {
-      // path to orbit-db file
-      directory: `${settings.root}/data/orbit-db`,
-      // how many messages to retrieve from history on joining a channel
-      maxHistory: 1
+      dbOptions: {
+        directory: `${settings.root}/data/orbit-db`
+      },
+      channelOptions: {}
     }
     const node = new Orbit(ipfs, options)
     node.events.once('connected', () => this.onStarted(node))

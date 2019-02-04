@@ -8,6 +8,7 @@
       "unableToDisplay": "Unable to display file"
     },
     "loadingHistory": "Loading history...",
+    "loadMore": "Click to load older messages",
     "sendMessagePlaceholder": "Type a message...",
     "status": {
       "users": "user",

@@ -33,6 +33,7 @@ class ChannelMessages extends React.Component {
 
     this.scrollToBottom = this.scrollToBottom.bind(this)
     this.onMessageUserClick = this.onMessageUserClick.bind(this)
+    this.onFirstMessageClick = this.onFirstMessageClick.bind(this)
   }
 
   componentDidMount () {
@@ -60,6 +61,12 @@ class ChannelMessages extends React.Component {
     const mousePosition = getMousePosition(evt)
 
     uiStore.openUserProfilePanel({ identity, profile }, mousePosition)
+  }
+
+  onFirstMessageClick (evt) {
+    const { channel } = this.props
+    evt.preventDefault()
+    channel.loadMore()
   }
 
   renderMessages () {
@@ -118,7 +125,8 @@ class ChannelMessages extends React.Component {
           t={t}
           channelName={channel.name}
           loading={channel.loadingHistory}
-          onClick={() => logger.warn('loadOlderMessages not implemented')}
+          hasMoreHistory={channel.hasMoreHistory}
+          onClick={this.onFirstMessageClick}
         />
         {messageEls}
         <span className="messagesEnd" ref={this.messagesEnd} />

@@ -5,7 +5,7 @@ function debugSend (networkStore, channelName, amount = 1, interval = 100, text 
     if (channel) {
       let i = 0
       timer = setInterval(() => {
-        channel.sendMessage(text + ' (' + i + ')')
+        channel.sendMessage(`${text} (${i})`)
         i++
         if (i === amount) clearInterval(timer)
       }, interval)

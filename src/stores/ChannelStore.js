@@ -17,7 +17,6 @@ export default class ChannelStore {
 
     this.leave = this.leave.bind(this)
     this.loadFile = this.loadFile.bind(this)
-    this.parseMessage = this.parseMessage.bind(this)
     this.stop = this.stop.bind(this)
 
     this._processSendQueue = throttleFunc(this._processSendQueue.bind(this))
@@ -35,7 +34,7 @@ export default class ChannelStore {
 
     this._loadState()
 
-    this.feed.load()
+    this.feed.load(20)
 
     // Save channel state on changes
     reaction(() => values(this._storableState), this._saveState)
@@ -52,13 +51,16 @@ export default class ChannelStore {
   @observable
   _sendingMessageCounter = 0
 
-  _loadBatch = []
-  _replicationBatch = []
+  _loadEntriesBatch = []
+  _replicateEntriesBatch = []
+
+  @observable
+  _replicationStatus = {}
 
   // Public instance variables
 
   @observable
-  messages = []
+  entries = []
 
   @observable
   peers = []
@@ -70,6 +72,39 @@ export default class ChannelStore {
   loadingNewMessages = false
 
   // Public instance getters
+
+  @computed
+  get entryHashes () {
+    return this.entries.map(e => e.hash)
+  }
+
+  @computed
+  get seenEntries () {
+    return this.entries.filter(e => e.seen)
+  }
+
+  @computed
+  get unseenEntries () {
+    return this.entries.filter(e => !e.seen)
+  }
+
+  @computed
+  get hasUnseenEntries () {
+    return this.unseenEntries.length > 0
+  }
+
+  @computed
+  get messages () {
+    // For backwards compatibility
+    // TODO: REMOVE
+    return this.entries.map(entry =>
+      Object.assign(JSON.parse(JSON.stringify(entry.payload.value)), {
+        hash: entry.hash,
+        userIdentity: entry.identity,
+        unread: !entry.seen
+      })
+    )
+  }
 
   @computed
   get messageHashes () {
@@ -108,20 +143,27 @@ export default class ChannelStore {
     return `orbit-chat.${username}.channel-states`
   }
 
+  @computed
+  get hasMoreHistory () {
+    return this._replicationStatus.progress < this._replicationStatus.max
+  }
+
   // Private instance actions
 
   @action.bound
-  _updateMessages (messages) {
-    const oldHashes = this.messageHashes
-    const { lastReadTimestamp = 0 } = this._storableState
+  _updateEntries (entries) {
+    const oldHashes = this.entryHashes
+    const { lastSeenTimestamp = 0 } = this._storableState
 
-    const newMessages = messages
-      // Filter out messages we already have
-      .filter(m => oldHashes.indexOf(m.hash) === -1)
-      // Set messages as unread
-      .map(m => Object.assign(m, { unread: m.meta.ts > lastReadTimestamp }))
+    const newEntries = entries
+      // Filter out entries we already have
+      .filter(e => oldHashes.indexOf(e.hash) === -1)
+      // Set entries as seen
+      .map(e => Object.assign(e, { seen: e.payload.value.meta.ts <= lastSeenTimestamp }))
 
-    this.messages = this.messages.concat(newMessages).sort((a, b) => a.meta.ts - b.meta.ts)
+    this.entries = this.entries
+      .concat(newEntries)
+      .sort((a, b) => a.payload.value.meta.ts - b.payload.value.meta.ts)
   }
 
   @action.bound
@@ -132,41 +174,49 @@ export default class ChannelStore {
     })
   }
 
+  @action.bound
+  _updateReplicationStatus () {
+    Object.assign(this._replicationStatus, this.feed.replicationStatus)
+  }
+
   @action // Called while loading from local filesystem
   _onLoadProgress (...args) {
+    this._updateReplicationStatus()
     const entry = args[2]
-    this._loadBatch.push(this.parseMessage(entry))
+    this._loadEntriesBatch.push(entry)
     this.loadingHistory = true
   }
 
   @action // Called when done loading from local filesystem
   _onLoaded () {
-    const messages = this._loadBatch.filter(e => e)
-    this._loadBatch = []
-    this._updateMessages(messages)
+    this._updateReplicationStatus()
+    const entries = this._loadEntriesBatch.filter(e => e)
+    this._loadEntriesBatch = []
+    this._updateEntries(entries)
     this.loadingHistory = false
   }
 
   @action // Called while loading from IPFS (receiving new messages)
   _onReplicateProgress (...args) {
+    this._updateReplicationStatus()
     const entry = args[2]
-    this._replicationBatch.push(this.parseMessage(entry))
+    this._replicateEntriesBatch.push(entry)
     this.loadingNewMessages = true
   }
 
   @action // Called when done loading from IPFS
   _onReplicated () {
-    const messages = this._replicationBatch.filter(e => e)
-    this._replicationBatch = []
-    this._updateMessages(messages)
+    this._updateReplicationStatus()
+    const entries = this._replicateEntriesBatch.filter(e => e)
+    this._replicateEntriesBatch = []
+    this._updateEntries(entries)
     this.loadingNewMessages = false
   }
 
   @action // Called when the user writes a message (text or file)
   _onWrite (...args) {
     const entry = args[2][0]
-    const messages = [this.parseMessage(entry)]
-    this._updateMessages(messages)
+    this._updateEntries([entry])
     if (this._sendingMessageCounter > 0) this._sendingMessageCounter -= 1
   }
 
@@ -187,21 +237,24 @@ export default class ChannelStore {
   // Public instance actions
 
   @action.bound
-  markMessageAsRead (message) {
-    message.unread = false
+  markEntryAsRead (entry) {
+    entry.seen = true
 
-    // Check if we need to update the last read timestamp
-    const { lastReadTimestamp } = this._storableState
-    if (!lastReadTimestamp || message.meta.ts > lastReadTimestamp) {
-      this._storableState.lastReadTimestamp = message.meta.ts
-    }
+    // Update the last read timestamp
+    this._storableState.lastSeenTimestamp = Math.max(
+      this._storableState.lastSeenTimestamp || 0,
+      entry.payload.value.meta.ts || 0
+    )
+  }
+
+  @action.bound
+  markMessageAsRead (message) {
+    this.entries.filter(e => e.hash === message.hash).map(this.markEntryAsRead)
   }
 
   @action.bound
   sendMessage (text) {
-    if (typeof text !== 'string' || text === '') {
-      return Promise.resolve()
-    }
+    if (typeof text !== 'string' || text === '') return Promise.resolve()
 
     this._sendingMessageCounter += 1
 
@@ -314,15 +367,36 @@ export default class ChannelStore {
     })
   }
 
-  parseMessage (entry) {
-    try {
-      const message = entry.payload.value
-      message.hash = entry.hash
-      message.userIdentity = entry.identity
-      return message
-    } catch (err) {
-      logger.warn(`Channel '${this.name}' failed to parse payload from message. Error:`, err)
+  async loadMore () {
+    // TODO: This is a bit hacky, but at the time of writing is the only way
+    // to load more entries
+
+    if (!this.hasMoreHistory) return
+
+    const log = this.feed._oplog
+    const Log = log.constructor
+
+    if (!Log.monkeyPatched) {
+      monkeyPatchIpfsLog(Log)
+      Log.monkeyPatched = true
     }
+
+    const newLog = await Log.fromEntryHash(
+      this.feed._ipfs,
+      this.feed.access,
+      this.feed.identity,
+      log.tails[0].next[0],
+      log.id,
+      log.values.length + 10,
+      log.values,
+      this.feed._onLoadProgress.bind(this.feed)
+    )
+
+    await log.join(newLog)
+
+    await this.feed._updateIndex()
+
+    this.feed.events.emit('ready', this.feed.address.toString(), log.heads)
   }
 
   stop () {
@@ -335,5 +409,32 @@ export default class ChannelStore {
     this.feed.events.removeListener('replicate.progress', this._onReplicateProgress)
     this.feed.events.removeListener('replicated', this._onReplicated)
     this.feed.events.removeListener('write', this._onWrite)
+  }
+}
+
+function monkeyPatchIpfsLog (Log) {
+  Log.difference = (a, b) => {
+    // let stack = Object.keys(a._headsIndex)
+    const stack = Object.keys(a._entryIndex) // This is the only change
+    const traversed = {}
+    const res = {}
+
+    const pushToStack = hash => {
+      if (!traversed[hash] && !b.get(hash)) {
+        stack.push(hash)
+        traversed[hash] = true
+      }
+    }
+
+    while (stack.length > 0) {
+      const hash = stack.shift()
+      const entry = a.get(hash)
+      if (entry && !b.get(hash) && entry.id === b.id) {
+        res[entry.hash] = entry
+        traversed[entry.hash] = true
+        entry.next.forEach(pushToStack)
+      }
+    }
+    return res
   }
 }
