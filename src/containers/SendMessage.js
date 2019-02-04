@@ -13,8 +13,8 @@ import '../styles/SendMessage.scss'
 class SendMessage extends React.Component {
   static propTypes = {
     t: PropTypes.func.isRequired,
-    theme: PropTypes.object.isRequired,
     onSendMessage: PropTypes.func.isRequired,
+    theme: PropTypes.object.isRequired,
     useEmojis: PropTypes.bool.isRequired,
     emojiSet: PropTypes.string.isRequired
   }

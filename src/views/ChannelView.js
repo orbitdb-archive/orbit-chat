@@ -1,11 +1,9 @@
 'use strict'
 
-import React from 'react'
-import { hot, setConfig } from 'react-hot-loader'
+import React, { useEffect, useState, useContext } from 'react'
+import { hot } from 'react-hot-loader'
 import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { observer } from 'mobx-react'
-import { withNamespaces } from 'react-i18next'
 
 import Logger from '../utils/logger'
 
@@ -16,82 +14,56 @@ import MessageUserProfilePanel from '../containers/MessageUserProfilePanel'
 
 import '../styles/ChannelView.scss'
 
-setConfig({
-  pureSFC: true,
-  pureRender: true
-})
-
 const logger = new Logger()
 
-class ChannelView extends React.Component {
-  static contextType = RootStoreContext
-  static propTypes = {
-    t: PropTypes.func.isRequired,
-    match: PropTypes.object.isRequired
-  }
+function ChannelView (props) {
+  const [shouldRedirectToIndex, setShouldRedirectToIndex] = useState(false)
+  const { networkStore, uiStore } = useContext(RootStoreContext)
 
-  state = { shouldRedirectToIndex: false }
+  const {
+    match: {
+      params: { channel: channelName }
+    }
+  } = props
 
-  componentDidMount () {
-    this.checkNetwork()
-    this.handleChannelName()
-  }
+  useEffect(() => {
+    checkNetwork()
+    handleChannelName()
 
-  componentDidUpdate () {
-    this.handleChannelName()
-  }
+    return () => {
+      uiStore.setCurrentChannelName(null)
+      uiStore.closeUserProfilePanel()
+    }
+  })
 
-  componentWillUnmount () {
-    const { uiStore } = this.context
-    uiStore.setCurrentChannelName(null)
-    uiStore.closeUserProfilePanel()
-  }
-
-  checkNetwork () {
-    const { networkStore } = this.context
+  function checkNetwork () {
     if (!networkStore.isOnline) {
       logger.warn(`Network is offline`)
-      this.setState({ shouldRedirectToIndex: true })
+      setShouldRedirectToIndex(true)
     }
   }
 
-  handleChannelName () {
-    const { networkStore, uiStore } = this.context
-
-    const {
-      match: {
-        params: { channel: channelName }
-      }
-    } = this.props
-
-    if (networkStore.hasUnreadMessages) uiStore.setTitle(`* #${channelName} | Orbit`)
-    else uiStore.setTitle(`#${channelName} | Orbit`)
-
+  function handleChannelName () {
+    uiStore.setTitle(`#${channelName} | Orbit`)
     uiStore.setCurrentChannelName(channelName)
   }
 
-  render () {
-    const { shouldRedirectToIndex } = this.state
+  if (shouldRedirectToIndex) return <Redirect to="/" />
 
-    if (shouldRedirectToIndex) return <Redirect to="/" />
+  return (
+    <div className="ChannelView">
+      {/* Render the profile panel of a user */}
+      {/* This is the panel that is shown when a username is clicked in chat  */}
+      <MessageUserProfilePanel />
 
-    const {
-      match: {
-        params: { channel: channelName }
-      }
-    } = this.props
-
-    return (
-      <div className="ChannelView">
-        {/* Render the profile panel of a user */}
-        {/* This is the panel that is shown when a username is clicked in chat  */}
-        <MessageUserProfilePanel />
-
-        {/* Render the channel */}
-        <Channel channelName={channelName} />
-      </div>
-    )
-  }
+      {/* Render the channel */}
+      <Channel channelName={channelName} />
+    </div>
+  )
 }
 
-export default hot(module)(withNamespaces()(observer(ChannelView)))
+ChannelView.propTypes = {
+  match: PropTypes.object.isRequired
+}
+
+export default hot(module)(ChannelView)

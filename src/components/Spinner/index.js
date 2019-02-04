@@ -24,6 +24,7 @@ Spinner.defaultProps = {
 
 Spinner.propTypes = {
   className: PropTypes.string,
+  theme: PropTypes.object,
   loading: PropTypes.bool,
   color: PropTypes.string,
   size: PropTypes.string

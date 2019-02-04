@@ -148,6 +148,10 @@ export default class ChannelStore {
     return this._replicationStatus.progress < this._replicationStatus.max
   }
 
+  @computed
+  get userCount () {
+    return this.peers.length + 1
+  }
   // Private instance actions
 
   @action.bound

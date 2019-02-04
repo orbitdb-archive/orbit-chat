@@ -11,7 +11,7 @@ export default class RootStore {
     this.i18n = i18n
     this.sessionStore = new SessionStore(this)
     this.settingsStore = new SettingsStore(this)
-    this.uiStore = new UiStore(this)
     this.networkStore = new NetworkStore(this)
+    this.uiStore = new UiStore(this)
   }
 }

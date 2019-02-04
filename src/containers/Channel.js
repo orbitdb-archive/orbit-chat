@@ -1,8 +1,7 @@
 'use strict'
 
-import React from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
-import { observer } from 'mobx-react'
 import { Redirect } from 'react-router-dom'
 
 import Logger from '../utils/logger'
@@ -16,63 +15,47 @@ import '../styles/Channel.scss'
 
 const logger = new Logger()
 
-class Channel extends React.Component {
-  static contextType = RootStoreContext
+function Channel ({ channelName }) {
+  const { networkStore } = useContext(RootStoreContext)
+  const [channel, setChannel] = useState(null)
+  const [shouldRedirectToIndex, setShouldRedirectToIndex] = useState(false)
 
-  static propTypes = {
-    channelName: PropTypes.string.isRequired
+  let mounted = true
+
+  async function joinChannel () {
+    try {
+      await networkStore.joinChannel(channelName)
+      if (mounted) setChannel(networkStore.channels[channelName])
+    } catch (err) {
+      logger.error(err)
+      if (mounted) setShouldRedirectToIndex(true)
+    }
   }
 
-  state = { shouldRedirectToIndex: false }
-
-  componentDidMount () {
-    this.checkNetworkAndChannel()
-  }
-
-  componentDidUpdate () {
-    this.checkNetworkAndChannel()
-  }
-
-  checkNetworkAndChannel () {
-    const { networkStore } = this.context
-    const { channelName } = this.props
-
-    if (networkStore.isOnline) {
-      if (networkStore.channelNames.indexOf(channelName) === -1) {
-        networkStore.joinChannel(channelName)
+  useEffect(
+    () => {
+      joinChannel()
+      return () => {
+        mounted = false
       }
-    } else {
-      logger.warn(`Network is offline`)
-      this.setState({ shouldRedirectToIndex: true })
-    }
-  }
+    },
+    [channelName]
+  )
 
-  render () {
-    const { shouldRedirectToIndex } = this.state
+  if (shouldRedirectToIndex) return <Redirect to="/" />
 
-    if (shouldRedirectToIndex) return <Redirect to="/" />
+  if (!channel) return null
 
-    const { networkStore, uiStore } = this.context
-    const { channelName } = this.props
-
-    const channel = networkStore.channels[channelName]
-
-    if (!channel) return null
-
-    const props = {
-      theme: { ...uiStore.theme },
-      channel,
-      useEmojis: uiStore.useEmojis,
-      emojiSet: uiStore.emojiSet
-    }
-
-    return (
-      <div className="Channel flipped">
-        <ChannelMessages {...props} />
-        <ChannelControls {...props} />
-      </div>
-    )
-  }
+  return (
+    <div className="Channel flipped">
+      <ChannelMessages channel={channel} />
+      <ChannelControls channel={channel} />
+    </div>
+  )
 }
 
-export default observer(Channel)
+Channel.propTypes = {
+  channelName: PropTypes.string.isRequired
+}
+
+export default Channel

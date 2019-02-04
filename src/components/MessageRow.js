@@ -2,15 +2,9 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { observer } from 'mobx-react'
 import IntersectObserver from 'react-intersection-observer'
 
-import {
-  MessageContent,
-  MessageTimestamp,
-  MessageUser,
-  MessageUserAvatar
-} from '../components/MessageParts'
+import { MessageContent, MessageTimestamp, MessageUser, MessageUserAvatar } from './MessageParts'
 
 import '../styles/MessageRow.scss'
 
@@ -21,7 +15,7 @@ function MessageRow ({
   highlightWords,
   onInViewChange,
   onMessageUserClick,
-  ...rest
+  ...messageContentProps
 }) {
   const isCommand = message.content && message.content.startsWith('/me')
 
@@ -51,7 +45,7 @@ function MessageRow ({
         component: 'div',
         className: 'content'
       }}
-      {...rest}
+      {...messageContentProps}
     />
   )
 
@@ -65,11 +59,11 @@ function MessageRow ({
       {messageContent}
     </div>
   ) : (
-    <>
+    <React.Fragment>
       {messageTimestamp}
       {messageUser}
       {messageContent}
-    </>
+    </React.Fragment>
   )
 
   return (
@@ -84,8 +78,6 @@ MessageRow.propTypes = {
   message: PropTypes.object.isRequired,
   colorifyUsernames: PropTypes.bool,
   useLargeMessage: PropTypes.bool,
-  useEmojis: PropTypes.bool,
-  emojiSet: PropTypes.string.isRequired,
   highlightWords: PropTypes.array,
   onInViewChange: PropTypes.func.isRequired,
   onMessageUserClick: PropTypes.func,
@@ -95,8 +87,7 @@ MessageRow.propTypes = {
 MessageRow.defaultProps = {
   colorifyUsernames: true,
   useLargeMessage: false,
-  useEmojis: true,
   highlightWords: []
 }
 
-export default observer(MessageRow)
+export default MessageRow
