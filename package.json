@@ -6,14 +6,15 @@
   "scripts": {
     "dev": "./node_modules/.bin/webpack-dev-server --mode=development",
     "build": "./node_modules/.bin/webpack --mode=production",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "NODE_ENV=test NODE_PATH=./src ./node_modules/.bin/mocha -r test/init.js --recursive",
     "lint": "eslint src/"
   },
   "standard": {
     "parser": "babel-eslint",
     "env": {
       "browser": true,
-      "node": true
+      "node": true,
+      "mocha": true
     }
   },
   "repository": {
@@ -67,12 +68,16 @@
     "@babel/plugin-transform-flow-strip-types": "^7.1.6",
     "@babel/preset-env": "^7.1.6",
     "@babel/preset-react": "^7.0.0",
+    "@babel/register": "^7.0.0",
     "@orbitdb/eslint-config-orbitdb": "0.0.2",
     "babel-eslint": "^10.0.1",
     "babel-loader": "^8.0.0",
     "babel-polyfill": "^6.26.0",
+    "chai": "^4.2.0",
     "clean-webpack-plugin": "^1.0.0",
     "css-loader": "^1.0.0",
+    "enzyme": "^3.8.0",
+    "enzyme-adapter-react-16": "^1.7.1",
     "eslint": "^5.9.0",
     "eslint-config-standard": "^12.0.0",
     "eslint-plugin-compat": "^2.5.1",
@@ -83,11 +88,17 @@
     "eslint-plugin-standard": "^4.0.0",
     "file-loader": "^2.0.0",
     "html-webpack-plugin": "^3.2.0",
+    "ignore-styles": "^5.0.1",
+    "jsdom": "^13.1.0",
+    "mediasource": "^2.3.0",
+    "mocha": "^5.2.0",
+    "mocha-webpack": "^1.1.0",
     "node-sass": "^4.3.3",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.3.0",
     "react-hot-loader": "^4.6.3",
     "sass-loader": "^7.1.0",
+    "sinon": "^7.2.2",
     "style-loader": "^0.23.0",
     "url-loader": "^1.1.1",
     "webpack": "^4.26.0",

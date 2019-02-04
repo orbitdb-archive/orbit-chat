@@ -40,7 +40,7 @@ async function loadPreviewContent (loadFunc, hash, name, mimeType) {
     } else if (fileIsImage) {
       return <PreviewImageFile src={srcUrl} />
     } else if (fileIsVideo) {
-      return <PreviewVideoFile stream={stream} filename={name} />
+      return <PreviewVideoFile src={srcUrl} stream={stream} filename={name} mimeType={mimeType} />
     } else {
       return <PreviewTextFile blob={blob} filename={name} />
     }
@@ -49,7 +49,6 @@ async function loadPreviewContent (loadFunc, hash, name, mimeType) {
 
 function FilePreview ({ t, animationProps, hash, loadFile, name, mimeType, show }) {
   const [previewContent, setPreviewContent] = useState(t('channel.file.previewLoading'))
-
   let isMounted // track whether component is mounted
 
   useEffect(
