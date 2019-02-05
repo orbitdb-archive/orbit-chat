@@ -49,7 +49,7 @@
     "ipfs": "0.33.1",
     "mobx": "^5.5.2",
     "mobx-react": "^5.4.2",
-    "orbit_": "github:orbitdb/orbit-core#1278bc29c5e93a2d983eabe0aa255f21ada4625d",
+    "orbit_": "github:orbitdb/orbit-core#56a16c0a68fb06306ca9b4cbba7ea270996683c0",
     "pleasejs": "^0.4.2",
     "prop-types": "^15.6.2",
     "react": "^16.8.0-alpha.1",
