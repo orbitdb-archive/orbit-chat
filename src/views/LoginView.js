@@ -46,14 +46,17 @@ class LoginView extends React.Component {
   }
 
   onLogin (e, username) {
-    const { sessionStore } = this.context
+    const { sessionStore, networkStore } = this.context
 
     e.preventDefault()
 
     if (username !== '') {
-      sessionStore.login({ username }).catch(e => {
-        logger.error(e)
-      })
+      sessionStore
+        .login({ username })
+        .then(() => networkStore.useJsIPFS())
+        .catch(e => {
+          logger.error(e)
+        })
     }
   }
 
@@ -78,7 +81,8 @@ class LoginView extends React.Component {
           component="div"
           transitionAppearTimeout={5000}
           transitionEnterTimeout={5000}
-          transitionLeaveTimeout={5000}>
+          transitionLeaveTimeout={5000}
+        >
           <h1 onClick={this.focusUsernameInput}>Orbit</h1>
         </CSSTransitionGroup>
         <LoginForm
@@ -94,7 +98,8 @@ class LoginView extends React.Component {
           type="button"
           className="ConfigurationButton submitButton"
           style={{ ...uiStore.theme }}
-          onClick={this.onConfigure}>
+          onClick={this.onConfigure}
+        >
           {t('configuration')}
         </button>
         <BackgroundAnimation

@@ -103,7 +103,8 @@ class ControlPanel extends React.Component {
       <CSSTransitionGroup
         {...transitionProps}
         transitionName="joinChannelAnimation"
-        className="joinChannelInput">
+        className="joinChannelInput"
+      >
         <JoinChannel
           onSubmit={this.onJoinChannel}
           autoFocus
@@ -113,13 +114,6 @@ class ControlPanel extends React.Component {
           inputRef={el => (this.joinChannelInput = el)}
         />
       </CSSTransitionGroup>
-    ) : !networkStore.starting ? (
-      <button
-        className="startIpfsButton submitButton"
-        style={{ ...uiStore.theme }}
-        onClick={() => networkStore.useJsIPFS()}>
-        {t('controlPanel.startJsIpfs')}
-      </button>
     ) : (
       <div style={{ position: 'relative' }}>
         <Spinner />
@@ -139,7 +133,8 @@ class ControlPanel extends React.Component {
               className={classNames('row link', {
                 active: uiStore.currentChannelName === c.name
               })}
-              key={c.name}>
+              key={c.name}
+            >
               <ChannelLink
                 channel={c}
                 theme={{ ...uiStore.theme }}
@@ -153,7 +148,8 @@ class ControlPanel extends React.Component {
                 onClick={() => {
                   if (uiStore.currentChannelName === c.name) this.redirect('/')
                   c.leave()
-                }}>
+                }}
+              >
                 {t('controlPanel.closeChannel')}
               </span>
             </div>
@@ -216,13 +212,15 @@ class ControlPanel extends React.Component {
       <React.Fragment>
         <CSSTransitionGroup
           {...transitionProps}
-          transitionName={leftSide ? 'openPanelAnimationLeft' : 'openPanelAnimationRight'}>
+          transitionName={leftSide ? 'openPanelAnimationLeft' : 'openPanelAnimationRight'}
+        >
           <div
             className={classNames('ControlPanel', {
               left: leftSide,
               right: !leftSide,
               'no-close': !this.isClosable()
-            })}>
+            })}
+          >
             <div style={{ opacity: 0.8, zIndex: -1 }}>
               <BackgroundAnimation
                 size={320}
@@ -233,7 +231,8 @@ class ControlPanel extends React.Component {
             </div>
             <CSSTransitionGroup
               {...transitionProps}
-              transitionName={leftSide ? 'panelHeaderAnimationLeft' : 'panelHeaderAnimationRight'}>
+              transitionName={leftSide ? 'panelHeaderAnimationLeft' : 'panelHeaderAnimationRight'}
+            >
               <div className="header" onClick={this.onClose}>
                 <div className="logo">Orbit</div>
               </div>
@@ -253,14 +252,16 @@ class ControlPanel extends React.Component {
               className={classNames({
                 panelHeader: channels.length > 0,
                 hidden: channels.length === 0
-              })}>
+              })}
+            >
               {t('controlPanel.channels')}
             </div>
 
             <CSSTransitionGroup
               {...transitionProps}
               transitionName="joinChannelAnimation"
-              className="openChannels">
+              className="openChannels"
+            >
               {this.renderChannelsList(channels)}
             </CSSTransitionGroup>
 
