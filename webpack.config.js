@@ -4,6 +4,8 @@ const path = require('path')
 const webpack = require('webpack')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
+const WebpackPwaManifest = require('webpack-pwa-manifest')
+const OfflinePlugin = require('offline-plugin')
 
 const config = {
   entry: ['babel-polyfill', './src/index.js'],
@@ -115,7 +117,25 @@ module.exports = (env, argv) => {
   }
 
   if (!isDevServer) {
-    config.plugins.push(new CleanWebpackPlugin(['dist']))
+    config.plugins.concat([
+      new CleanWebpackPlugin(['dist']),
+      new WebpackPwaManifest({
+        short_name: 'orbit-chat',
+        name: 'Orbit Chat',
+        description: 'A distributed, peer-to-peer chat application built on IPFS',
+        theme_color: '#202020',
+        background_color: '#202020',
+        icons: [
+          {
+            src: path.join(__dirname, './src/images/orbit_logo_400x400.png'),
+            sizes: [96, 128, 192, 256, 384]
+          }
+        ],
+        display: 'standalone',
+        start_url: '/'
+      }),
+      new OfflinePlugin({ autoUpdate: true })
+    ])
   }
 
   return config
