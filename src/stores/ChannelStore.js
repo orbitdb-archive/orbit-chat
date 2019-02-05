@@ -138,7 +138,7 @@ export default class ChannelStore {
 
   @computed
   get storagekey () {
-    const username = this.network.session.username
+    const username = this.network.sessionStore.username
     if (!username) throw new Error('No logged in user')
     return `orbit-chat.${username}.channel-states`
   }
@@ -311,7 +311,9 @@ export default class ChannelStore {
     try {
       const states = Object.assign(this._getStoredStates(), { [this.name]: this._storableState })
       localStorage.setItem(this.storagekey, JSON.stringify(states))
-    } catch (err) {}
+    } catch (err) {
+      console.error(err)
+    }
   }
 
   @action

@@ -11,8 +11,7 @@ const logger = new Logger()
 
 export default class IpfsStore {
   constructor (networkStore) {
-    this.sessionStore = networkStore.rootStore.sessionStore
-    this.settingsStore = networkStore.rootStore.settingsStore
+    this.settingsStore = networkStore.settingsStore
   }
 
   @observable
@@ -25,39 +24,45 @@ export default class IpfsStore {
   stopping = false
 
   @action.bound
-  onStarted (node) {
+  onStarted (node, callback) {
     logger.info('ipfs node started')
     this.starting = false
     this.node = node
+    if (typeof callback === 'function') callback(node)
   }
 
   @action.bound
-  onStopped () {
+  onStopped (callback) {
     logger.info('ipfs node stopped')
     this.stopping = false
     this.node = null
+    if (typeof callback === 'function') callback()
   }
 
   @action.bound
-  useJsIPFS () {
-    const { username } = this.sessionStore
-    if (this.starting || !username) return
+  async useJsIPFS () {
+    if (this.node) return this.node
+
+    if (this.starting) throw new Error('Already starting IPFS')
+
     this.starting = true
     logger.info('Starting js-ipfs node')
-    this.stop()
-    const settings = this.settingsStore.networkSettings.ipfs
-    const node = new IPFS(settings)
-    node.version((err, { version }) => {
-      if (err) return
-      logger.info(`js-ipfs version ${version}`)
+
+    return new Promise(resolve => {
+      const settings = this.settingsStore.networkSettings.ipfs
+      const node = new IPFS(settings)
+      node.version((err, { version }) => {
+        if (err) return
+        logger.info(`js-ipfs version ${version}`)
+      })
+      node.once('ready', () => this.onStarted(node, resolve))
     })
-    node.once('ready', () => this.onStarted(node))
   }
 
   @action.bound
-  useGoIPFS () {
-    const { username } = this.sessionStore
-    if (this.starting || !username) return
+  async useGoIPFS () {
+    if (this.starting) throw new Error('Already starting IPFS')
+
     this.starting = true
     logger.debug('Activating go-ipfs node')
     this.stop()
@@ -65,11 +70,16 @@ export default class IpfsStore {
   }
 
   @action.bound
-  stop () {
-    if (this.stopping || !this.node) return
+  async stop () {
+    if (!this.node) return
+    if (this.stopping) throw new Error('Already stopping IPFS')
+
     this.stopping = true
     logger.info('Stopping ipfs node')
-    this.node.once('stop', () => this.onStopped())
-    this.node.stop()
+
+    await new Promise(resolve => {
+      this.node.once('stop', () => this.onStopped(resolve))
+      this.node.stop()
+    })
   }
 }
