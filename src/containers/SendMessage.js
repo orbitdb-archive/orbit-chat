@@ -5,10 +5,13 @@ import PropTypes from 'prop-types'
 import { withNamespaces } from 'react-i18next'
 import { CSSTransitionGroup } from 'react-transition-group'
 import { emojiIndex } from 'emoji-mart'
-
-import EmojiPicker from '../components/EmojiPicker'
+import LoadAsync from '../components/Loadable'
 
 import '../styles/SendMessage.scss'
+
+const EmojiPicker = LoadAsync({
+  loader: () => import(/* webpackChunkName: "EmojiPicker" */ '../components/EmojiPicker')
+})
 
 class SendMessage extends React.Component {
   static propTypes = {
@@ -111,7 +114,8 @@ class SendMessage extends React.Component {
           transitionAppear={true}
           transitionAppearTimeout={1000}
           transitionEnterTimeout={0}
-          transitionLeaveTimeout={0}>
+          transitionLeaveTimeout={0}
+        >
           <EmojiPicker
             ref={this.emojiPicker}
             emojis={emojiResults}

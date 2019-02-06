@@ -5,12 +5,16 @@ import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
 import { CSSTransitionGroup } from 'react-transition-group'
+import LoadAsync from '../components/Loadable'
 
 import RootStoreContext from '../context/RootStoreContext'
 
-import BackgroundAnimation from '../components/BackgroundAnimation'
-
 import '../styles/LoadingView.scss'
+
+const BackgroundAnimation = LoadAsync({
+  loader: () =>
+    import(/* webpackChunkName: "BackgroundAnimation" */ '../components/BackgroundAnimation')
+})
 
 class LoadingView extends React.Component {
   static contextType = RootStoreContext
@@ -40,7 +44,8 @@ class LoadingView extends React.Component {
           className="header"
           component="div"
           transitionName="loadingHeaderAnimation"
-          {...transitionProps}>
+          {...transitionProps}
+        >
           <h1>{t('loading')}</h1>
         </CSSTransitionGroup>
         <BackgroundAnimation size={480} theme={{ ...uiStore.theme }} />
