@@ -52,7 +52,6 @@
     "orbit_": "github:orbitdb/orbit-core#56a16c0a68fb06306ca9b4cbba7ea270996683c0",
     "pleasejs": "^0.4.2",
     "prop-types": "^15.6.2",
-    "quicklink": "^1.0.0",
     "react": "^16.8.0-alpha.1",
     "react-dom": "^16.8.0-alpha.1",
     "react-favicon": "0.0.14",

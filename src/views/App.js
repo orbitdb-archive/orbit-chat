@@ -20,6 +20,8 @@ import '../styles/Main.scss'
 import '../styles/App.scss'
 import '../styles/Scrollbars.scss'
 
+import faviconUrl from '../images/OrbitLogo_32x32.png'
+
 const rootStore = new RootStore(i18n)
 
 // Load default settings
@@ -31,6 +33,10 @@ rootStore.sessionStore.loadFromCache()
 addDebug({ rootStore })
 
 const loginPath = '/connect'
+
+const Favicon = LoadAsync({
+  loader: () => import(/* webpackChunkName: "Favicon" */ 'react-favicon')
+})
 
 const ControlPanel = LoadAsync({
   loader: () => import(/* webpackChunkName: "ControlPanel" */ '../containers/ControlPanel')
@@ -55,6 +61,7 @@ const SettingsView = LoadAsync({
 function AppView () {
   return (
     <div className="App view">
+      <Favicon url={faviconUrl} />
       {/* Only render ControlPanel when logged in */}
       <PrivateRouteWithContext component={ControlPanel} loginPath={loginPath} />
 
