@@ -312,7 +312,7 @@ export default class ChannelStore {
       const states = Object.assign(this._getStoredStates(), { [this.name]: this._storableState })
       localStorage.setItem(this.storagekey, JSON.stringify(states))
     } catch (err) {
-      console.error(err)
+      logger.error(err)
     }
   }
 

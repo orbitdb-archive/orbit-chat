@@ -159,6 +159,7 @@ export default class NetworkStore {
 
   async start () {
     if (this.isOnline) return
+    logger.info('Starting network')
 
     await this.ipfsStore.useJsIPFS()
     await this.orbitStore.init(this.ipfs)
