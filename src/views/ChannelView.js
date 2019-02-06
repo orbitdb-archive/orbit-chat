@@ -4,13 +4,23 @@ import React, { useContext } from 'react'
 import { hot } from 'react-hot-loader'
 import PropTypes from 'prop-types'
 import { Observer } from 'mobx-react'
+import LoadAsync from '../components/Loadable'
+
+import Logger from '../utils/logger'
 
 import RootStoreContext from '../context/RootStoreContext'
 
-import Channel from '../containers/Channel'
-import MessageUserProfilePanel from '../containers/MessageUserProfilePanel'
-
 import '../styles/ChannelView.scss'
+
+const Channel = LoadAsync({
+  loader: () => import(/* webpackChunkName: "Channel" */ '../containers/Channel')
+})
+const MessageUserProfilePanel = LoadAsync({
+  loader: () =>
+    import(/* webpackChunkName: "MessageUserProfilePanel" */ '../containers/MessageUserProfilePanel')
+})
+
+const logger = new Logger()
 
 function ChannelView (props) {
   const { networkStore } = useContext(RootStoreContext)

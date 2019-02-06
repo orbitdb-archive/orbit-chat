@@ -7,6 +7,7 @@ import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
 import { withNamespaces } from 'react-i18next'
 import { CSSTransitionGroup } from 'react-transition-group'
+import LoadAsync from '../components/Loadable'
 
 import { version } from '../../package.json'
 
@@ -14,10 +15,15 @@ import Logger from '../utils/logger'
 
 import RootStoreContext from '../context/RootStoreContext'
 
-import BackgroundAnimation from '../components/BackgroundAnimation'
-import LoginForm from '../components/LoginForm'
-
 import '../styles/LoginView.scss'
+
+const BackgroundAnimation = LoadAsync({
+  loader: () =>
+    import(/* webpackChunkName: "BackgroundAnimation" */ '../components/BackgroundAnimation')
+})
+const LoginForm = LoadAsync({
+  loader: () => import(/* webpackChunkName: "LoginForm" */ '../components/LoginForm')
+})
 
 const logger = new Logger()
 
@@ -78,7 +84,8 @@ class LoginView extends React.Component {
           component="div"
           transitionAppearTimeout={5000}
           transitionEnterTimeout={5000}
-          transitionLeaveTimeout={5000}>
+          transitionLeaveTimeout={5000}
+        >
           <h1 onClick={this.focusUsernameInput}>Orbit</h1>
         </CSSTransitionGroup>
         <LoginForm
@@ -94,7 +101,8 @@ class LoginView extends React.Component {
           type="button"
           className="ConfigurationButton submitButton"
           style={{ ...uiStore.theme }}
-          onClick={this.onConfigure}>
+          onClick={this.onConfigure}
+        >
           {t('configuration')}
         </button>
         <BackgroundAnimation

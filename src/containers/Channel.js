@@ -2,13 +2,23 @@
 
 import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { Redirect } from 'react-router-dom'
+import LoadAsync from '../components/Loadable'
+
+import Logger from '../utils/logger'
 
 import RootStoreContext from '../context/RootStoreContext'
 
-import ChannelControls from './ChannelControls'
-import ChannelMessages from './ChannelMessages'
-
 import '../styles/Channel.scss'
+
+const ChannelControls = LoadAsync({
+  loader: () => import(/* webpackChunkName: "ChannelControls" */ './ChannelControls')
+})
+const ChannelMessages = LoadAsync({
+  loader: () => import(/* webpackChunkName: "ChannelMessages" */ './ChannelMessages')
+})
+
+const logger = new Logger()
 
 function Channel ({ channelName }) {
   const [channel, setChannel] = useState(null)
