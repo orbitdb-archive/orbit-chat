@@ -17,7 +17,7 @@ export default class SettingsStore {
     this._updateLanguage = this._updateLanguage.bind(this)
 
     // Reload settings when user changes
-    reaction(() => this.sessionStore.username, this._load)
+    reaction(() => this.sessionStore.username, this.load)
 
     // Need to react to language changes
     // since we need to call 'i18n.changeLanguage'
@@ -28,8 +28,6 @@ export default class SettingsStore {
 
     // Save ui settings when they change
     reaction(() => values(this.uiSettings), this._saveUiSettings)
-
-    this._load()
   }
 
   // Public instance variables
@@ -52,10 +50,30 @@ export default class SettingsStore {
     }
   }
 
-  // Private instance actions
+  // Private instance methods
+
+  _saveNetworkSettings () {
+    try {
+      const { networkKey } = this._settingsKeys
+      localStorage.setItem(networkKey, JSON.stringify(this.networkSettings))
+    } catch (err) {}
+  }
+
+  _saveUiSettings () {
+    try {
+      const { uiKey } = this._settingsKeys
+      localStorage.setItem(uiKey, JSON.stringify(this.uiSettings))
+    } catch (err) {}
+  }
+
+  _updateLanguage (lng) {
+    this.rootStore.i18n.changeLanguage(lng)
+  }
+
+  // Public instance actions
 
   @action.bound
-  _load (username) {
+  load (username) {
     let networkSettings = {}
     let uiSettings = {}
 
@@ -84,25 +102,5 @@ export default class SettingsStore {
     // Merge default settings with user defined settings
     Object.assign(this.networkSettings, defaulNetworkSettingsCopy, networkSettings)
     Object.assign(this.uiSettings, defaultUiSettingsCopy, uiSettings)
-  }
-
-  // Private instance methods
-
-  _saveNetworkSettings () {
-    try {
-      const { networkKey } = this._settingsKeys
-      localStorage.setItem(networkKey, JSON.stringify(this.networkSettings))
-    } catch (err) {}
-  }
-
-  _saveUiSettings () {
-    try {
-      const { uiKey } = this._settingsKeys
-      localStorage.setItem(uiKey, JSON.stringify(this.uiSettings))
-    } catch (err) {}
-  }
-
-  _updateLanguage (lng) {
-    this.rootStore.i18n.changeLanguage(lng)
   }
 }

@@ -28,6 +28,12 @@ import '../styles/Scrollbars.scss'
 
 const rootStore = new RootStore(i18n)
 
+// Load default settings
+rootStore.settingsStore.load()
+
+// Load a session (user) from cache
+rootStore.sessionStore.loadFromCache()
+
 addDebug({ rootStore })
 
 const loginPath = '/connect'
