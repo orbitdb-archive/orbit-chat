@@ -42,7 +42,7 @@ function AppView () {
   return (
     <div className="App view">
       {/* Only render ControlPanel when logged in */}
-      <PrivateRouteWithContext component={ControlPanel} />
+      <PrivateRouteWithContext component={ControlPanel} loginPath={loginPath} />
 
       {/* Render ChannelHeader when in a channel OR when in settings */}
       <Route exact path="/channel/:channel" component={ChannelHeader} />
@@ -50,9 +50,19 @@ function AppView () {
 
       <Switch>
         <Route exact path={loginPath} component={LoginView} />
-        <PrivateRouteWithContext exact path="/channel/:channel" component={ChannelView} />
-        <PrivateRouteWithContext exact path="/settings" component={SettingsView} />
-        <PrivateRouteWithContext component={IndexView} />
+        <PrivateRouteWithContext
+          exact
+          path="/channel/:channel"
+          component={ChannelView}
+          loginPath={loginPath}
+        />
+        <PrivateRouteWithContext
+          exact
+          path="/settings"
+          component={SettingsView}
+          loginPath={loginPath}
+        />
+        <PrivateRouteWithContext component={IndexView} loginPath={loginPath} />
       </Switch>
     </div>
   )

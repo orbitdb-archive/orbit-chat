@@ -12,12 +12,12 @@ class PrivateRouteWithContext extends React.Component {
   static contextType = RootStoreContext
 
   static propTypes = {
-    loginPath: PropTypes.string
+    loginPath: PropTypes.string.isRequired
   }
 
   render () {
     const { sessionStore } = this.context
-    const { loginPath = '/connect', ...rest } = this.props
+    const { loginPath, ...rest } = this.props
 
     if (!sessionStore) return null
 
