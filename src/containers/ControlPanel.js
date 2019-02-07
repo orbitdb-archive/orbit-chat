@@ -117,7 +117,7 @@ class ControlPanel extends React.Component {
       <button
         className="startIpfsButton submitButton"
         style={{ ...uiStore.theme }}
-        onClick={() => networkStore.useJsIPFS()}>
+        onClick={() => networkStore.start()}>
         {t('controlPanel.startJsIpfs')}
       </button>
     ) : (

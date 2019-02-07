@@ -3,10 +3,13 @@
 import { action, configure, observable, computed, runInAction } from 'mobx'
 
 import Logger from '../utils/logger'
+import * as cookies from '../utils/cookies'
 
 configure({ enforceActions: 'observed' })
 
 const logger = new Logger()
+
+const cookieKey = 'orbit-chat-username'
 
 export default class SessionStore {
   constructor (rootStore) {
@@ -43,9 +46,30 @@ export default class SessionStore {
     runInAction(() => {
       this._user = user
     })
+    this._cacheUser(user)
+  }
+
+  // Private instance methods
+
+  _readUserFromCache () {
+    const username = cookies.getCookie(cookieKey)
+    return username ? { username } : null
+  }
+
+  _cacheUser (user) {
+    if (user) {
+      cookies.setCookie(cookieKey, user.username, 1)
+    } else {
+      cookies.expireCookie(cookieKey)
+    }
   }
 
   // Public instance methods
+
+  loadFromCache () {
+    const cached = this._readUserFromCache()
+    if (cached) this.login(cached)
+  }
 
   login (user) {
     logger.info('User login')

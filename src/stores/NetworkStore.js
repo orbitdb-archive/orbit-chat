@@ -14,36 +14,23 @@ const logger = new Logger()
 
 export default class NetworkStore {
   constructor (rootStore) {
-    this.rootStore = rootStore
-    this.session = rootStore.sessionStore
-    this.settings = rootStore.settingsStore
+    this.sessionStore = rootStore.sessionStore
+    this.settingsStore = rootStore.settingsStore
+
     this.ipfsStore = new IpfsStore(this)
     this.orbitStore = new OrbitStore(this)
 
     this.joinChannel = this.joinChannel.bind(this)
 
-    // Stop if user logs out
+    // Stop if user logs out, start if not already online or not starting
     reaction(
-      () => this.session.username,
+      () => this.sessionStore.username,
       username => {
         if (!username) this.stop()
+        else if (!(this.isOnline || this.starting)) this.start()
       }
     )
-
-    // React to ipfs changes
-    reaction(() => this.ipfsStore.node, this._onIpfsChanged)
-
-    // React to orbit changes
-    reaction(() => this.orbitStore.node, this._onOrbitChanged)
   }
-
-  // Private instance variables
-
-  @observable
-  _ipfs = null
-
-  @observable
-  _orbit = null
 
   // Public instance variables
 
@@ -59,17 +46,17 @@ export default class NetworkStore {
 
   @computed
   get ipfs () {
-    return this._ipfs
+    return this.ipfsStore.node
   }
 
   @computed
   get orbit () {
-    return this._orbit
+    return this.orbitStore.node
   }
 
   @computed
   get isOnline () {
-    return this._ipfs && this._orbit
+    return this.ipfs && this.orbit
   }
 
   @computed
@@ -82,10 +69,12 @@ export default class NetworkStore {
     return this.channelsAsArray.some(c => c.hasUnreadMessages)
   }
 
+  @computed
   get channelNames () {
     return keys(this.channels)
   }
 
+  @computed
   get channelsAsArray () {
     return values(this.channels)
   }
@@ -93,41 +82,29 @@ export default class NetworkStore {
   // Private instance actions
 
   @action.bound
-  _onIpfsChanged (newIpfs) {
-    this._ipfs = newIpfs
-  }
-
-  @action.bound
-  _onOrbitChanged (newOrbit) {
-    this._stopOrbit()
-
-    this._orbit = newOrbit
-
-    if (this.orbit) this._onOrbitStarted(this.orbit)
-  }
-
-  @action.bound
   _onJoinedChannel (channelName) {
     if (this.channelNames.indexOf(channelName) !== -1) return
-    const channelSetup = Object.assign({}, this.orbit.channels[channelName], { network: this })
-    this.channels[channelName] = new ChannelStore(channelSetup)
+
+    this.channels[channelName] = new ChannelStore(
+      Object.assign({}, this.orbit.channels[channelName], { network: this })
+    )
 
     // Save the channel to localstorage
     // so user will connect to it automatically next time
-    this.settings.networkSettings.channels = [
-      ...this.settings.networkSettings.channels.filter(c => c !== channelName),
+    const networkSettings = this.settingsStore.networkSettings
+    networkSettings.channels = [
+      ...networkSettings.channels.filter(c => c !== channelName),
       channelName
     ]
   }
 
   @action.bound
   _onLeftChannel (channelName) {
-    this.removeChannel(channelName)
+    this._removeChannel(channelName)
 
     // Remove the channel from localstorage
-    this.settings.networkSettings.channels = this.settings.networkSettings.channels.filter(
-      c => c !== channelName
-    )
+    const networkSettings = this.settingsStore.networkSettings
+    networkSettings.channels = networkSettings.channels.filter(c => c !== channelName)
   }
 
   @action.bound
@@ -136,65 +113,69 @@ export default class NetworkStore {
   }
 
   @action.bound
-  _stopOrbit () {
-    this.channelNames.map(this.removeChannel)
-    this.swarmPeers = []
-    if (this.orbit) this._onOrbitStopped(this.orbit)
-  }
-
-  @action.bound
-  removeChannel (channelName) {
+  _removeChannel (channelName) {
     this.channels[channelName].stop()
     delete this.channels[channelName]
   }
 
-  // Private instance methods
-
-  _onOrbitStarted (orbit) {
-    orbit.events.on('joined', this._onJoinedChannel)
-    orbit.events.on('left', this._onLeftChannel)
-    orbit.events.on('peers', this._onSwarmPeerUpdate)
-
-    // Join all channnels that are saved in localstorage for current user
-    this.settings.networkSettings.channels.map(this.joinChannel)
+  @action.bound
+  _resetSwarmPeers () {
+    this.swarmPeers = []
   }
 
-  _onOrbitStopped (orbit) {
-    orbit.events.removeListener('joined', this._onJoinedChannel)
-    orbit.events.removeListener('left', this._onLeftChannel)
-    orbit.events.removeListener('peers', this._onSwarmPeerUpdate)
+  // Private instance methods
+
+  _onOrbitStarted (orbitNode) {
+    orbitNode.events.on('joined', this._onJoinedChannel)
+    orbitNode.events.on('left', this._onLeftChannel)
+    orbitNode.events.on('peers', this._onSwarmPeerUpdate)
+
+    // Join all channnels that are saved in localstorage for current user
+    this.settingsStore.networkSettings.channels.map(this.joinChannel)
+  }
+
+  _onOrbitStopped (orbitNode) {
+    orbitNode.events.removeListener('joined', this._onJoinedChannel)
+    orbitNode.events.removeListener('left', this._onLeftChannel)
+    orbitNode.events.removeListener('peers', this._onSwarmPeerUpdate)
   }
 
   // Public instance methods
+
+  async joinChannel (channelName) {
+    if (!this.isOnline) throw new Error('Network is not online')
+    if (this.channelNames.indexOf(channelName) === -1) {
+      await this.orbit.join(channelName)
+    }
+    return this.channels[channelName]
+  }
+
+  async leaveChannel (channelName) {
+    if (!this.isOnline) throw new Error('Network is not online')
+    if (this.channelNames.indexOf(channelName) !== -1) {
+      await this.orbit.leave(channelName)
+    }
+  }
+
+  async start () {
+    if (this.isOnline) return
+    logger.info('Starting network')
+
+    await this.ipfsStore.useJsIPFS()
+    await this.orbitStore.init(this.ipfs)
+
+    this._onOrbitStarted(this.orbit)
+  }
 
   async stop () {
     if (!this.isOnline) return
     logger.info('Stopping network')
 
-    this._stopOrbit()
+    this.channelNames.map(this._removeChannel)
+    this._resetSwarmPeers()
+    this._onOrbitStopped(this.orbit)
 
     await this.orbitStore.stop()
     await this.ipfsStore.stop()
-  }
-
-  async joinChannel (channelName) {
-    if (!this.isOnline) throw new Error('Network is offline')
-
-    if (this.channelNames.indexOf(channelName) !== -1) return
-
-    await this.orbit.join(channelName)
-  }
-
-  leaveChannel (channelName) {
-    if (!this.orbit || this.channelNames.indexOf(channelName) === -1) return
-    return this.orbit.leave(channelName)
-  }
-
-  useJsIPFS () {
-    return this.ipfsStore.useJsIPFS()
-  }
-
-  useGoIPFS () {
-    return this.ipfsStore.useGoIPFS()
   }
 }
