@@ -6,8 +6,6 @@ import PropTypes from 'prop-types'
 import { Observer } from 'mobx-react'
 import LoadAsync from '../components/Loadable'
 
-import Logger from '../utils/logger'
-
 import RootStoreContext from '../context/RootStoreContext'
 
 import '../styles/ChannelView.scss'
@@ -19,8 +17,6 @@ const MessageUserProfilePanel = LoadAsync({
   loader: () =>
     import(/* webpackChunkName: "MessageUserProfilePanel" */ '../containers/MessageUserProfilePanel')
 })
-
-const logger = new Logger()
 
 function ChannelView (props) {
   const { networkStore } = useContext(RootStoreContext)
