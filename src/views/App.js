@@ -2,8 +2,6 @@
 
 import React from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
-import { I18nextProvider } from 'react-i18next'
-import LoadAsync from '../components/Loadable'
 
 import i18n from '../config/i18n.config'
 
@@ -14,6 +12,8 @@ import { addDebug } from '../utils/debug'
 import PrivateRouteWithContext from '../containers/PrivateRouteWithContext'
 
 import RootStoreContext from '../context/RootStoreContext'
+
+import LoadAsync from '../components/Loadable'
 
 import '../styles/normalize.css'
 import '../styles/Main.scss'
@@ -88,15 +88,13 @@ function AppView () {
 
 function App () {
   return (
-    <I18nextProvider i18n={i18n}>
-      <RootStoreContext.Provider value={rootStore}>
-        <Router>
-          {/* Render App in a route so it will receive the "location"
+    <RootStoreContext.Provider value={rootStore}>
+      <Router>
+        {/* Render App in a route so it will receive the "location"
               prop and rerender properly on location changes */}
-          <Route component={AppView} />
-        </Router>
-      </RootStoreContext.Provider>
-    </I18nextProvider>
+        <Route component={AppView} />
+      </Router>
+    </RootStoreContext.Provider>
   )
 }
 

@@ -1,8 +1,7 @@
 'use strict'
 
 import React, { useContext } from 'react'
-import PropTypes from 'prop-types'
-import { withNamespaces } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Observer } from 'mobx-react'
 import { CSSTransitionGroup } from 'react-transition-group'
 
@@ -15,8 +14,9 @@ import BackgroundAnimation from '../components/BackgroundAnimation'
 import '../styles/MessageUserProfilePanel.scss'
 import earthImg from '../images/earth.png'
 
-function MessageUserProfilePanel ({ t }) {
+function MessageUserProfilePanel () {
   const { uiStore } = useContext(RootStoreContext)
+  const [t] = useTranslation()
 
   return (
     <Observer>
@@ -79,8 +79,6 @@ function renderUserCard (t, user) {
   )
 }
 
-MessageUserProfilePanel.propTypes = {
-  t: PropTypes.func.isRequired
-}
+MessageUserProfilePanel.propTypes = {}
 
-export default withNamespaces()(MessageUserProfilePanel)
+export default MessageUserProfilePanel

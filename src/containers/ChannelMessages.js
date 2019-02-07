@@ -3,7 +3,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import { withNamespaces } from 'react-i18next'
 import classNames from 'classnames'
 
 import getMousePosition from '../utils/mouse-position'
@@ -18,7 +17,6 @@ class ChannelMessages extends React.Component {
   static contextType = RootStoreContext
 
   static propTypes = {
-    t: PropTypes.func.isRequired,
     channel: PropTypes.object.isRequired
   }
 
@@ -69,7 +67,7 @@ class ChannelMessages extends React.Component {
   renderMessages () {
     const { sessionStore, uiStore } = this.context
     const { colorifyUsernames, useLargeMessage, language, theme, useEmojis, emojiSet } = uiStore
-    const { t, channel } = this.props
+    const { channel } = this.props
 
     let prevDate
 
@@ -85,7 +83,6 @@ class ChannelMessages extends React.Component {
       els.push(
         <MessageRow
           key={message.hash}
-          t={t}
           message={message}
           colorifyUsernames={colorifyUsernames}
           useLargeMessage={useLargeMessage}
@@ -107,7 +104,7 @@ class ChannelMessages extends React.Component {
 
   render () {
     const { useLargeMessage, useMonospaceFont } = this.context.uiStore
-    const { t, channel } = this.props
+    const { channel } = this.props
 
     const messageEls = this.renderMessages()
 
@@ -121,7 +118,6 @@ class ChannelMessages extends React.Component {
         })}
         ref={this.messagesEl}>
         <FirstMessage
-          t={t}
           channelName={channel.name}
           loading={channel.loadingHistory}
           hasMoreHistory={channel.hasMoreHistory}
@@ -134,4 +130,4 @@ class ChannelMessages extends React.Component {
   }
 }
 
-export default withNamespaces()(observer(ChannelMessages))
+export default observer(ChannelMessages)
