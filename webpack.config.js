@@ -11,7 +11,7 @@ const config = {
   entry: ['babel-polyfill', './src/index.js'],
   output: {
     path: path.join(__dirname, 'dist'),
-    publicPath: '/',
+    publicPath: './',
     filename: '[name].[hash:20].js'
   },
   resolve: {
