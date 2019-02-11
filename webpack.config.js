@@ -6,7 +6,6 @@ const HtmlWebpackPlugin = require('html-webpack-plugin')
 const CleanWebpackPlugin = require('clean-webpack-plugin')
 const WebpackPwaManifest = require('webpack-pwa-manifest')
 const OfflinePlugin = require('offline-plugin')
-const TerserPlugin = require('terser-webpack-plugin')
 
 const config = {
   entry: ['babel-polyfill', './src/index.js'],
@@ -97,8 +96,7 @@ const config = {
   optimization: {
     splitChunks: {
       chunks: 'all'
-    },
-    minimizer: [new TerserPlugin()]
+    }
   },
   plugins: [
     new HtmlWebpackPlugin({
