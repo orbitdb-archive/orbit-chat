@@ -100,7 +100,8 @@ const config = {
   },
   plugins: [
     new HtmlWebpackPlugin({
-      template: 'src/index.html'
+      template: 'src/index.html',
+      favicon: 'src/images/orbit_logo_32x32.png'
     })
   ]
 }
@@ -134,7 +135,7 @@ module.exports = (env, argv) => {
           {
             src: path.join(__dirname, './src/images/orbit_logo_400x400.png'),
             sizes: [96, 128, 192, 256, 384, 512],
-            destination: 'images/icons/'
+            destination: 'images/pwa-icons/'
           }
         ],
         display: 'standalone',

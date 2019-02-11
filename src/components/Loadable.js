@@ -1,4 +1,5 @@
-import React from 'react'
+'use strict'
+
 import Loadable from 'react-loadable'
 import Spinner from './Spinner'
 
