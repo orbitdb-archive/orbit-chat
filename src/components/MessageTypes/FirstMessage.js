@@ -3,8 +3,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
-function FirstMessage ({ t, loading, hasMoreHistory, channelName, ...rest }) {
+function FirstMessage ({ loading, hasMoreHistory, channelName, ...rest }) {
+  const [t] = useTranslation()
   return (
     <div className={classNames('firstMessage', { hasMoreHistory })} {...rest}>
       {loading
@@ -17,7 +19,6 @@ function FirstMessage ({ t, loading, hasMoreHistory, channelName, ...rest }) {
 }
 
 FirstMessage.propTypes = {
-  t: PropTypes.func.isRequired,
   loading: PropTypes.bool.isRequired,
   hasMoreHistory: PropTypes.bool.isRequired,
   channelName: PropTypes.string.isRequired

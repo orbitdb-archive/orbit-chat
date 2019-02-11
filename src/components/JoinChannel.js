@@ -2,10 +2,12 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
+import { useTranslation } from 'react-i18next'
 
 import '../styles/JoinChannel.scss'
 
-function JoinChannel ({ t, onSubmit, theme, inputRef }) {
+function JoinChannel ({ onSubmit, theme, inputRef }) {
+  const [t] = useTranslation()
   return (
     <div className="JoinChannel">
       <form onSubmit={onSubmit}>
@@ -21,7 +23,6 @@ function JoinChannel ({ t, onSubmit, theme, inputRef }) {
 }
 
 JoinChannel.propTypes = {
-  t: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
   theme: PropTypes.object.isRequired,
   inputRef: PropTypes.func

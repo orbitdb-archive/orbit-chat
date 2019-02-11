@@ -4,7 +4,7 @@ import React, { useContext } from 'react'
 import { hot } from 'react-hot-loader'
 import PropTypes from 'prop-types'
 import { Observer } from 'mobx-react'
-import { withNamespaces } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 
 import RootStoreContext from '../context/RootStoreContext'
 
@@ -12,8 +12,9 @@ import ChannelLink from './ChannelLink'
 
 import '../styles/ChannelHeader.scss'
 
-function ChannelHeader ({ t, match }) {
+function ChannelHeader ({ match }) {
   const { networkStore, uiStore } = useContext(RootStoreContext)
+  const [t] = useTranslation()
 
   function onChannelClick (e) {
     // Stop propagation to Header
@@ -59,8 +60,7 @@ function ChannelHeader ({ t, match }) {
 }
 
 ChannelHeader.propTypes = {
-  t: PropTypes.func.isRequired,
   match: PropTypes.object.isRequired
 }
 
-export default hot(module)(withNamespaces()(ChannelHeader))
+export default hot(module)(ChannelHeader)

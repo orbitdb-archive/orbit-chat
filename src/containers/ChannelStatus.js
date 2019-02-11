@@ -2,10 +2,11 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withNamespaces } from 'react-i18next'
+import { useTranslation } from 'react-i18next'
 import { Observer } from 'mobx-react'
 
-function ChannelStatus ({ t, channel, theme }) {
+function ChannelStatus ({ channel, theme }) {
+  const [t] = useTranslation()
   return (
     <Observer>
       {() => (
@@ -18,9 +19,8 @@ function ChannelStatus ({ t, channel, theme }) {
 }
 
 ChannelStatus.propTypes = {
-  t: PropTypes.func.isRequired,
   channel: PropTypes.object.isRequired,
   theme: PropTypes.object.isRequired
 }
 
-export default withNamespaces()(ChannelStatus)
+export default ChannelStatus

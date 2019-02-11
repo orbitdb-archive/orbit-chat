@@ -3,6 +3,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransitionGroup } from 'react-transition-group'
+import { useTranslation } from 'react-i18next'
 
 import FilePreview from '../FilePreview'
 
@@ -10,7 +11,8 @@ import { getHumanReadableSize, isAudio, isText, isImage, isVideo } from '../../u
 
 import '../../styles/FileMessage.scss'
 
-function FileMessage ({ t, animationProps, hash, meta, ...rest }) {
+function FileMessage ({ animationProps, hash, meta, ...rest }) {
+  const [t] = useTranslation()
   const [showPreview, setShowPreview] = useState(false)
 
   const { name, size, mimeType } = meta
@@ -39,7 +41,6 @@ function FileMessage ({ t, animationProps, hash, meta, ...rest }) {
           {t('channel.file.download')}
         </a>
         <FilePreview
-          t={t}
           animationProps={animationProps}
           hash={hash}
           name={name}
@@ -53,7 +54,6 @@ function FileMessage ({ t, animationProps, hash, meta, ...rest }) {
 }
 
 FileMessage.propTypes = {
-  t: PropTypes.func.isRequired,
   animationProps: PropTypes.object.isRequired,
   hash: PropTypes.string.isRequired,
   meta: PropTypes.shape({

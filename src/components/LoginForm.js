@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransitionGroup } from 'react-transition-group'
+import { useTranslation } from 'react-i18next'
 
 import Logger from '../utils/logger'
 
@@ -13,7 +14,8 @@ import uportLogo from '../images/uport.png'
 
 const logger = new Logger()
 
-function LoginForm ({ t, theme, onSubmit, setUsernameInputRef }) {
+function LoginForm ({ theme, onSubmit, setUsernameInputRef }) {
+  const [t] = useTranslation()
   const [currentLength, setCurrentLength] = useState(0)
 
   const usernameInputRef = useRef()
@@ -68,7 +70,6 @@ function LoginForm ({ t, theme, onSubmit, setUsernameInputRef }) {
 }
 
 LoginForm.propTypes = {
-  t: PropTypes.func.isRequired,
   theme: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired,
   setUsernameInputRef: PropTypes.func

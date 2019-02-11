@@ -3,7 +3,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { CSSTransitionGroup } from 'react-transition-group'
 import LoadAsync from '../components/Loadable'
 
@@ -54,4 +54,4 @@ class LoadingView extends React.Component {
   }
 }
 
-export default withNamespaces()(observer(LoadingView))
+export default withTranslation()(observer(LoadingView))

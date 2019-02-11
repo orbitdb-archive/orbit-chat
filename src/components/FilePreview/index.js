@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { CSSTransitionGroup } from 'react-transition-group'
+import { useTranslation } from 'react-i18next'
 
 import PreviewAudioFile from './PreviewAudioFile'
 import PreviewImageFile from './PreviewImageFile'
@@ -47,7 +48,8 @@ async function loadPreviewContent (loadFunc, hash, name, mimeType) {
   }
 }
 
-function FilePreview ({ t, animationProps, hash, loadFile, name, mimeType, show }) {
+function FilePreview ({ animationProps, hash, loadFile, name, mimeType, show }) {
+  const [t] = useTranslation()
   const [previewContent, setPreviewContent] = useState(t('channel.file.previewLoading'))
   let isMounted // track whether component is mounted
 
@@ -88,7 +90,6 @@ function FilePreview ({ t, animationProps, hash, loadFile, name, mimeType, show 
 }
 
 FilePreview.propTypes = {
-  t: PropTypes.func.isRequired,
   animationProps: PropTypes.object.isRequired,
   hash: PropTypes.string.isRequired,
   loadFile: PropTypes.func.isRequired,

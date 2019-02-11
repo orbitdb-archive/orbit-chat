@@ -4,7 +4,7 @@ import React from 'react'
 import { hot } from 'react-hot-loader'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { CSSTransitionGroup } from 'react-transition-group'
 
 import settingsOptions from '../config/setting.options.json'
@@ -115,4 +115,4 @@ class SettingsView extends React.Component {
   }
 }
 
-export default hot(module)(withNamespaces()(observer(SettingsView)))
+export default hot(module)(withTranslation()(observer(SettingsView)))

@@ -5,7 +5,7 @@ import { hot } from 'react-hot-loader'
 import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { observer } from 'mobx-react'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { CSSTransitionGroup } from 'react-transition-group'
 import LoadAsync from '../components/Loadable'
 
@@ -89,7 +89,6 @@ class LoginView extends React.Component {
           <h1 onClick={this.focusUsernameInput}>Orbit</h1>
         </CSSTransitionGroup>
         <LoginForm
-          t={t}
           theme={{ ...uiStore.theme }}
           onSubmit={this.onLogin}
           setUsernameInputRef={ref => (this.usernameInputRef = ref)}
@@ -115,4 +114,4 @@ class LoginView extends React.Component {
   }
 }
 
-export default hot(module)(withNamespaces()(observer(LoginView)))
+export default hot(module)(withTranslation()(observer(LoginView)))

@@ -2,7 +2,7 @@
 
 import React from 'react'
 import PropTypes from 'prop-types'
-import { withNamespaces } from 'react-i18next'
+import { withTranslation } from 'react-i18next'
 import { CSSTransitionGroup } from 'react-transition-group'
 import { emojiIndex } from 'emoji-mart'
 import LoadAsync from '../components/Loadable'
@@ -148,4 +148,4 @@ class SendMessage extends React.Component {
   }
 }
 
-export default withNamespaces()(SendMessage)
+export default withTranslation()(SendMessage)
