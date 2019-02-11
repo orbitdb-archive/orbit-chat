@@ -3,6 +3,7 @@
 import React from 'react'
 import { HashRouter as Router, Route, Switch } from 'react-router-dom'
 import { I18nextProvider } from 'react-i18next'
+import LoadAsync from '../components/Loadable'
 
 import i18n from '../config/i18n.config'
 
@@ -10,16 +11,9 @@ import RootStore from '../stores/RootStore'
 
 import { addDebug } from '../utils/debug'
 
-import RootStoreContext from '../context/RootStoreContext'
-
 import PrivateRouteWithContext from '../containers/PrivateRouteWithContext'
-import ControlPanel from '../containers/ControlPanel'
-import ChannelHeader from '../containers/ChannelHeader'
 
-import ChannelView from './ChannelView'
-import IndexView from './IndexView'
-import LoginView from './LoginView'
-import SettingsView from './SettingsView'
+import RootStoreContext from '../context/RootStoreContext'
 
 import '../styles/normalize.css'
 import '../styles/Main.scss'
@@ -37,6 +31,30 @@ rootStore.sessionStore.loadFromCache()
 addDebug({ rootStore })
 
 const loginPath = '/connect'
+
+const ControlPanel = LoadAsync({
+  loader: () => import(/* webpackChunkName: "ControlPanel" */ '../containers/ControlPanel')
+})
+
+const ChannelHeader = LoadAsync({
+  loader: () => import(/* webpackChunkName: "ChannelHeader" */ '../containers/ChannelHeader')
+})
+
+const ChannelView = LoadAsync({
+  loader: () => import(/* webpackChunkName: "ChannelView" */ './ChannelView')
+})
+
+const IndexView = LoadAsync({
+  loader: () => import(/* webpackChunkName: "IndexView" */ './IndexView')
+})
+
+const LoginView = LoadAsync({
+  loader: () => import(/* webpackChunkName: "LoginView" */ './LoginView')
+})
+
+const SettingsView = LoadAsync({
+  loader: () => import(/* webpackChunkName: "SettingsView" */ './SettingsView')
+})
 
 function AppView () {
   return (

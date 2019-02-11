@@ -2,13 +2,18 @@
 
 import React, { useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import LoadAsync from '../components/Loadable'
 
 import RootStoreContext from '../context/RootStoreContext'
 
-import ChannelControls from './ChannelControls'
-import ChannelMessages from './ChannelMessages'
-
 import '../styles/Channel.scss'
+
+const ChannelControls = LoadAsync({
+  loader: () => import(/* webpackChunkName: "ChannelControls" */ './ChannelControls')
+})
+const ChannelMessages = LoadAsync({
+  loader: () => import(/* webpackChunkName: "ChannelMessages" */ './ChannelMessages')
+})
 
 function Channel ({ channelName }) {
   const [channel, setChannel] = useState(null)
