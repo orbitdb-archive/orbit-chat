@@ -5,14 +5,8 @@ import PropTypes from 'prop-types'
 import { CSSTransitionGroup } from 'react-transition-group'
 import { useTranslation } from 'react-i18next'
 
-import Logger from '../utils/logger'
-
 import '../styles/SubmitButton.scss'
 import '../styles/InputField.scss'
-
-import uportLogo from '../images/uport.png'
-
-const logger = new Logger()
 
 function LoginForm ({ theme, onSubmit, setUsernameInputRef }) {
   const [t] = useTranslation()
@@ -49,20 +43,8 @@ function LoginForm ({ theme, onSubmit, setUsernameInputRef }) {
           />
         </div>
         <div className="connectButtonRow">
-          <span className="hint">
-            {currentLength > 0 ? t('login.pressEnterToLogin') : t('login.orLoginWith')}
-          </span>
+          <span className="hint">{currentLength > 0 ? t('login.pressEnterToLogin') : null}</span>
           <input type="submit" value="Connect" style={{ display: 'none' }} />
-        </div>
-        <div className="lastRow">
-          {currentLength === 0 ? (
-            <img
-              onClick={() => logger.warn('Uport Login not implemented')}
-              className="logo"
-              src={uportLogo}
-              height="64"
-            />
-          ) : null}
         </div>
       </CSSTransitionGroup>
     </form>
