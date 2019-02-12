@@ -21,6 +21,11 @@
     "closeChannel": "Sulje",
     "startJsIpfs": "Käynnistä js-ipfs"
   },
+  "disclaimer": {
+    "alpha": {
+      "content": "Tämä on ohjelman alpha versio. Asiat muuttuvat ja menevät rikki \u2014 keskustelut häviävät. Käytä omalla vastuulla."
+    }
+  },
   "joinChannel": {
     "inputPlaceholder": "Liity kanavalle"
   },

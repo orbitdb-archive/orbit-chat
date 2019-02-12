@@ -21,6 +21,11 @@
     "closeChannel": "Close",
     "startJsIpfs": "Start js-ipfs"
   },
+  "disclaimer": {
+    "alpha": {
+      "content": "This is an alpha version of the software. Things will break and change \u2014 chats will be lost. Use at your own risk."
+    }
+  },
   "joinChannel": {
     "inputPlaceholder": "Join channel"
   },
