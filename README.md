@@ -7,11 +7,13 @@
 Browser application for [Orbit](https://github.com/orbitdb/orbit). Try it at https://orbit.chat.
 
 Built with the following packages:
+
 - [orbit-core](https://github.com/orbitdb/orbit-core) - Core Orbit communication library.
 - [js-ipfs](https://github.com/ipfs/js-ipfs) - A new p2p hypermedia protocol for content-addressed storage.
 
 See also:
-- [orbit-db](https://github.com/orbitdb/orbit-db) - Serverless, p2p database that orbit-core uses to store its data.                                
+
+- [orbit-db](https://github.com/orbitdb/orbit-db) - Serverless, p2p database that orbit-core uses to store its data.
 - [orbit-textui](https://github.com/orbitdb/orbit-textui) - Terminal client prototype for Orbit.
 - [orbit-electron](https://github.com/orbitdb/orbit-electron) - Stand-alone desktop application for Orbit Chat built with Electron.
 - [IPFS](https://ipfs.io) - IPFS
@@ -23,6 +25,7 @@ This project uses [npm](http://npmjs.com/) and [nodejs](https://nodejs.org/).
 ### Run
 
 Get the source code and install dependencies:
+
 ```sh
 git clone https://github.com/orbitdb/orbit-chat.git
 cd orbit-chat/
@@ -32,19 +35,13 @@ npm install
 Start the application:
 `npm run dev`
 
-*Run will start a development server, open the app in the browser and watch for changes in the source files. Upon change, it'll automatically compile and reload the app in the browser*
+_Run will start a development server, open the app in the browser and watch for changes in the source files. Upon change, it'll automatically compile and reload the app in the browser_
 
 ### Build
 
 `npm run build`
 
-*This produces a fully stand-alone build in `dist/` which can be run from `dist/index.html` file or on a http-server.*
-
-To test the release build, run:
-
-`npm start`
-
-And open http://localhost:8081/index.html in your browser.
+_This produces a fully stand-alone build in `dist/` which can be run from `dist/index.html` file or on a http-server._
 
 ## Contribute
 
