@@ -56,6 +56,10 @@ const SettingsView = LoadAsync({
   loader: () => import(/* webpackChunkName: "SettingsView" */ './SettingsView')
 })
 
+const AlphaDisclaimer = LoadAsync({
+  loader: () => import(/* webpackChunkName: "AlphaDisclaimer" */ '../containers/AlphaDisclaimer')
+})
+
 function AppView () {
   return (
     <div className="App view">
@@ -82,6 +86,9 @@ function AppView () {
         />
         <PrivateRouteWithContext component={IndexView} loginPath={loginPath} />
       </Switch>
+
+      {/* Render an alpha disclaimer on login page */}
+      <Route exact path={loginPath} component={AlphaDisclaimer} />
     </div>
   )
 }
