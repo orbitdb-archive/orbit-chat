@@ -2,7 +2,9 @@
 
 [![Gitter](https://img.shields.io/gitter/room/nwjs/nw.js.svg)](https://gitter.im/orbitdb/Lobby)
 
-> A distributed, peer-to-peer chat application built on [IPFS](http://ipfs.io)
+> Deprecated: A distributed, peer-to-peer chat application built on [IPFS](http://ipfs.io)
+
+**Status: Deprecated**. This repository has merged with https://github.com/orbitdb/orbit-web and is now deprecated. Go there!
 
 Browser application for [Orbit](https://github.com/orbitdb/orbit). Try it at https://orbit.chat.
 
